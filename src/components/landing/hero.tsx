@@ -12,11 +12,12 @@ import {
   type DivisionStatus,
 } from '#/components/landing/division-utils'
 import { cn } from '#/lib/utils'
-import type { Division } from '#/lib/types'
+import { buildSchedulePath } from '#/lib/tournament-slugs'
+import type { Division, Season } from '#/lib/types'
 
 type HeroSectionProps = {
   divisions: Division[]
-  seasonId: number
+  season: Season
   seasonName: string
   activeDivisionId?: number | null
 }
@@ -95,12 +96,12 @@ function HeroDateBlock({ division }: { division: Division }) {
 function HeroLegFeature({
   division,
   status,
-  seasonId,
+  season,
   seasonName,
 }: {
   division: Division
   status: DivisionStatus
-  seasonId: number
+  season: Season
   seasonName: string
 }) {
   const legNumber = formatDivisionOrder(division.order)
@@ -153,8 +154,7 @@ function HeroLegFeature({
 
             {(status === 'live' || status === 'upcoming') && (
               <Link
-                to={'/matches' as never}
-                search={{ season: String(seasonId) } as never}
+                to={buildSchedulePath(season, division) as never}
                 className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
               >
                 View fixtures
@@ -189,11 +189,14 @@ function HeroLegFallback() {
 
 export function HeroSection({
   divisions,
-  seasonId,
+  season,
   seasonName,
   activeDivisionId,
 }: HeroSectionProps) {
   const featured = resolveHeroDivision(divisions, activeDivisionId)
+  const schedulePath = featured
+    ? buildSchedulePath(season, featured.division)
+    : null
 
   return (
     <section className="sp-landing-hero overflow-hidden border-b border-border text-foreground">
@@ -203,14 +206,14 @@ export function HeroSection({
             <HeroLegFeature
               division={featured.division}
               status={featured.status}
-              seasonId={seasonId}
+              season={season}
               seasonName={seasonName}
             />
           ) : (
             <HeroLegFallback />
           )}
 
-          <EngagementCarousel seasonId={seasonId} />
+          <EngagementCarousel schedulePath={schedulePath} />
         </div>
       </div>
     </section>

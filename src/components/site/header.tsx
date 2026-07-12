@@ -1,43 +1,48 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { getRouteApi, Link, useRouterState } from '@tanstack/react-router'
 
+import {
+  buildFeaturedTournamentPath,
+  getTournamentBaseFromPathname,
+} from '#/lib/tournament-slugs'
 import { cn } from '#/lib/utils'
 import { SiteLogo } from './logo'
 
+const rootRoute = getRouteApi('__root__')
+
 type NavItem = {
-  to: string
+  segment: string
   label: string
-  exact?: boolean
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/matches', label: 'Schedule' },
-  { to: '/standings', label: 'Standings' },
-  { to: '/teams', label: 'Clubs' },
-  { to: '/stats', label: 'Stats' },
-  { to: '/voting', label: 'Voting' },
-  { to: '/quiz', label: 'Quiz' },
-  { to: '/gallery', label: 'Gallery' },
+  { segment: 'schedule', label: 'Schedule' },
+  { segment: 'standings', label: 'Standings' },
+  { segment: 'clubs', label: 'Clubs' },
+  { segment: 'stats', label: 'Stats' },
+  { segment: 'voting', label: 'Voting' },
+  { segment: 'quiz', label: 'Quiz' },
+  { segment: 'gallery', label: 'Gallery' },
 ]
 
 type HeaderNavLinkProps = {
-  item: NavItem
+  to: string
+  label: string
   onNavigate?: () => void
   className?: string
 }
 
-function HeaderNavLink({ item, onNavigate, className }: HeaderNavLinkProps) {
+function HeaderNavLink({ to, label, onNavigate, className }: HeaderNavLinkProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
-  const isActive = item.exact
-    ? pathname === item.to
-    : pathname === item.to || pathname.startsWith(`${item.to}/`)
+  const isActive =
+    pathname === to || (to !== '/' && pathname.startsWith(`${to}/`))
 
   return (
     <Link
-      to={item.to as never}
+      to={to as never}
       onClick={onNavigate}
       aria-current={isActive ? 'page' : undefined}
       className={cn(
@@ -48,13 +53,27 @@ function HeaderNavLink({ item, onNavigate, className }: HeaderNavLinkProps) {
         className,
       )}
     >
-      {item.label}
+      {label}
     </Link>
+  )
+}
+
+function useTournamentNavBase(): string {
+  const { seasons } = rootRoute.useRouteContext()
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
+
+  return (
+    getTournamentBaseFromPathname(pathname) ??
+    buildFeaturedTournamentPath(seasons) ??
+    '/'
   )
 }
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const tournamentBase = useTournamentNavBase()
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -77,7 +96,11 @@ export function SiteHeader() {
             className="hidden items-center gap-1 lg:flex xl:gap-2"
           >
             {NAV_ITEMS.map((item) => (
-              <HeaderNavLink key={item.to} item={item} />
+              <HeaderNavLink
+                key={item.segment}
+                to={`${tournamentBase}/${item.segment}`}
+                label={item.label}
+              />
             ))}
           </nav>
 
@@ -105,9 +128,10 @@ export function SiteHeader() {
           >
             <ul className="divide-y divide-border">
               {NAV_ITEMS.map((item) => (
-                <li key={item.to}>
+                <li key={item.segment}>
                   <HeaderNavLink
-                    item={item}
+                    to={`${tournamentBase}/${item.segment}`}
+                    label={item.label}
                     onNavigate={closeMobileMenu}
                     className="block w-full px-1 py-3 after:inset-x-1"
                   />

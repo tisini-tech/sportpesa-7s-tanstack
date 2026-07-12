@@ -70,7 +70,11 @@ const SLIDES: HeroSlide[] = [
   },
 ]
 
-export function EngagementCarousel({ seasonId }: { seasonId: number }) {
+export function EngagementCarousel({
+  schedulePath,
+}: {
+  schedulePath: string | null
+}) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
@@ -88,8 +92,6 @@ export function EngagementCarousel({ seasonId }: { seasonId: number }) {
     const timer = window.setInterval(next, AUTO_PLAY_MS)
     return () => window.clearInterval(timer)
   }, [isPaused, next])
-
-  const search = { season: String(seasonId) }
 
   return (
     <div
@@ -161,8 +163,11 @@ export function EngagementCarousel({ seasonId }: { seasonId: number }) {
                   </div>
 
                   <Link
-                    to={slide.to as never}
-                    search={search as never}
+                    to={
+                      (slide.id === 'matches' && schedulePath
+                        ? schedulePath
+                        : slide.to) as never
+                    }
                     className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30"
                   >
                     {slide.cta}

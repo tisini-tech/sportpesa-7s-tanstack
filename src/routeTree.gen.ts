@@ -10,33 +10,70 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SeasonSlugLegSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/route'
+import { Route as SeasonSlugLegSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/index'
+import { Route as SeasonSlugLegSlugScheduleIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SeasonSlugLegSlugRouteRoute = SeasonSlugLegSlugRouteRouteImport.update({
+  id: '/$seasonSlug/$legSlug',
+  path: '/$seasonSlug/$legSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeasonSlugLegSlugIndexRoute = SeasonSlugLegSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+} as any)
+const SeasonSlugLegSlugScheduleIndexRoute =
+  SeasonSlugLegSlugScheduleIndexRouteImport.update({
+    id: '/schedule/',
+    path: '/schedule/',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
+  '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
+  '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugIndexRoute
+  '/$seasonSlug/$legSlug/schedule': typeof SeasonSlugLegSlugScheduleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
+  '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
+  '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$seasonSlug/$legSlug'
+    | '/$seasonSlug/$legSlug/'
+    | '/$seasonSlug/$legSlug/schedule/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/$seasonSlug/$legSlug' | '/$seasonSlug/$legSlug/schedule'
+  id:
+    | '__root__'
+    | '/'
+    | '/$seasonSlug/$legSlug'
+    | '/$seasonSlug/$legSlug/'
+    | '/$seasonSlug/$legSlug/schedule/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SeasonSlugLegSlugRouteRoute: typeof SeasonSlugLegSlugRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +85,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$seasonSlug/$legSlug': {
+      id: '/$seasonSlug/$legSlug'
+      path: '/$seasonSlug/$legSlug'
+      fullPath: '/$seasonSlug/$legSlug'
+      preLoaderRoute: typeof SeasonSlugLegSlugRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$seasonSlug/$legSlug/': {
+      id: '/$seasonSlug/$legSlug/'
+      path: '/'
+      fullPath: '/$seasonSlug/$legSlug/'
+      preLoaderRoute: typeof SeasonSlugLegSlugIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
+    '/$seasonSlug/$legSlug/schedule/': {
+      id: '/$seasonSlug/$legSlug/schedule/'
+      path: '/schedule'
+      fullPath: '/$seasonSlug/$legSlug/schedule/'
+      preLoaderRoute: typeof SeasonSlugLegSlugScheduleIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
   }
 }
 
+interface SeasonSlugLegSlugRouteRouteChildren {
+  SeasonSlugLegSlugIndexRoute: typeof SeasonSlugLegSlugIndexRoute
+  SeasonSlugLegSlugScheduleIndexRoute: typeof SeasonSlugLegSlugScheduleIndexRoute
+}
+
+const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
+  {
+    SeasonSlugLegSlugIndexRoute: SeasonSlugLegSlugIndexRoute,
+    SeasonSlugLegSlugScheduleIndexRoute: SeasonSlugLegSlugScheduleIndexRoute,
+  }
+
+const SeasonSlugLegSlugRouteRouteWithChildren =
+  SeasonSlugLegSlugRouteRoute._addFileChildren(
+    SeasonSlugLegSlugRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SeasonSlugLegSlugRouteRoute: SeasonSlugLegSlugRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -74,6 +74,29 @@ export function formatDivisionOrder(order: number): string {
   return String(order).padStart(2, '0')
 }
 
+function formatDivisionDateLabel(value: string | null): string | null {
+  if (!value) return null
+
+  const parsed = parseDate(value)
+  if (Number.isNaN(parsed.getTime())) return null
+
+  return new Intl.DateTimeFormat('en-GB', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  }).format(parsed)
+}
+
+export function formatDivisionDayLabel(division: Division, day: 1 | 2): string {
+  const value = day === 1 ? division.date_from : division.date_to
+  return formatDivisionDateLabel(value) ?? 'Date TBC'
+}
+
+export function hasDivisionSecondDay(division: Division): boolean {
+  if (!division.date_from || !division.date_to) return false
+  return division.date_from.slice(0, 10) !== division.date_to.slice(0, 10)
+}
+
 export function pickFeaturedDivision(divisions: Division[]): {
   division: Division
   status: DivisionStatus
@@ -93,10 +116,7 @@ export function pickFeaturedDivision(divisions: Division[]): {
   const upcoming = ranked
     .filter((entry) => entry.status === 'upcoming')
     .sort((a, b) => {
-      if (
-        !hasDivisionDates(a.division) ||
-        !hasDivisionDates(b.division)
-      ) {
+      if (!hasDivisionDates(a.division) || !hasDivisionDates(b.division)) {
         return a.division.order - b.division.order
       }
 
@@ -110,10 +130,7 @@ export function pickFeaturedDivision(divisions: Division[]): {
   const completed = ranked
     .filter((entry) => entry.status === 'completed')
     .sort((a, b) => {
-      if (
-        !hasDivisionDates(a.division) ||
-        !hasDivisionDates(b.division)
-      ) {
+      if (!hasDivisionDates(a.division) || !hasDivisionDates(b.division)) {
         return b.division.order - a.division.order
       }
 
