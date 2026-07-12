@@ -29,8 +29,8 @@ export const Route = createFileRoute('/$seasonSlug/$legSlug/schedule/')({
   loader: async ({ context }) => {
     const fixtures = await getFixturesFn({
       data: {
-        seasonId: context.season.id,
-        divisionId: context.division.id,
+        seasonId: context.season.id.toString(),
+        divisionId: context.division.id.toString(),
       },
     })
 

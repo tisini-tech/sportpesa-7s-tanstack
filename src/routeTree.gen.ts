@@ -13,6 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SeasonSlugLegSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/route'
 import { Route as SeasonSlugLegSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/index'
 import { Route as SeasonSlugLegSlugScheduleIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/index'
+import { Route as SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/route'
+import { Route as SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/index'
+import { Route as SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+import { Route as SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+import { Route as SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,24 +40,68 @@ const SeasonSlugLegSlugScheduleIndexRoute =
     path: '/schedule/',
     getParentRoute: () => SeasonSlugLegSlugRouteRoute,
   } as any)
+const SeasonSlugLegSlugScheduleFixtureIdRouteRoute =
+  SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport.update({
+    id: '/schedule/$fixtureId',
+    path: '/schedule/$fixtureId',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+  } as any)
+const SeasonSlugLegSlugScheduleFixtureIdIndexRoute =
+  SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SeasonSlugLegSlugScheduleFixtureIdStatsRoute =
+  SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport.update({
+    id: '/stats',
+    path: '/stats',
+    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SeasonSlugLegSlugScheduleFixtureIdLineupsRoute =
+  SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport.update({
+    id: '/lineups',
+    path: '/lineups',
+    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SeasonSlugLegSlugScheduleFixtureIdH2hRoute =
+  SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport.update({
+    id: '/h2h',
+    path: '/h2h',
+    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
   '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
   '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/schedule': typeof SeasonSlugLegSlugScheduleIndexRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
   '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
   '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -60,15 +109,32 @@ export interface FileRouteTypes {
     | '/'
     | '/$seasonSlug/$legSlug'
     | '/$seasonSlug/$legSlug/'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId'
     | '/$seasonSlug/$legSlug/schedule/'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$seasonSlug/$legSlug' | '/$seasonSlug/$legSlug/schedule'
+  to:
+    | '/'
+    | '/$seasonSlug/$legSlug'
+    | '/$seasonSlug/$legSlug/schedule'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId'
   id:
     | '__root__'
     | '/'
     | '/$seasonSlug/$legSlug'
     | '/$seasonSlug/$legSlug/'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId'
     | '/$seasonSlug/$legSlug/schedule/'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+    | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,17 +172,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SeasonSlugLegSlugScheduleIndexRouteImport
       parentRoute: typeof SeasonSlugLegSlugRouteRoute
     }
+    '/$seasonSlug/$legSlug/schedule/$fixtureId': {
+      id: '/$seasonSlug/$legSlug/schedule/$fixtureId'
+      path: '/schedule/$fixtureId'
+      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId'
+      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
+    '/$seasonSlug/$legSlug/schedule/$fixtureId/': {
+      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/'
+      path: '/'
+      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/'
+      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': {
+      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+      path: '/stats'
+      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport
+      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': {
+      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+      path: '/lineups'
+      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport
+      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': {
+      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+      path: '/h2h'
+      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport
+      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
   }
 }
 
+interface SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren {
+  SeasonSlugLegSlugScheduleFixtureIdH2hRoute: typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  SeasonSlugLegSlugScheduleFixtureIdLineupsRoute: typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  SeasonSlugLegSlugScheduleFixtureIdStatsRoute: typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  SeasonSlugLegSlugScheduleFixtureIdIndexRoute: typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
+}
+
+const SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren: SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren =
+  {
+    SeasonSlugLegSlugScheduleFixtureIdH2hRoute:
+      SeasonSlugLegSlugScheduleFixtureIdH2hRoute,
+    SeasonSlugLegSlugScheduleFixtureIdLineupsRoute:
+      SeasonSlugLegSlugScheduleFixtureIdLineupsRoute,
+    SeasonSlugLegSlugScheduleFixtureIdStatsRoute:
+      SeasonSlugLegSlugScheduleFixtureIdStatsRoute,
+    SeasonSlugLegSlugScheduleFixtureIdIndexRoute:
+      SeasonSlugLegSlugScheduleFixtureIdIndexRoute,
+  }
+
+const SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren =
+  SeasonSlugLegSlugScheduleFixtureIdRouteRoute._addFileChildren(
+    SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren,
+  )
+
 interface SeasonSlugLegSlugRouteRouteChildren {
   SeasonSlugLegSlugIndexRoute: typeof SeasonSlugLegSlugIndexRoute
+  SeasonSlugLegSlugScheduleFixtureIdRouteRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
   SeasonSlugLegSlugScheduleIndexRoute: typeof SeasonSlugLegSlugScheduleIndexRoute
 }
 
 const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
   {
     SeasonSlugLegSlugIndexRoute: SeasonSlugLegSlugIndexRoute,
+    SeasonSlugLegSlugScheduleFixtureIdRouteRoute:
+      SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren,
     SeasonSlugLegSlugScheduleIndexRoute: SeasonSlugLegSlugScheduleIndexRoute,
   }
 

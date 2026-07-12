@@ -46,7 +46,7 @@ export default function SiteFooter() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-auto border-t-2 border-secondary bg-card">
+    <footer className="mt-auto border-t-2 bg-card">
       <div className="sp-shell-wide border-b border-border py-4">
         <div className="flex flex-wrap items-center justify-center gap-3">
           <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">

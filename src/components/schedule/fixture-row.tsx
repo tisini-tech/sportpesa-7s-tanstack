@@ -1,7 +1,18 @@
 import { cn } from '#/lib/utils'
-import type { Fixture } from '#/lib/types'
+import type { Fixture, TeamLogo } from '#/lib/types'
+import { getRouteApi, Link } from '@tanstack/react-router'
+
+const legRoute = getRouteApi('/$seasonSlug/$legSlug')
 
 type FixtureStatus = 'live' | 'completed' | 'upcoming'
+export type FixtureResult = 'W' | 'D' | 'L'
+
+type FixtureRowProps = {
+  fixture: Fixture
+  interactive?: boolean
+  result?: FixtureResult
+  logos?: TeamLogo[]
+}
 
 function getFixtureStatus(fixture: Fixture): FixtureStatus {
   const status = (fixture.game_status ?? '').toLowerCase()
@@ -18,7 +29,8 @@ function getFixtureStatus(fixture: Fixture): FixtureStatus {
     status.includes('finish') ||
     status.includes('complete') ||
     status.includes('ft') ||
-    status.includes('played')
+    status.includes('played') ||
+    status.includes('ended')
   ) {
     return 'completed'
   }
@@ -50,9 +62,34 @@ function hasScore(fixture: Fixture): boolean {
   return Boolean(fixture.home_score) && Boolean(fixture.away_score)
 }
 
+export function getResultForTeam(
+  fixture: Fixture,
+  teamId: number,
+): FixtureResult | null {
+  if (!hasScore(fixture)) return null
+
+  const home = Number(fixture.home_score)
+  const away = Number(fixture.away_score)
+  if (Number.isNaN(home) || Number.isNaN(away)) return null
+  if (home === away) return 'D'
+
+  const isHomeTeam = fixture.team1_id === teamId
+  if (isHomeTeam) return home > away ? 'W' : 'L'
+  return away > home ? 'W' : 'L'
+}
+
 function getTeamInitials(name: string | null): string {
   const source = name || 'TBD'
   return source.slice(0, 2).toUpperCase()
+}
+
+function resolveTeamLogo(
+  teamId: number,
+  teamLogo: string | null | undefined,
+  logos?: TeamLogo[],
+): string | null {
+  if (teamLogo) return teamLogo
+  return logos?.find((logo) => logo.team_id === teamId)?.logo ?? null
 }
 
 function TeamLogo({
@@ -85,7 +122,27 @@ function scoreClass(isLeader: boolean): string {
   return isLeader ? 'text-secondary' : 'text-muted-foreground'
 }
 
-export function FixtureRow({ fixture }: { fixture: Fixture }) {
+function ResultBadge({ result }: { result: FixtureResult }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex size-7 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-bold ring-1',
+        result === 'W' && 'bg-secondary/15 text-secondary ring-secondary/30',
+        result === 'D' && 'bg-muted text-muted-foreground ring-border',
+        result === 'L' && 'bg-destructive/15 text-destructive ring-destructive/30',
+      )}
+    >
+      {result}
+    </span>
+  )
+}
+
+function FixtureRowContent({
+  fixture,
+  result,
+  logos,
+  interactive = true,
+}: FixtureRowProps) {
   const status = getFixtureStatus(fixture)
   const showScore = hasScore(fixture)
   const homeName = fixture.team1_name || 'TBC'
@@ -96,14 +153,32 @@ export function FixtureRow({ fixture }: { fixture: Fixture }) {
     homeScore !== null && awayScore !== null && homeScore > awayScore
   const awayLeads =
     homeScore !== null && awayScore !== null && awayScore > homeScore
+  const team1Logo = resolveTeamLogo(
+    fixture.team1_id,
+    fixture.team1_logo,
+    logos,
+  )
+  const team2Logo = resolveTeamLogo(
+    fixture.team2_id,
+    fixture.team2_logo,
+    logos,
+  )
 
   return (
-    <li className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto_minmax(0,1fr)] items-center gap-2 border-b border-border/70 px-4 py-4 last:border-b-0 sm:gap-3">
+    <div
+      className={cn(
+        'grid items-center gap-2 px-4 py-4 sm:gap-3',
+        result
+          ? 'grid-cols-[minmax(0,1fr)_auto_auto_auto_minmax(0,1fr)_auto]'
+          : 'grid-cols-[minmax(0,1fr)_auto_auto_auto_minmax(0,1fr)]',
+        interactive && 'transition-colors hover:bg-muted/20',
+      )}
+    >
       <p className="truncate text-right text-sm font-medium text-foreground/80">
         {homeName}
       </p>
 
-      <TeamLogo name={fixture.team1_name} logo={fixture.team1_logo} />
+      <TeamLogo name={fixture.team1_name} logo={team1Logo} />
 
       <div className="flex w-20 shrink-0 flex-col items-center justify-center sm:w-24">
         {showScore ? (
@@ -127,11 +202,58 @@ export function FixtureRow({ fixture }: { fixture: Fixture }) {
         </p>
       </div>
 
-      <TeamLogo name={fixture.team2_name} logo={fixture.team2_logo} />
+      <TeamLogo name={fixture.team2_name} logo={team2Logo} />
 
       <p className="truncate text-left text-sm font-medium text-foreground/80">
         {awayName}
       </p>
+
+      {result ? <ResultBadge result={result} /> : null}
+    </div>
+  )
+}
+
+export function FixtureRow({
+  fixture,
+  interactive = true,
+  result,
+  logos,
+}: FixtureRowProps) {
+  if (!interactive) {
+    return (
+      <li className="border-b border-border/70 last:border-b-0">
+        <FixtureRowContent
+          fixture={fixture}
+          result={result}
+          logos={logos}
+          interactive={false}
+        />
+      </li>
+    )
+  }
+
+  return (
+    <FixtureRowLink fixture={fixture} logos={logos} />
+  )
+}
+
+function FixtureRowLink({
+  fixture,
+  logos,
+}: {
+  fixture: Fixture
+  logos?: TeamLogo[]
+}) {
+  const { seasonSlug, legSlug } = legRoute.useParams()
+
+  return (
+    <li className="border-b border-border/70 last:border-b-0">
+      <Link
+        to="/$seasonSlug/$legSlug/schedule/$fixtureId"
+        params={{ seasonSlug, legSlug, fixtureId: fixture.id.toString() }}
+      >
+        <FixtureRowContent fixture={fixture} logos={logos} interactive />
+      </Link>
     </li>
   )
 }
