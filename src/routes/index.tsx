@@ -1,21 +1,46 @@
-import { Button } from '#/components/ui/button'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: Home })
+import { HeroSection } from '#/components/landing/hero'
+import { LegStrip } from '#/components/landing/legs-strip'
+
+const rootRoute = getRouteApi('__root__')
+
+export const Route = createFileRoute('/')({
+  component: Home,
+})
 
 function Home() {
+  const { seasons } = rootRoute.useRouteContext()
+  const { season: seasonId, division: divisionId } = rootRoute.useSearch()
+  const navigate = Route.useNavigate()
+
+  const season = seasons.find((item) => item.id === seasonId)
+
+  if (!season) {
+    return null
+  }
+
+  const setActiveDivisionId = (id: number) => {
+    navigate({
+      search: (prev) => ({ ...prev, division: id }),
+      replace: true,
+    })
+  }
+
   return (
-    <div className="p-8">
-      <h1 className="text-4xl font-bold">Welcome to TanStack Start</h1>
-      <p className="mt-4 text-lg">
-        Edit <code>src/routes/index.tsx</code> to get started.
-      </p>
+    <div>
+      <HeroSection
+        divisions={season.divisions}
+        seasonId={season.id}
+        seasonName={season.name}
+        activeDivisionId={divisionId ?? null}
+      />
 
-      <Button variant="secondary">Click me</Button>
-
-      <Button variant="ghost">Click me</Button>
-      <Button variant="link">Click me</Button>
-      <Button variant="destructive">Click me</Button>
+      <LegStrip
+        divisions={season.divisions}
+        activeDivisionId={divisionId ?? null}
+        onSelectDivision={setActiveDivisionId}
+      />
     </div>
   )
 }

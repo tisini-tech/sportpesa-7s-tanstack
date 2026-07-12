@@ -4,7 +4,6 @@ import { cn } from '#/lib/utils'
 import { sportpesaLogo } from '#/assets'
 
 type SiteLogoProps = {
-  season?: string
   onNavigate?: () => void
   variant?: 'header' | 'default'
   className?: string
@@ -12,13 +11,11 @@ type SiteLogoProps = {
 }
 
 export function SiteLogo({
-  season,
   onNavigate,
   variant = 'default',
   className,
   sportpesaClassName,
 }: SiteLogoProps) {
-  const linkSearch = { season }
   const isHeader = variant === 'header'
 
   return (
@@ -33,7 +30,6 @@ export function SiteLogo({
     >
       <Link
         to="/"
-        search={linkSearch}
         onClick={onNavigate}
         className={cn(
           'flex items-center transition-opacity hover:opacity-95',
