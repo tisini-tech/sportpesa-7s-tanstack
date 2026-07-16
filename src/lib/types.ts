@@ -158,6 +158,11 @@ export interface TeamLogo {
   logo: string
 }
 
+export interface TeamFixturesResponse {
+  fixtures: Fixture[]
+  logos: TeamLogo[]
+}
+
 export interface CompetitionStanding {
   competition: number
   season: number
@@ -219,4 +224,47 @@ export interface DivisionPoint {
   division_id: number
   division_name: string
   points: number
+}
+
+export interface Team {
+  team_id: number
+  team_name: string
+  team_logo: string
+  games_played: number
+  short_name: string
+}
+
+export interface TeamPlayer {
+  id: number
+  player_id: number
+  team_id: number
+  current_jersey_no: number
+  player: Player
+}
+
+export interface Player {
+  id: number
+  name: string
+  dob: string
+  current_position: string
+  nationality: string
+  passportphoto: string
+  fifa_id: string
+  preferred_foot: string
+  jersey_no: number
+  height: number
+  weight: number
+}
+
+export interface TeamStats {
+  team_id: number
+  team_name: string
+  team_logo: string
+  games_played: number
+  games_won: number
+  games_lost: number
+  games_drawn: number
+  goals_for: number
+  goals_against: number
+  stats: EventStat[]
 }

@@ -233,16 +233,18 @@ export function FixtureRow({
   }
 
   return (
-    <FixtureRowLink fixture={fixture} logos={logos} />
+    <FixtureRowLink fixture={fixture} logos={logos} result={result} />
   )
 }
 
 function FixtureRowLink({
   fixture,
   logos,
+  result,
 }: {
   fixture: Fixture
   logos?: TeamLogo[]
+  result?: FixtureResult
 }) {
   const { seasonSlug, legSlug } = legRoute.useParams()
 
@@ -252,7 +254,12 @@ function FixtureRowLink({
         to="/$seasonSlug/$legSlug/schedule/$fixtureId"
         params={{ seasonSlug, legSlug, fixtureId: fixture.id.toString() }}
       >
-        <FixtureRowContent fixture={fixture} logos={logos} interactive />
+        <FixtureRowContent
+          fixture={fixture}
+          logos={logos}
+          result={result}
+          interactive
+        />
       </Link>
     </li>
   )
