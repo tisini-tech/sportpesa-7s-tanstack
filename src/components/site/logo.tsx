@@ -19,21 +19,13 @@ export function SiteLogo({
   const isHeader = variant === 'header'
 
   return (
-    <div
-      className={cn(
-        'flex shrink-0 items-stretch overflow-hidden bg-white',
-        isHeader
-          ? 'rounded-md shadow-md ring-1 ring-black/5'
-          : 'rounded-sm shadow-sm',
-        className,
-      )}
-    >
+    <div className={cn('flex shrink-0 items-stretch', className)}>
       <Link
         to="/"
         onClick={onNavigate}
         className={cn(
           'flex items-center transition-opacity hover:opacity-95',
-          isHeader ? 'px-2 py-1.5 sm:px-2.5' : 'px-1 sm:px-1.5',
+          isHeader ? 'py-0.5' : '',
         )}
         aria-label="SportPesa National 7s Circuit — Home"
       >

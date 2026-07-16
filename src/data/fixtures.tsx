@@ -6,6 +6,7 @@ import type {
   FixtureDetails,
   FixtureH2H,
   FixtureLineups,
+  CompetitionStanding,
 } from '#/lib/types'
 
 export const getFixturesFn = createServerFn({ method: 'GET' })

@@ -1,4 +1,13 @@
-import { kruLogo, tisiniLogo } from '#/assets'
+import {
+  christiePartner,
+  dala7sPartner,
+  driftwoodPartner,
+  embu7sPartner,
+  kabeberiPartner,
+  kruWhitePartner,
+  prinslooPartner,
+  tisiniLogo,
+} from '#/assets'
 import {
   FacebookSocialIcon,
   InstagramSocialIcon,
@@ -7,6 +16,16 @@ import {
   YouTubeSocialIcon,
 } from './social-icons'
 import { SiteLogo } from './logo'
+
+const PARTNERS = [
+  { name: 'Kenya Rugby Union', logo: kruWhitePartner },
+  { name: 'Driftwood 7s', logo: driftwoodPartner },
+  { name: 'Prinsloo 7s', logo: prinslooPartner },
+  { name: 'Christie 7s', logo: christiePartner },
+  { name: 'Kabeberi Memorial Sevens', logo: kabeberiPartner },
+  { name: 'Dala Sevens', logo: dala7sPartner },
+  { name: 'Embu Sevens', logo: embu7sPartner },
+] as const
 
 const SOCIAL_LINKS = [
   {
@@ -47,18 +66,21 @@ export default function SiteFooter() {
 
   return (
     <footer className="mt-auto border-t-2 bg-card">
-      <div className="sp-shell-wide border-b border-border py-4">
-        <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="sp-shell-wide border-b border-border py-5">
+        <div className="flex flex-col items-center gap-4">
           <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
             In partnership with
           </span>
-          <span className="inline-flex rounded-sm bg-white px-2 py-1">
-            <img
-              src={kruLogo}
-              alt="Kenya Rugby Union"
-              className="h-8 w-auto object-contain sm:h-9"
-            />
-          </span>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-4 sm:gap-x-6">
+            {PARTNERS.map((partner) => (
+              <img
+                key={partner.name}
+                src={partner.logo}
+                alt={partner.name}
+                className="h-9 w-auto max-w-[7.5rem] object-contain sm:h-10 sm:max-w-[8.5rem]"
+              />
+            ))}
+          </div>
         </div>
       </div>
 

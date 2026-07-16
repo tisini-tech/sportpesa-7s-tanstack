@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SeasonSlugLegSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/route'
 import { Route as SeasonSlugLegSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/index'
+import { Route as SeasonSlugLegSlugStandingsIndexRouteImport } from './routes/$seasonSlug/$legSlug/standings/index'
 import { Route as SeasonSlugLegSlugScheduleIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/index'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/route'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/index'
@@ -34,6 +35,12 @@ const SeasonSlugLegSlugIndexRoute = SeasonSlugLegSlugIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SeasonSlugLegSlugRouteRoute,
 } as any)
+const SeasonSlugLegSlugStandingsIndexRoute =
+  SeasonSlugLegSlugStandingsIndexRouteImport.update({
+    id: '/standings/',
+    path: '/standings/',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+  } as any)
 const SeasonSlugLegSlugScheduleIndexRoute =
   SeasonSlugLegSlugScheduleIndexRouteImport.update({
     id: '/schedule/',
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
   '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
+  '/$seasonSlug/$legSlug/standings/': typeof SeasonSlugLegSlugStandingsIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
@@ -86,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/schedule': typeof SeasonSlugLegSlugScheduleIndexRoute
+  '/$seasonSlug/$legSlug/standings': typeof SeasonSlugLegSlugStandingsIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
@@ -98,6 +107,7 @@ export interface FileRoutesById {
   '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
   '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
+  '/$seasonSlug/$legSlug/standings/': typeof SeasonSlugLegSlugStandingsIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId'
     | '/$seasonSlug/$legSlug/schedule/'
+    | '/$seasonSlug/$legSlug/standings/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$seasonSlug/$legSlug'
     | '/$seasonSlug/$legSlug/schedule'
+    | '/$seasonSlug/$legSlug/standings'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
@@ -131,6 +143,7 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId'
     | '/$seasonSlug/$legSlug/schedule/'
+    | '/$seasonSlug/$legSlug/standings/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
@@ -163,6 +176,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/$seasonSlug/$legSlug/'
       preLoaderRoute: typeof SeasonSlugLegSlugIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
+    '/$seasonSlug/$legSlug/standings/': {
+      id: '/$seasonSlug/$legSlug/standings/'
+      path: '/standings'
+      fullPath: '/$seasonSlug/$legSlug/standings/'
+      preLoaderRoute: typeof SeasonSlugLegSlugStandingsIndexRouteImport
       parentRoute: typeof SeasonSlugLegSlugRouteRoute
     }
     '/$seasonSlug/$legSlug/schedule/': {
@@ -238,6 +258,7 @@ interface SeasonSlugLegSlugRouteRouteChildren {
   SeasonSlugLegSlugIndexRoute: typeof SeasonSlugLegSlugIndexRoute
   SeasonSlugLegSlugScheduleFixtureIdRouteRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
   SeasonSlugLegSlugScheduleIndexRoute: typeof SeasonSlugLegSlugScheduleIndexRoute
+  SeasonSlugLegSlugStandingsIndexRoute: typeof SeasonSlugLegSlugStandingsIndexRoute
 }
 
 const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
@@ -246,6 +267,7 @@ const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
     SeasonSlugLegSlugScheduleFixtureIdRouteRoute:
       SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren,
     SeasonSlugLegSlugScheduleIndexRoute: SeasonSlugLegSlugScheduleIndexRoute,
+    SeasonSlugLegSlugStandingsIndexRoute: SeasonSlugLegSlugStandingsIndexRoute,
   }
 
 const SeasonSlugLegSlugRouteRouteWithChildren =

@@ -6,14 +6,14 @@ import { ScheduleEmptyState } from './schedule-empty-state'
 
 export function QuartersTab({ fixtures }: { fixtures: Fixture[] }) {
   const quarters = fixtures.filter((fixture) =>
-    fixture.stage_name.includes('Quarter'),
+    ['377', '378'].includes(fixture.stage ?? ''),
   )
 
   const groupedQuarters = useMemo(() => {
     const grouped: Record<string, Fixture[]> = {}
 
     for (const fixture of quarters) {
-      const quarterName = fixture.stage_name
+      const quarterName = fixture.stage_name ?? ''
       if (!grouped[quarterName]) {
         grouped[quarterName] = []
       }

@@ -157,3 +157,66 @@ export interface TeamLogo {
   team_id: number
   logo: string
 }
+
+export interface CompetitionStanding {
+  competition: number
+  season: number
+  division: number
+  type: string
+  matches_played: number
+  standings: Standing[] | null
+  stages: StageStanding[] | null
+  division_standings: DivisionStanding[] | null
+  overall_standings: OverallStanding[] | null
+}
+
+export interface Standing {
+  id: number
+  team_name: string
+  short_name: string
+  logo: string
+  P: number
+  W: number
+  D: number
+  L: number
+  GF: number
+  GA: number
+  GD: number
+  Pts: number
+  live: {
+    opponent: string
+    score: string
+    status: string
+  }
+}
+
+export interface StageStanding {
+  id: number
+  name: string
+  standings: Standing[]
+}
+
+export interface DivisionStanding {
+  position: number
+  team_id: number
+  team_name: string
+  team_short_name: string
+  team_logo: string
+  points: number
+}
+
+export interface OverallStanding {
+  position: number
+  team_id: number
+  team_name: string
+  team_short_name: string
+  team_logo: string
+  total_points: number
+  division_points: DivisionPoint[]
+}
+
+export interface DivisionPoint {
+  division_id: number
+  division_name: string
+  points: number
+}

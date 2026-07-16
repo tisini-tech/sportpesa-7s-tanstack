@@ -1,4 +1,5 @@
 import { getFixturesFn } from '#/data/fixtures'
+import { getGroupStandingsFn } from '#/data/standings'
 import { GroupStageTab } from '#/components/schedule/groups'
 import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
@@ -27,14 +28,19 @@ export const Route = createFileRoute('/$seasonSlug/$legSlug/schedule/')({
     stage: search.stage,
   }),
   loader: async ({ context }) => {
-    const fixtures = await getFixturesFn({
-      data: {
-        seasonId: context.season.id.toString(),
-        divisionId: context.division.id.toString(),
-      },
-    })
+    const seasonId = context.season.id.toString()
+    const divisionId = context.division.id.toString()
 
-    return { fixtures }
+    const [fixtures, standings] = await Promise.all([
+      getFixturesFn({
+        data: { seasonId, divisionId },
+      }),
+      getGroupStandingsFn({
+        data: { seasonId, divisionId },
+      }).catch(() => [] as Awaited<ReturnType<typeof getGroupStandingsFn>>),
+    ])
+
+    return { fixtures, standings }
   },
   component: ScheduleLayout,
 })
@@ -43,7 +49,7 @@ function ScheduleLayout() {
   const { seasons } = rootRoute.useRouteContext()
   const { season, division } = legRoute.useRouteContext()
   const { stage } = Route.useSearch()
-  const { fixtures } = Route.useLoaderData()
+  const { fixtures, standings } = Route.useLoaderData()
 
   const navigate = Route.useNavigate()
   const activeStage = stage ?? 'groups'
@@ -104,7 +110,7 @@ function ScheduleLayout() {
 
       <section className="sp-content-shell py-8">
         {activeStage === 'groups' ? (
-          <GroupStageTab fixtures={fixtures} />
+          <GroupStageTab fixtures={fixtures} standings={standings} />
         ) : activeStage === 'quarters' ? (
           <QuartersTab fixtures={fixtures} />
         ) : activeStage === 'semi-finals' ? (

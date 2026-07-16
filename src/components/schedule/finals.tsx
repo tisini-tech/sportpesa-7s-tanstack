@@ -6,23 +6,15 @@ import { ScheduleEmptyState } from './schedule-empty-state'
 import type { Fixture } from '#/lib/types'
 
 export function FinalsTab({ fixtures }: { fixtures: Fixture[] }) {
-  const final = [
-    'Cup Final',
-    '3rd Place Final',
-    '5th Place Final',
-    'Challenge Final',
-    '13th Place Final',
-  ]
-
   const finals = fixtures.filter((fixture) =>
-    final.includes(fixture.stage_name),
+    ['383', '385', '386', '387', '388'].includes(fixture.stage ?? ''),
   )
 
   const groupedQuarters = useMemo(() => {
     const grouped: Record<string, Fixture[]> = {}
 
     for (const fixture of finals) {
-      const quarterName = fixture.stage_name
+      const quarterName = fixture.stage_name ?? ''
 
       if (!grouped[quarterName]) {
         grouped[quarterName] = []
