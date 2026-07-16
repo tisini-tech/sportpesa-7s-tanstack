@@ -268,3 +268,11 @@ export interface TeamStats {
   goals_against: number
   stats: EventStat[]
 }
+
+export interface TopTeamStats {
+  team_id: number
+  team_name: string
+  team_logo: string
+  total: number
+  sub_events: SubEvent[]
+}

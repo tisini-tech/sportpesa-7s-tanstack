@@ -1,5 +1,10 @@
 import { apiService } from '#/lib/api'
-import type { Team, TeamFixturesResponse, TeamStats } from '#/lib/types'
+import type {
+  Team,
+  TeamFixturesResponse,
+  TeamStats,
+  TopTeamStats,
+} from '#/lib/types'
 import { createServerFn } from '@tanstack/react-start'
 
 export const getTeamsFn = createServerFn({ method: 'GET' })
@@ -40,6 +45,15 @@ export const getTeamStatsFn = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const response: TeamStats = await apiService.get(
       `/competitions/238/seasons/${data.seasonId}/teams/${data.teamId}/stats`,
+    )
+    return response
+  })
+
+export const getTopTeamStatsFn = createServerFn({ method: 'GET' })
+  .validator((data: { seasonId: string; eventId: string }) => data)
+  .handler(async ({ data }) => {
+    const response = await apiService.get<TopTeamStats[]>(
+      `/competitions/238/seasons/${data.seasonId}/events/${data.eventId}/top-teams`,
     )
     return response
   })
