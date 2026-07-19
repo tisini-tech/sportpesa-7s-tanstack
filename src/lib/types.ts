@@ -24,6 +24,18 @@ export interface Stage {
   kind: string
 }
 
+export interface DivisionPool {
+  id: number
+  name: string
+  teams: TeamPool[]
+}
+
+export interface TeamPool {
+  team_id: number
+  team_name: string
+  team_logo: string
+}
+
 export interface Fixture {
   id: number
   team1_id: number
