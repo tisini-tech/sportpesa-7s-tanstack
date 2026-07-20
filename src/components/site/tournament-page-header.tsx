@@ -96,7 +96,7 @@ export function TournamentPageHeader({
                   ) : null}
                 </div>
 
-                <h1 className="mt-1.5 font-heading text-2xl font-black tracking-tight text-foreground uppercase sm:mt-2 sm:text-3xl lg:text-4xl">
+                <h1 className="mt-1.5 font-heading text-2xl font-black tracking-tight text-primary uppercase sm:mt-2 sm:text-3xl lg:text-4xl">
                   {division.name}
                 </h1>
 

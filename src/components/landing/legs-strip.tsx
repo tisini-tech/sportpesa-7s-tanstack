@@ -3,34 +3,74 @@ import {
   formatDivisionStatusLabel,
   getDivisionStatus,
 } from '#/components/landing/division-utils'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
+import type { Division, Season } from '#/lib/types'
 import { cn } from '#/lib/utils'
-import type { Division } from '#/lib/types'
 
 type LegStripProps = {
+  seasons: Season[]
+  season: Season
   divisions: Division[]
   activeDivisionId: number | null
+  onSelectSeason: (seasonId: number) => void
   onSelectDivision: (id: number) => void
 }
 
 export function LegStrip({
+  seasons,
+  season,
   divisions,
   activeDivisionId,
+  onSelectSeason,
   onSelectDivision,
 }: LegStripProps) {
   if (!divisions.length) return null
 
-  const sortedDivisions = [...divisions].sort((a, b) => a.order - b.order)
+  const seasonItems = seasons.map((item) => ({
+    value: item.id.toString(),
+    label: item.name,
+  }))
 
   return (
     <section className="border-y border-border bg-card py-4">
-      <div className="sp-shell-wide">
+      <div className="sp-shell-wide space-y-3">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-0">
+          <p className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+            Season
+          </p>
+          <Select
+            value={season.id.toString()}
+            items={seasonItems}
+            onValueChange={(value) => {
+              if (value) onSelectSeason(Number(value))
+            }}
+          >
+            <SelectTrigger className="h-8 min-w-[7.5rem] border-border bg-background text-xs font-semibold">
+              <SelectValue placeholder="Season" />
+            </SelectTrigger>
+            <SelectContent align="end">
+              {seasons.map((item) => (
+                <SelectItem key={item.id} value={item.id.toString()}>
+                  {item.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="-mx-4 sm:mx-0">
           <div
             className="flex w-full min-w-0 snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto overscroll-x-contain px-4 pb-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] md:grid md:snap-none md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-6"
             role="list"
             aria-label="Tournament legs"
           >
-            {sortedDivisions.map((division) => {
+            {divisions.map((division, index) => {
               const isActive = division.id === activeDivisionId
               const status = getDivisionStatus(division)
 
@@ -54,7 +94,7 @@ export function LegStrip({
                         isActive ? 'text-secondary' : 'text-muted-foreground',
                       )}
                     >
-                      Leg {division.order}
+                      Leg {index + 1}
                     </p>
                     <span
                       className={cn(
@@ -62,15 +102,21 @@ export function LegStrip({
                         status === 'live' &&
                           'bg-secondary text-secondary-foreground',
                         status === 'upcoming' &&
-                          (isActive ? 'bg-secondary/20 text-secondary' : 'text-primary'),
+                          (isActive
+                            ? 'bg-secondary/20 text-secondary'
+                            : 'text-primary'),
                         status === 'completed' &&
-                          (isActive ? 'text-primary-foreground/70' : 'text-muted-foreground'),
+                          (isActive
+                            ? 'text-primary-foreground/70'
+                            : 'text-muted-foreground'),
                       )}
                     >
                       {formatDivisionStatusLabel(status)}
                     </span>
                   </div>
-                  <p className="mt-1 truncate text-sm font-bold">{division.name}</p>
+                  <p className="mt-1 truncate text-sm font-bold">
+                    {division.name}
+                  </p>
                   <p
                     className={cn(
                       'mt-1 truncate text-xs',

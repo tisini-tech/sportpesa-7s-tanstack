@@ -67,11 +67,7 @@ export function DivisionPools({
       >
         {pools.map((pool) => (
           <li key={pool.id}>
-            <PoolCard
-              pool={pool}
-              seasonSlug={seasonSlug}
-              legSlug={legSlug}
-            />
+            <PoolCard pool={pool} seasonSlug={seasonSlug} legSlug={legSlug} />
           </li>
         ))}
       </ul>
@@ -88,9 +84,7 @@ function PoolCard({
   seasonSlug: string
   legSlug: string
 }) {
-  const teams = [...pool.teams].sort((a, b) =>
-    a.team_name.localeCompare(b.team_name),
-  )
+  const teams = pool.teams
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">

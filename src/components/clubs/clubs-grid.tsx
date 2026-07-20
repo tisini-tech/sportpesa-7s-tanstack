@@ -39,7 +39,7 @@ export function ClubsGrid({
   }
 
   return (
-    <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+    <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
       {sorted.map((team) => (
         <li key={team.team_id}>
           <Link
@@ -56,12 +56,20 @@ export function ClubsGrid({
             )}
           >
             <div className="flex size-16 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/50 sm:size-20">
-              <span className="flex size-full flex-col items-center justify-center gap-1 text-muted-foreground">
-                <UsersIcon className="size-5 sm:size-6" aria-hidden />
-                <span className="text-[0.65rem] font-bold tracking-wide">
-                  {getTeamInitials(team.short_name || team.team_name)}
+              {team.team_logo ? (
+                <img
+                  src={team.team_logo}
+                  alt=""
+                  className="size-full object-cover"
+                />
+              ) : (
+                <span className="flex size-full flex-col items-center justify-center gap-1 text-muted-foreground">
+                  <UsersIcon className="size-5 sm:size-6" aria-hidden />
+                  <span className="text-[0.65rem] font-bold tracking-wide">
+                    {getTeamInitials(team.short_name || team.team_name)}
+                  </span>
                 </span>
-              </span>
+              )}
             </div>
 
             <div className="min-w-0 w-full">

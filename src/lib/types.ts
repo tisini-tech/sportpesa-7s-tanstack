@@ -319,3 +319,67 @@ export interface Participant {
   team_name: string | null
   team_logo: string | null
 }
+
+export interface QuestionChoice {
+  id: number
+  question: number
+  text: string
+  team: number
+}
+
+export interface Question {
+  choices: QuestionChoice[]
+  id: number
+  question_set: number
+  answer_type: string
+  text: string
+  order: number
+  image_url: string | null
+  points: number
+  timer_seconds: number
+  is_required: boolean
+  team: number
+  metric: number
+  metric_detail: number
+}
+
+export interface Quiz {
+  id: number
+  title: string
+  description: string
+  image_url: string | null
+  type: string
+  play_mode: string
+  status: string
+  starts_at: string
+  ends_at: string
+  is_public: boolean
+  is_payable: boolean
+  amount_payable: string
+  prize_description: string | null
+  company: number
+  match: number | null
+  questions?: Question[]
+}
+
+export interface QuizUser {
+  id: number
+  username: string
+}
+
+export interface QuizLeaderboard {
+  user: QuizUser
+  id: number
+  question_set: number
+  score: number
+  time_used: number
+  has_paid: boolean
+  live_session: number
+  joined_at_question: number
+  completed_at: string | null
+}
+
+export interface QuizSubmitResponse {
+  message: string
+  error: string
+}

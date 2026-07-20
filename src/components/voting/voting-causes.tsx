@@ -68,7 +68,8 @@ export function VotingCauses({
       statusOrder[getVoteStatus(a)] - statusOrder[getVoteStatus(b)]
     if (statusDiff !== 0) return statusDiff
     return (
-      parseVoteDate(b.date_from).getTime() - parseVoteDate(a.date_from).getTime()
+      parseVoteDate(b.date_from).getTime() -
+      parseVoteDate(a.date_from).getTime()
     )
   })
 
@@ -121,7 +122,7 @@ function VoteCauseCard({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
           <ImageIcon className="size-8 opacity-60" aria-hidden />
           <span className="text-[0.65rem] font-bold tracking-[0.14em] uppercase">
-            Image coming soon
+            Image
           </span>
         </div>
 
@@ -160,7 +161,7 @@ function VoteCauseCard({
               'inline-flex h-10 items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-bold tracking-wide uppercase transition-colors',
               status === 'open'
                 ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                : 'border border-border bg-muted/40 text-foreground hover:bg-muted',
+                : 'border border-border bg-muted/40 text-primary hover:bg-muted',
             )}
           >
             {ctaLabel}

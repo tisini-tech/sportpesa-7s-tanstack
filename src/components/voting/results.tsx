@@ -25,7 +25,8 @@ export function VoteResults({ poll }: { poll: VoteParticipant }) {
     (a, b) => b.total_votes - a.total_votes,
   )
   const maxVotes = ranked[0]?.total_votes ?? 0
-  const totalVotes = poll.total_votes || ranked.reduce((sum, p) => sum + p.total_votes, 0)
+  const totalVotes =
+    poll.total_votes || ranked.reduce((sum, p) => sum + p.total_votes, 0)
 
   return (
     <div className="space-y-5">
@@ -34,7 +35,7 @@ export function VoteResults({ poll }: { poll: VoteParticipant }) {
           <p className="text-[0.65rem] font-bold tracking-[0.12em] text-secondary uppercase">
             Results
           </p>
-          <h1 className="mt-1 font-heading text-xl font-black tracking-tight text-foreground uppercase sm:text-2xl">
+          <h1 className="mt-1 font-heading text-xl font-black tracking-tight text-primary uppercase sm:text-2xl">
             {poll.reason}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -46,7 +47,9 @@ export function VoteResults({ poll }: { poll: VoteParticipant }) {
 
       {ranked.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-12 text-center">
-          <p className="text-sm font-semibold text-foreground">No results yet</p>
+          <p className="text-sm font-semibold text-foreground">
+            No results yet
+          </p>
           <p className="mt-1 text-sm text-muted-foreground">
             Participants will appear here once voting data is available.
           </p>
@@ -81,9 +84,10 @@ function ResultRow({
 }) {
   const isWinner = rank === 1
   const share =
-    totalVotes > 0 ? Math.round((participant.total_votes / totalVotes) * 100) : 0
-  const barWidth =
-    maxVotes > 0 ? (participant.total_votes / maxVotes) * 100 : 0
+    totalVotes > 0
+      ? Math.round((participant.total_votes / totalVotes) * 100)
+      : 0
+  const barWidth = maxVotes > 0 ? (participant.total_votes / maxVotes) * 100 : 0
   const team = teamLabel(participant)
 
   return (

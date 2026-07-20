@@ -174,7 +174,7 @@ function OverallStandingRow({
       ))}
 
       <td className="px-3 py-3 text-center sm:px-4">
-        <span className="text-base font-bold tabular-nums text-foreground">
+        <span className="text-base font-bold tabular-nums text-primary">
           {standing.total_points}
         </span>
       </td>

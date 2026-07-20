@@ -23,10 +23,12 @@ import { Route as SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport } from './r
 import { Route as SeasonSlugLegSlugClubsClubSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/route'
 import { Route as SeasonSlugLegSlugVotingVoteIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/voting/$voteId/index'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/index'
+import { Route as SeasonSlugLegSlugQuizQuizIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/quiz/$quizId/index'
 import { Route as SeasonSlugLegSlugClubsClubSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/index'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+import { Route as SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport } from './routes/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
 import { Route as SeasonSlugLegSlugClubsClubSlugStatsRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
 import { Route as SeasonSlugLegSlugClubsClubSlugFixturesRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
 
@@ -111,6 +113,12 @@ const SeasonSlugLegSlugScheduleFixtureIdIndexRoute =
     path: '/',
     getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
   } as any)
+const SeasonSlugLegSlugQuizQuizIdIndexRoute =
+  SeasonSlugLegSlugQuizQuizIdIndexRouteImport.update({
+    id: '/quiz/$quizId/',
+    path: '/quiz/$quizId/',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+  } as any)
 const SeasonSlugLegSlugClubsClubSlugIndexRoute =
   SeasonSlugLegSlugClubsClubSlugIndexRouteImport.update({
     id: '/',
@@ -134,6 +142,12 @@ const SeasonSlugLegSlugScheduleFixtureIdH2hRoute =
     id: '/h2h',
     path: '/h2h',
     getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SeasonSlugLegSlugQuizQuizIdLeaderboardRoute =
+  SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport.update({
+    id: '/quiz/$quizId/leaderboard',
+    path: '/quiz/$quizId/leaderboard',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
   } as any)
 const SeasonSlugLegSlugClubsClubSlugStatsRoute =
   SeasonSlugLegSlugClubsClubSlugStatsRouteImport.update({
@@ -163,10 +177,12 @@ export interface FileRoutesByFullPath {
   '/$seasonSlug/$legSlug/voting/': typeof SeasonSlugLegSlugVotingIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
+  '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
+  '/$seasonSlug/$legSlug/quiz/$quizId/': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
   '/$seasonSlug/$legSlug/voting/$voteId/': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
@@ -182,10 +198,12 @@ export interface FileRoutesByTo {
   '/$seasonSlug/$legSlug/voting': typeof SeasonSlugLegSlugVotingIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
+  '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
+  '/$seasonSlug/$legSlug/quiz/$quizId': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
   '/$seasonSlug/$legSlug/voting/$voteId': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
@@ -205,10 +223,12 @@ export interface FileRoutesById {
   '/$seasonSlug/$legSlug/voting/': typeof SeasonSlugLegSlugVotingIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
+  '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
+  '/$seasonSlug/$legSlug/quiz/$quizId/': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
   '/$seasonSlug/$legSlug/voting/$voteId/': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
@@ -229,10 +249,12 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/voting/'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    | '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/'
+    | '/$seasonSlug/$legSlug/quiz/$quizId/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
     | '/$seasonSlug/$legSlug/voting/$voteId/'
   fileRoutesByTo: FileRoutesByTo
@@ -248,10 +270,12 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/voting'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    | '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug'
+    | '/$seasonSlug/$legSlug/quiz/$quizId'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId'
     | '/$seasonSlug/$legSlug/voting/$voteId'
   id:
@@ -270,10 +294,12 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/voting/'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    | '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/'
+    | '/$seasonSlug/$legSlug/quiz/$quizId/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
     | '/$seasonSlug/$legSlug/voting/$voteId/'
   fileRoutesById: FileRoutesById
@@ -383,6 +409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport
       parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
     }
+    '/$seasonSlug/$legSlug/quiz/$quizId/': {
+      id: '/$seasonSlug/$legSlug/quiz/$quizId/'
+      path: '/quiz/$quizId'
+      fullPath: '/$seasonSlug/$legSlug/quiz/$quizId/'
+      preLoaderRoute: typeof SeasonSlugLegSlugQuizQuizIdIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
     '/$seasonSlug/$legSlug/clubs/$clubSlug/': {
       id: '/$seasonSlug/$legSlug/clubs/$clubSlug/'
       path: '/'
@@ -410,6 +443,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
       preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport
       parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': {
+      id: '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
+      path: '/quiz/$quizId/leaderboard'
+      fullPath: '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
+      preLoaderRoute: typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
     }
     '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': {
       id: '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -484,6 +524,8 @@ interface SeasonSlugLegSlugRouteRouteChildren {
   SeasonSlugLegSlugStandingsIndexRoute: typeof SeasonSlugLegSlugStandingsIndexRoute
   SeasonSlugLegSlugStatsIndexRoute: typeof SeasonSlugLegSlugStatsIndexRoute
   SeasonSlugLegSlugVotingIndexRoute: typeof SeasonSlugLegSlugVotingIndexRoute
+  SeasonSlugLegSlugQuizQuizIdLeaderboardRoute: typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
+  SeasonSlugLegSlugQuizQuizIdIndexRoute: typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   SeasonSlugLegSlugVotingVoteIdIndexRoute: typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
 
@@ -501,6 +543,10 @@ const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
     SeasonSlugLegSlugStandingsIndexRoute: SeasonSlugLegSlugStandingsIndexRoute,
     SeasonSlugLegSlugStatsIndexRoute: SeasonSlugLegSlugStatsIndexRoute,
     SeasonSlugLegSlugVotingIndexRoute: SeasonSlugLegSlugVotingIndexRoute,
+    SeasonSlugLegSlugQuizQuizIdLeaderboardRoute:
+      SeasonSlugLegSlugQuizQuizIdLeaderboardRoute,
+    SeasonSlugLegSlugQuizQuizIdIndexRoute:
+      SeasonSlugLegSlugQuizQuizIdIndexRoute,
     SeasonSlugLegSlugVotingVoteIdIndexRoute:
       SeasonSlugLegSlugVotingVoteIdIndexRoute,
   }

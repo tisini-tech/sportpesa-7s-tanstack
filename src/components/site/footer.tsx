@@ -30,27 +30,27 @@ const PARTNERS = [
 const SOCIAL_LINKS = [
   {
     label: 'Follow us on X',
-    href: 'https://x.com/',
+    href: 'https://x.com/SportPesa',
     icon: XSocialIcon,
   },
   {
     label: 'Follow us on Facebook',
-    href: 'https://www.facebook.com/',
+    href: 'https://www.facebook.com/SportPesaOfficial',
     icon: FacebookSocialIcon,
   },
   {
     label: 'Follow us on Instagram',
-    href: 'https://www.instagram.com/',
+    href: 'https://www.instagram.com/SportPesa',
     icon: InstagramSocialIcon,
   },
   {
     label: 'Follow us on TikTok',
-    href: 'https://www.tiktok.com/',
+    href: 'https://www.tiktok.com/@sportpesa',
     icon: TikTokSocialIcon,
   },
   {
     label: 'Follow us on YouTube',
-    href: 'https://www.youtube.com/',
+    href: 'https://www.youtube.com/@sportpesa',
     icon: YouTubeSocialIcon,
   },
 ] as const
@@ -98,7 +98,7 @@ export default function SiteFooter() {
               <a
                 key={link.label}
                 href={link.href}
-                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="font-medium text-muted-foreground transition-colors hover:text-secondary"
               >
                 {link.label}
               </a>
@@ -116,7 +116,7 @@ export default function SiteFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent"
+                className="flex size-10 items-center justify-center rounded-full border border-primary/40 text-primary transition-colors hover:border-secondary hover:bg-secondary/10 hover:text-secondary"
               >
                 <Icon className="size-5" />
               </a>
