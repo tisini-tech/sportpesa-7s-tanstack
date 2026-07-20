@@ -13,7 +13,6 @@ import appCss from '../styles.css?url'
 import { SiteHeader } from '#/components/site/header'
 import SiteFooter from '#/components/site/footer'
 import { getSeasonsFn } from '#/data/seasons'
-import { Loading } from '#/components/error/loading'
 import { NotFound } from '#/components/error/not-found'
 import { Error } from '#/components/error/error'
 

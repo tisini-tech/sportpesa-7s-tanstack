@@ -288,3 +288,34 @@ export interface TopTeamStats {
   total: number
   sub_events: SubEvent[]
 }
+
+export interface VoteCause {
+  id: number
+  reason: string
+  date_from: string
+  date_to: string
+  tournament: number | null
+}
+
+export interface VoteParticipant {
+  id: number
+  reason: string
+  tournament: number | null
+  date_from: string
+  date_to: string
+  total_votes: number
+  participants: Participant[]
+}
+
+export interface Participant {
+  id: number
+  voting_cause: number
+  name: string
+  image_url: string | null
+  description: string
+  total_votes: number
+  /** Total votes cast across the poll at the time of this response. */
+  votes_casted?: number
+  team_name: string | null
+  team_logo: string | null
+}
