@@ -180,7 +180,7 @@ function QuizCard({
               legSlug,
               quizId: quiz.id.toString(),
             }}
-            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-secondary px-4 text-sm font-bold tracking-wide text-primary uppercase transition-colors hover:bg-secondary/90"
+            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-secondary px-4 text-sm font-bold tracking-wide text-secondary-foreground uppercase transition-colors hover:bg-secondary/90"
           >
             <PlayIcon className="size-4" aria-hidden />
             Play

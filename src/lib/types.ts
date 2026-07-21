@@ -14,6 +14,8 @@ export interface Division {
   order: number
   date_from: string | null
   date_to: string | null
+  day1_video_url: string | null
+  day2_video_url: string | null
   county: string
   stages: Stage[]
 }
@@ -382,4 +384,13 @@ export interface QuizLeaderboard {
 export interface QuizSubmitResponse {
   message: string
   error: string
+}
+
+export interface Country {
+  id: number
+  name: string
+  iso_code2: string
+  iso_code3: string
+  telephone_code: string
+  nationality: string
 }

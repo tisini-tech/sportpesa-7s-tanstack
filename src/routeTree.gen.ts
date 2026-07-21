@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
+import { Route as AuthRequestPasswordRouteImport } from './routes/_auth/request-password'
+import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as SeasonSlugLegSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/route'
 import { Route as SeasonSlugLegSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/index'
 import { Route as SeasonSlugLegSlugVotingIndexRouteImport } from './routes/$seasonSlug/$legSlug/voting/index'
+import { Route as SeasonSlugLegSlugVideosIndexRouteImport } from './routes/$seasonSlug/$legSlug/videos/index'
 import { Route as SeasonSlugLegSlugStatsIndexRouteImport } from './routes/$seasonSlug/$legSlug/stats/index'
 import { Route as SeasonSlugLegSlugStandingsIndexRouteImport } from './routes/$seasonSlug/$legSlug/standings/index'
 import { Route as SeasonSlugLegSlugScheduleIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/index'
@@ -22,6 +28,7 @@ import { Route as SeasonSlugLegSlugClubsIndexRouteImport } from './routes/$seaso
 import { Route as SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/route'
 import { Route as SeasonSlugLegSlugClubsClubSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/route'
 import { Route as SeasonSlugLegSlugVotingVoteIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/voting/$voteId/index'
+import { Route as SeasonSlugLegSlugVideosVideoIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/videos/$videoId/index'
 import { Route as SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/index'
 import { Route as SeasonSlugLegSlugQuizQuizIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/quiz/$quizId/index'
 import { Route as SeasonSlugLegSlugClubsClubSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/index'
@@ -32,10 +39,34 @@ import { Route as SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport } from './ro
 import { Route as SeasonSlugLegSlugClubsClubSlugStatsRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
 import { Route as SeasonSlugLegSlugClubsClubSlugFixturesRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
 
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthRequestPasswordRoute = AuthRequestPasswordRouteImport.update({
+  id: '/request-password',
+  path: '/request-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const SeasonSlugLegSlugRouteRoute = SeasonSlugLegSlugRouteRouteImport.update({
   id: '/$seasonSlug/$legSlug',
@@ -51,6 +82,12 @@ const SeasonSlugLegSlugVotingIndexRoute =
   SeasonSlugLegSlugVotingIndexRouteImport.update({
     id: '/voting/',
     path: '/voting/',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+  } as any)
+const SeasonSlugLegSlugVideosIndexRoute =
+  SeasonSlugLegSlugVideosIndexRouteImport.update({
+    id: '/videos/',
+    path: '/videos/',
     getParentRoute: () => SeasonSlugLegSlugRouteRoute,
   } as any)
 const SeasonSlugLegSlugStatsIndexRoute =
@@ -105,6 +142,12 @@ const SeasonSlugLegSlugVotingVoteIdIndexRoute =
   SeasonSlugLegSlugVotingVoteIdIndexRouteImport.update({
     id: '/voting/$voteId/',
     path: '/voting/$voteId/',
+    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+  } as any)
+const SeasonSlugLegSlugVideosVideoIdIndexRoute =
+  SeasonSlugLegSlugVideosVideoIdIndexRouteImport.update({
+    id: '/videos/$videoId/',
+    path: '/videos/$videoId/',
     getParentRoute: () => SeasonSlugLegSlugRouteRoute,
   } as any)
 const SeasonSlugLegSlugScheduleFixtureIdIndexRoute =
@@ -165,6 +208,10 @@ const SeasonSlugLegSlugClubsClubSlugFixturesRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
+  '/register': typeof AuthRegisterRoute
+  '/request-password': typeof AuthRequestPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/verify': typeof AuthVerifyRoute
   '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
   '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
@@ -174,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
   '/$seasonSlug/$legSlug/standings/': typeof SeasonSlugLegSlugStandingsIndexRoute
   '/$seasonSlug/$legSlug/stats/': typeof SeasonSlugLegSlugStatsIndexRoute
+  '/$seasonSlug/$legSlug/videos/': typeof SeasonSlugLegSlugVideosIndexRoute
   '/$seasonSlug/$legSlug/voting/': typeof SeasonSlugLegSlugVotingIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -184,10 +232,15 @@ export interface FileRoutesByFullPath {
   '/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
   '/$seasonSlug/$legSlug/quiz/$quizId/': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
+  '/$seasonSlug/$legSlug/videos/$videoId/': typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
   '/$seasonSlug/$legSlug/voting/$voteId/': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/register': typeof AuthRegisterRoute
+  '/request-password': typeof AuthRequestPasswordRoute
+  '/reset-password': typeof AuthResetPasswordRoute
+  '/verify': typeof AuthVerifyRoute
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/clubs': typeof SeasonSlugLegSlugClubsIndexRoute
   '/$seasonSlug/$legSlug/gallery': typeof SeasonSlugLegSlugGalleryIndexRoute
@@ -195,6 +248,7 @@ export interface FileRoutesByTo {
   '/$seasonSlug/$legSlug/schedule': typeof SeasonSlugLegSlugScheduleIndexRoute
   '/$seasonSlug/$legSlug/standings': typeof SeasonSlugLegSlugStandingsIndexRoute
   '/$seasonSlug/$legSlug/stats': typeof SeasonSlugLegSlugStatsIndexRoute
+  '/$seasonSlug/$legSlug/videos': typeof SeasonSlugLegSlugVideosIndexRoute
   '/$seasonSlug/$legSlug/voting': typeof SeasonSlugLegSlugVotingIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -205,12 +259,18 @@ export interface FileRoutesByTo {
   '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
   '/$seasonSlug/$legSlug/quiz/$quizId': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
+  '/$seasonSlug/$legSlug/videos/$videoId': typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
   '/$seasonSlug/$legSlug/voting/$voteId': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteRouteWithChildren
   '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
+  '/_auth/register': typeof AuthRegisterRoute
+  '/_auth/request-password': typeof AuthRequestPasswordRoute
+  '/_auth/reset-password': typeof AuthResetPasswordRoute
+  '/_auth/verify': typeof AuthVerifyRoute
   '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
   '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
@@ -220,6 +280,7 @@ export interface FileRoutesById {
   '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
   '/$seasonSlug/$legSlug/standings/': typeof SeasonSlugLegSlugStandingsIndexRoute
   '/$seasonSlug/$legSlug/stats/': typeof SeasonSlugLegSlugStatsIndexRoute
+  '/$seasonSlug/$legSlug/videos/': typeof SeasonSlugLegSlugVideosIndexRoute
   '/$seasonSlug/$legSlug/voting/': typeof SeasonSlugLegSlugVotingIndexRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -230,6 +291,7 @@ export interface FileRoutesById {
   '/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
   '/$seasonSlug/$legSlug/quiz/$quizId/': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
   '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
+  '/$seasonSlug/$legSlug/videos/$videoId/': typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
   '/$seasonSlug/$legSlug/voting/$voteId/': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -237,6 +299,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$seasonSlug/$legSlug'
+    | '/register'
+    | '/request-password'
+    | '/reset-password'
+    | '/verify'
     | '/$seasonSlug/$legSlug/'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId'
@@ -246,6 +312,7 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/schedule/'
     | '/$seasonSlug/$legSlug/standings/'
     | '/$seasonSlug/$legSlug/stats/'
+    | '/$seasonSlug/$legSlug/videos/'
     | '/$seasonSlug/$legSlug/voting/'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -256,10 +323,15 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/'
     | '/$seasonSlug/$legSlug/quiz/$quizId/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
+    | '/$seasonSlug/$legSlug/videos/$videoId/'
     | '/$seasonSlug/$legSlug/voting/$voteId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/register'
+    | '/request-password'
+    | '/reset-password'
+    | '/verify'
     | '/$seasonSlug/$legSlug'
     | '/$seasonSlug/$legSlug/clubs'
     | '/$seasonSlug/$legSlug/gallery'
@@ -267,6 +339,7 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/schedule'
     | '/$seasonSlug/$legSlug/standings'
     | '/$seasonSlug/$legSlug/stats'
+    | '/$seasonSlug/$legSlug/videos'
     | '/$seasonSlug/$legSlug/voting'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -277,11 +350,17 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/clubs/$clubSlug'
     | '/$seasonSlug/$legSlug/quiz/$quizId'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId'
+    | '/$seasonSlug/$legSlug/videos/$videoId'
     | '/$seasonSlug/$legSlug/voting/$voteId'
   id:
     | '__root__'
     | '/'
+    | '/_auth'
     | '/$seasonSlug/$legSlug'
+    | '/_auth/register'
+    | '/_auth/request-password'
+    | '/_auth/reset-password'
+    | '/_auth/verify'
     | '/$seasonSlug/$legSlug/'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId'
@@ -291,6 +370,7 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/schedule/'
     | '/$seasonSlug/$legSlug/standings/'
     | '/$seasonSlug/$legSlug/stats/'
+    | '/$seasonSlug/$legSlug/videos/'
     | '/$seasonSlug/$legSlug/voting/'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -301,22 +381,59 @@ export interface FileRouteTypes {
     | '/$seasonSlug/$legSlug/clubs/$clubSlug/'
     | '/$seasonSlug/$legSlug/quiz/$quizId/'
     | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
+    | '/$seasonSlug/$legSlug/videos/$videoId/'
     | '/$seasonSlug/$legSlug/voting/$voteId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   SeasonSlugLegSlugRouteRoute: typeof SeasonSlugLegSlugRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/verify': {
+      id: '/_auth/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/request-password': {
+      id: '/_auth/request-password'
+      path: '/request-password'
+      fullPath: '/request-password'
+      preLoaderRoute: typeof AuthRequestPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/register': {
+      id: '/_auth/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/$seasonSlug/$legSlug': {
       id: '/$seasonSlug/$legSlug'
@@ -337,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/voting'
       fullPath: '/$seasonSlug/$legSlug/voting/'
       preLoaderRoute: typeof SeasonSlugLegSlugVotingIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
+    '/$seasonSlug/$legSlug/videos/': {
+      id: '/$seasonSlug/$legSlug/videos/'
+      path: '/videos'
+      fullPath: '/$seasonSlug/$legSlug/videos/'
+      preLoaderRoute: typeof SeasonSlugLegSlugVideosIndexRouteImport
       parentRoute: typeof SeasonSlugLegSlugRouteRoute
     }
     '/$seasonSlug/$legSlug/stats/': {
@@ -400,6 +524,13 @@ declare module '@tanstack/react-router' {
       path: '/voting/$voteId'
       fullPath: '/$seasonSlug/$legSlug/voting/$voteId/'
       preLoaderRoute: typeof SeasonSlugLegSlugVotingVoteIdIndexRouteImport
+      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+    }
+    '/$seasonSlug/$legSlug/videos/$videoId/': {
+      id: '/$seasonSlug/$legSlug/videos/$videoId/'
+      path: '/videos/$videoId'
+      fullPath: '/$seasonSlug/$legSlug/videos/$videoId/'
+      preLoaderRoute: typeof SeasonSlugLegSlugVideosVideoIdIndexRouteImport
       parentRoute: typeof SeasonSlugLegSlugRouteRoute
     }
     '/$seasonSlug/$legSlug/schedule/$fixtureId/': {
@@ -468,6 +599,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthRouteRouteChildren {
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthRequestPasswordRoute: typeof AuthRequestPasswordRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthVerifyRoute: typeof AuthVerifyRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthRequestPasswordRoute: AuthRequestPasswordRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthVerifyRoute: AuthVerifyRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 interface SeasonSlugLegSlugClubsClubSlugRouteRouteChildren {
   SeasonSlugLegSlugClubsClubSlugFixturesRoute: typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
   SeasonSlugLegSlugClubsClubSlugStatsRoute: typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -523,9 +672,11 @@ interface SeasonSlugLegSlugRouteRouteChildren {
   SeasonSlugLegSlugScheduleIndexRoute: typeof SeasonSlugLegSlugScheduleIndexRoute
   SeasonSlugLegSlugStandingsIndexRoute: typeof SeasonSlugLegSlugStandingsIndexRoute
   SeasonSlugLegSlugStatsIndexRoute: typeof SeasonSlugLegSlugStatsIndexRoute
+  SeasonSlugLegSlugVideosIndexRoute: typeof SeasonSlugLegSlugVideosIndexRoute
   SeasonSlugLegSlugVotingIndexRoute: typeof SeasonSlugLegSlugVotingIndexRoute
   SeasonSlugLegSlugQuizQuizIdLeaderboardRoute: typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
   SeasonSlugLegSlugQuizQuizIdIndexRoute: typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
+  SeasonSlugLegSlugVideosVideoIdIndexRoute: typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
   SeasonSlugLegSlugVotingVoteIdIndexRoute: typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
 }
 
@@ -542,11 +693,14 @@ const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
     SeasonSlugLegSlugScheduleIndexRoute: SeasonSlugLegSlugScheduleIndexRoute,
     SeasonSlugLegSlugStandingsIndexRoute: SeasonSlugLegSlugStandingsIndexRoute,
     SeasonSlugLegSlugStatsIndexRoute: SeasonSlugLegSlugStatsIndexRoute,
+    SeasonSlugLegSlugVideosIndexRoute: SeasonSlugLegSlugVideosIndexRoute,
     SeasonSlugLegSlugVotingIndexRoute: SeasonSlugLegSlugVotingIndexRoute,
     SeasonSlugLegSlugQuizQuizIdLeaderboardRoute:
       SeasonSlugLegSlugQuizQuizIdLeaderboardRoute,
     SeasonSlugLegSlugQuizQuizIdIndexRoute:
       SeasonSlugLegSlugQuizQuizIdIndexRoute,
+    SeasonSlugLegSlugVideosVideoIdIndexRoute:
+      SeasonSlugLegSlugVideosVideoIdIndexRoute,
     SeasonSlugLegSlugVotingVoteIdIndexRoute:
       SeasonSlugLegSlugVotingVoteIdIndexRoute,
   }
@@ -558,6 +712,7 @@ const SeasonSlugLegSlugRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   SeasonSlugLegSlugRouteRoute: SeasonSlugLegSlugRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport

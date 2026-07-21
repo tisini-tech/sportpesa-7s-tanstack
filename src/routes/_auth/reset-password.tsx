@@ -1,0 +1,221 @@
+import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
+import {
+  createFileRoute,
+  getRouteApi,
+  Link,
+  useNavigate,
+} from '@tanstack/react-router'
+import { Loader2Icon } from 'lucide-react'
+
+import { InputField } from '#/components/forms/input-field'
+import { Button } from '#/components/ui/button'
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '#/components/ui/field'
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '#/components/ui/input-otp'
+import { resetPasswordSchema } from '#/lib/schemas'
+import { cn } from '#/lib/utils'
+import { resetPasswordFn } from '#/data/auth'
+import { pickFeaturedDivision } from '#/components/landing/division-utils'
+import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
+
+const rootRoute = getRouteApi('__root__')
+
+export const Route = createFileRoute('/_auth/reset-password')({
+  component: ResetPasswordPage,
+})
+
+function ResetPasswordPage() {
+  const { seasons } = rootRoute.useRouteContext()
+
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const navigate = useNavigate()
+
+  const form = useForm({
+    defaultValues: {
+      otp: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+    validators: {
+      onSubmit: resetPasswordSchema,
+    },
+    onSubmit: async ({ value }) => {
+      setSubmitError(null)
+
+      try {
+        await resetPasswordFn({ data: value })
+
+        const season = seasons[0]
+        const featured = season ? pickFeaturedDivision(season.divisions) : null
+
+        if (!season || !featured) {
+          void navigate({ to: '/' })
+          return
+        }
+
+        void navigate({
+          to: '/$seasonSlug/$legSlug/quiz',
+          params: {
+            seasonSlug: getSeasonSlug(season),
+            legSlug: getLegSlug(featured.division),
+          },
+        })
+      } catch (error) {
+        setSubmitError(
+          error instanceof Error ? error.message : 'Could not reset password',
+        )
+      }
+    },
+  })
+
+  return (
+    <div className="space-y-6">
+      <header className="space-y-2 text-center">
+        <h1 className="font-heading text-xl font-black tracking-tight text-foreground uppercase">
+          Reset password
+        </h1>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Enter the 6-digit code we sent you, then choose a new password.
+        </p>
+      </header>
+
+      <form
+        noValidate
+        className="space-y-6"
+        onSubmit={(e) => {
+          e.preventDefault()
+          void form.handleSubmit()
+        }}
+      >
+        <FieldGroup className="gap-5">
+          <form.Field
+            name="otp"
+            children={(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid
+
+              return (
+                <Field
+                  className="gap-2"
+                  data-invalid={isInvalid ? true : undefined}
+                >
+                  <FieldLabel htmlFor="reset-otp">One-time code</FieldLabel>
+                  <div className="flex justify-center sm:justify-start">
+                    <InputOTP
+                      id="reset-otp"
+                      maxLength={6}
+                      value={field.state.value}
+                      onChange={(value) => field.handleChange(value)}
+                      onBlur={field.handleBlur}
+                      containerClassName="gap-2"
+                      aria-invalid={isInvalid || undefined}
+                    >
+                      <InputOTPGroup className="gap-1.5">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                          <InputOTPSlot
+                            key={index}
+                            index={index}
+                            className={cn(
+                              'size-11 rounded-xl border border-border bg-background text-base font-semibold first:rounded-xl first:border-l last:rounded-xl',
+                              isInvalid && 'border-destructive',
+                            )}
+                          />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                  {isInvalid ? (
+                    <FieldError errors={field.state.meta.errors} />
+                  ) : (
+                    <FieldDescription>
+                      Check your phone or email for the code.
+                    </FieldDescription>
+                  )}
+                </Field>
+              )
+            }}
+          />
+
+          <form.Field
+            name="newPassword"
+            children={(field) => (
+              <InputField
+                field={field}
+                id="new-password"
+                label="New password"
+                type="password"
+                placeholder="At least 6 characters + a special character"
+                autoComplete="new-password"
+                className="gap-2"
+                inputClassName="h-11 rounded-xl px-3"
+              />
+            )}
+          />
+
+          <form.Field
+            name="confirmPassword"
+            children={(field) => (
+              <InputField
+                field={field}
+                id="confirm-password"
+                label="Confirm password"
+                type="password"
+                placeholder="Repeat your new password"
+                autoComplete="new-password"
+                className="gap-2"
+                inputClassName="h-11 rounded-xl px-3"
+              />
+            )}
+          />
+
+          {submitError ? (
+            <Field>
+              <FieldError errors={[{ message: submitError }]} />
+            </Field>
+          ) : null}
+
+          <Field className="gap-4">
+            <form.Subscribe
+              selector={(state) => state.isSubmitting}
+              children={(isSubmitting) => (
+                <Button
+                  disabled={isSubmitting}
+                  type="submit"
+                  size="lg"
+                  className="h-11 w-full rounded-xl text-sm font-bold tracking-[0.08em] uppercase"
+                >
+                  {isSubmitting ? (
+                    <Loader2Icon className="size-4 animate-spin" />
+                  ) : (
+                    'Reset password'
+                  )}
+                </Button>
+              )}
+            />
+
+            <FieldDescription className="text-center text-xs leading-relaxed">
+              Didn&apos;t get a code?{' '}
+              <Link
+                to="/request-password"
+                className="font-semibold text-secondary underline-offset-4 hover:underline"
+              >
+                Request a new one
+              </Link>
+            </FieldDescription>
+          </Field>
+        </FieldGroup>
+      </form>
+    </div>
+  )
+}

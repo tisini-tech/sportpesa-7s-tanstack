@@ -22,7 +22,7 @@ import { cn } from '#/lib/utils'
 import { loginFn } from '#/data/auth'
 import type { LoginSchema } from '#/lib/schemas'
 
-type LoginMethod = 'phone' | 'email'
+export type LoginMethod = 'phone' | 'email'
 
 type LoginModalProps = {
   open?: boolean
@@ -199,7 +199,7 @@ export function LoginModal({
                   inputClassName="h-11 rounded-xl px-3"
                   labelEnd={
                     <a
-                      href="#"
+                      href="/request-password"
                       className="text-xs font-medium text-primary underline-offset-4 hover:underline"
                     >
                       Forgot password?
@@ -236,7 +236,7 @@ export function LoginModal({
               <FieldDescription className="text-center text-xs leading-relaxed">
                 Don&apos;t have an account?{' '}
                 <a
-                  href="#"
+                  href="/register"
                   className="font-semibold text-secondary underline-offset-4 hover:underline"
                 >
                   Sign up

@@ -2,7 +2,12 @@ import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
 import { useAppSession } from '#/lib/session'
-import type { Quiz, QuizLeaderboard, QuizSubmitResponse } from '#/lib/types'
+import type {
+  Country,
+  Quiz,
+  QuizLeaderboard,
+  QuizSubmitResponse,
+} from '#/lib/types'
 
 export const getQuizzesFn = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -81,3 +86,14 @@ export const submitQuizFn = createServerFn({ method: 'POST' })
 
     return response
   })
+
+export const getCountriesFn = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const response = await apiService.get<Country[]>('/countries', {
+      base: 'quiz',
+      withApiKey: true,
+    })
+
+    return response
+  },
+)

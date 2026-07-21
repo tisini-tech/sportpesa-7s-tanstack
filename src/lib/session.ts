@@ -1,14 +1,18 @@
 import { useSession } from '@tanstack/react-start/server'
 
-type SessionData = {
-  user: {
-    id: number
-    name: string
-    email: string
-    phone: string
-  }
-  accessToken: string
-  refreshToken: string
+export type SessionUser = {
+  id: number
+  name: string
+  email: string
+  phone: string
+}
+
+export type SessionData = {
+  user?: SessionUser
+  accessToken?: string
+  refreshToken?: string
+  /** Email or E.164 phone awaiting OTP verification after register. */
+  pendingVerification?: string
 }
 
 export function useAppSession() {

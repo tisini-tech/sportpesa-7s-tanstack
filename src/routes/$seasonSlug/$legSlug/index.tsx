@@ -7,6 +7,7 @@ import { HeroSection } from '#/components/landing/hero'
 import { LegStrip } from '#/components/landing/legs-strip'
 import { poolsQueryOptions } from '#/data/seasons'
 import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
+import { VideosSection } from '#/components/landing/videos'
 
 const rootRoute = getRouteApi('__root__')
 const legRoute = getRouteApi('/$seasonSlug/$legSlug')
@@ -90,6 +91,8 @@ function Home() {
           divisionId={division.id.toString()}
         />
       </Suspense>
+
+      <VideosSection data={seasons} />
     </div>
   )
 }

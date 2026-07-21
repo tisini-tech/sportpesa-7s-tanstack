@@ -68,12 +68,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
 
       <body className="min-h-screen">
-        <main className="flex min-h-screen w-full flex-col">
-          <SiteHeader />
-
-          <div className="w-full min-w-0 flex-1">{children}</div>
-          <SiteFooter />
-        </main>
+        <div>{children}</div>
 
         <TanStackDevtools
           config={{

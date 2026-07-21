@@ -23,6 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { segment: 'stats', label: 'Stats' },
   { segment: 'voting', label: 'Voting' },
   { segment: 'quiz', label: 'Quiz' },
+  { segment: 'videos', label: 'Videos' },
   { segment: 'gallery', label: 'Gallery' },
 ]
 
@@ -33,7 +34,12 @@ type HeaderNavLinkProps = {
   className?: string
 }
 
-function HeaderNavLink({ to, label, onNavigate, className }: HeaderNavLinkProps) {
+function HeaderNavLink({
+  to,
+  label,
+  onNavigate,
+  className,
+}: HeaderNavLinkProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })

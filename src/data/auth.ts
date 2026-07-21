@@ -1,6 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
 import { useAppSession } from '#/lib/session'
-import type { LoginSchema } from '#/lib/schemas'
+import type {
+  LoginSchema,
+  RegisterSchema,
+  ResetPasswordSchema,
+} from '#/lib/schemas'
+import { formatE164Phone } from '#/lib/schemas'
+import { formatApiError } from '#/lib/utils'
+// import { redirect } from '@tanstack/react-router'
 
 export const loginFn = createServerFn({ method: 'POST' })
   .validator((data: LoginSchema) => data)
@@ -73,9 +80,156 @@ export const getOptionalUserFn = createServerFn({ method: 'GET' }).handler(
 export const getUserFn = createServerFn({ method: 'GET' }).handler(async () => {
   const session = await useAppSession()
 
-  //   if (!session.data.user) {
-  //     throw redirect({ to: '/login' })
-  //   }
+  // if (!session.data.user) {
+  //   throw redirect({ to: '/login' })
+  // }
 
   return session.data.user
 })
+
+export const registerFn = createServerFn({ method: 'POST' })
+  .validator((data: RegisterSchema) => data)
+  .handler(async ({ data }) => {
+    const url = process.env.API_QUIZ_URL
+    if (!url) {
+      throw new Error('API_URL is not set')
+    }
+
+    const res = await fetch(`${url}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone_number: formatE164Phone(data.countryCode, data.phone),
+        email: data.email,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        sir_name: '',
+        username: data.username,
+        password: data.password,
+      }),
+    })
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}))
+      throw new Error(formatApiError(error, 'Failed to register'))
+    }
+
+    const pendingVerification = data.email.trim()
+      ? data.email.trim()
+      : formatE164Phone(data.countryCode, data.phone)
+
+    const session = await useAppSession()
+    await session.update({
+      pendingVerification,
+    })
+
+    return (await res.json()) as { message?: string }
+  })
+
+export const verifyFn = createServerFn({ method: 'POST' })
+  .validator((data: { otp: string }) => data)
+  .handler(async ({ data }) => {
+    const url = process.env.API_QUIZ_URL
+    if (!url) {
+      throw new Error('API_URL is not set')
+    }
+
+    const session = await useAppSession()
+    const pendingVerification = session.data.pendingVerification?.trim()
+
+    if (!pendingVerification) {
+      throw new Error('No pending verification. Please register again.')
+    }
+
+    const res = await fetch(`${url}/auth/verify-account`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email_or_phone_number: pendingVerification,
+        otp_code: data.otp,
+      }),
+    })
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}))
+      throw new Error(formatApiError(error, 'Failed to verify'))
+    }
+
+    const user = await res.json()
+
+    await session.update({
+      accessToken: user.access_token,
+      refreshToken: user.refresh_token,
+      pendingVerification: '',
+      user: {
+        id: user.id,
+        name: user.first_name + ' ' + user.last_name,
+        email: user.email,
+        phone: user.phone_number,
+      },
+    })
+
+    return { success: true }
+  })
+
+export const requestOtpFn = createServerFn({ method: 'POST' })
+  .validator((data: { identifier: string }) => data)
+  .handler(async ({ data }) => {
+    const url = process.env.API_QUIZ_URL
+    if (!url) {
+      throw new Error('API_URL is not set')
+    }
+
+    const res = await fetch(`${url}/auth/request-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email_or_phone_number: data.identifier,
+        purpose: 'password_reset',
+      }),
+    })
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}))
+      throw new Error(formatApiError(error, 'Failed to request OTP'))
+    }
+
+    const session = await useAppSession()
+    await session.update({
+      pendingVerification: data.identifier,
+    })
+
+    return (await res.json()) as { message?: string }
+  })
+
+export const resetPasswordFn = createServerFn({ method: 'POST' })
+  .validator((data: ResetPasswordSchema) => data)
+  .handler(async ({ data }) => {
+    const url = process.env.API_QUIZ_URL
+    if (!url) {
+      throw new Error('API_URL is not set')
+    }
+
+    const session = await useAppSession()
+    const pendingVerification = session.data.pendingVerification?.trim()
+    if (!pendingVerification) {
+      throw new Error('No pending verification. Please request OTP again.')
+    }
+
+    const res = await fetch(`${url}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email_or_phone_number: pendingVerification,
+        otp_code: data.otp,
+        password: data.newPassword,
+      }),
+    })
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}))
+      throw new Error(formatApiError(error, 'Failed to reset password'))
+    }
+
+    return (await res.json()) as { message?: string }
+  })

@@ -161,7 +161,7 @@ function VoteCauseCard({
               'inline-flex h-10 items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-bold tracking-wide uppercase transition-colors',
               status === 'open'
                 ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-                : 'border border-border bg-muted/40 text-primary hover:bg-muted',
+                : 'border border-border bg-muted/40 text-muted-foreground hover:bg-muted',
             )}
           >
             {ctaLabel}
