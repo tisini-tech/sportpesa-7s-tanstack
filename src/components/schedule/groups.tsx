@@ -107,6 +107,8 @@ export function GroupStageTab({
     return <ScheduleEmptyState stage="groups" />
   }
 
+  console.log(fixtures)
+
   return (
     <div className="space-y-5">
       <div

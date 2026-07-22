@@ -59,13 +59,19 @@ function formatFixtureKickoff(fixture: Fixture): string {
 }
 
 function hasScore(fixture: Fixture): boolean {
-  return Boolean(fixture.home_score) && Boolean(fixture.away_score)
+  return (
+    fixture.home_score != null &&
+    fixture.home_score !== '' &&
+    fixture.away_score != null &&
+    fixture.away_score !== ''
+  )
 }
 
 export function getResultForTeam(
   fixture: Fixture,
   teamId: number,
 ): FixtureResult | null {
+  if (getFixtureStatus(fixture) === 'upcoming') return null
   if (!hasScore(fixture)) return null
 
   const home = Number(fixture.home_score)
@@ -144,7 +150,7 @@ function FixtureRowContent({
   interactive = true,
 }: FixtureRowProps) {
   const status = getFixtureStatus(fixture)
-  const showScore = hasScore(fixture)
+  const showScore = status !== 'upcoming' && hasScore(fixture)
   const homeName = fixture.team1_name || 'TBC'
   const awayName = fixture.team2_name || 'TBC'
   const homeScore = parseScore(fixture.home_score)
