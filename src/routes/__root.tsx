@@ -10,11 +10,10 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import appCss from '../styles.css?url'
-import { SiteHeader } from '#/components/site/header'
-import SiteFooter from '#/components/site/footer'
 import { getSeasonsFn } from '#/data/seasons'
 import { NotFound } from '#/components/error/not-found'
 import { Error } from '#/components/error/error'
+import { Analytics } from '#/components/site/analytics'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -24,26 +23,46 @@ export const Route = createRootRouteWithContext<{
 
     return { seasons }
   },
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'SportPesa 7s',
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
+  head: () => {
+    const gaId = import.meta.env.VITE_GA_MEASUREMENT_ID
+
+    return {
+      meta: [
+        {
+          charSet: 'utf-8',
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1',
+        },
+        {
+          title: 'SportPesa 7s',
+        },
+      ],
+      links: [
+        {
+          rel: 'stylesheet',
+          href: appCss,
+        },
+      ],
+      scripts: gaId
+        ? [
+            {
+              src: `https://www.googletagmanager.com/gtag/js?id=${gaId}`,
+              async: true,
+            },
+            {
+              children: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaId}', { send_page_view: false });
+        `,
+            },
+          ]
+        : [],
+    }
+  },
   component: RootComponent,
   shellComponent: RootDocument,
   errorComponent: Error,
@@ -55,6 +74,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Analytics />
       <Outlet />
     </QueryClientProvider>
   )

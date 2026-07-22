@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   CalendarDaysIcon,
   ChevronRightIcon,
+  ClockIcon,
   ImageIcon,
   PlayIcon,
   TrophyIcon,
@@ -48,6 +50,20 @@ function formatQuizDateRange(quiz: Quiz): string {
     }).format(date)
 
   return `${format(from)} – ${format(to)}`
+}
+
+function getCountdownParts(msRemaining: number) {
+  const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000))
+  const days = Math.floor(totalSeconds / 86_400)
+  const hours = Math.floor((totalSeconds % 86_400) / 3_600)
+  const minutes = Math.floor((totalSeconds % 3_600) / 60)
+  const seconds = totalSeconds % 60
+
+  return { days, hours, minutes, seconds }
+}
+
+function pad(value: number) {
+  return value.toString().padStart(2, '0')
 }
 
 function actionLabel(action: QuizAction): string {
@@ -118,7 +134,21 @@ function QuizCard({
   seasonSlug: string
   legSlug: string
 }) {
-  const action = getQuizAction(quiz)
+  const [now, setNow] = useState(() => new Date())
+  const action = getQuizAction(quiz, now)
+  const startsAt = parseQuizDate(quiz.starts_at)
+
+  useEffect(() => {
+    if (action !== 'upcoming') return
+
+    const timer = window.setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => window.clearInterval(timer)
+  }, [action])
+
+  const countdown = getCountdownParts(startsAt.getTime() - now.getTime())
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -201,15 +231,54 @@ function QuizCard({
             <ChevronRightIcon className="size-4" aria-hidden />
           </Link>
         ) : (
-          <button
-            type="button"
-            disabled
-            className="inline-flex h-10 cursor-not-allowed items-center justify-center rounded-xl border border-border bg-muted/20 px-4 text-sm font-bold tracking-wide text-muted-foreground uppercase opacity-70"
+          <div
+            className="flex h-10 items-center justify-between gap-3 rounded-xl border border-border bg-muted/20 px-3"
+            aria-live="polite"
+            aria-label={`Starts in ${countdown.days} days ${countdown.hours} hours ${countdown.minutes} minutes ${countdown.seconds} seconds`}
           >
-            Coming soon
-          </button>
+            <span className="inline-flex items-center gap-1.5 text-[0.65rem] font-bold tracking-[0.1em] text-primary uppercase">
+              <ClockIcon className="size-3.5 shrink-0" aria-hidden />
+              Starts in
+            </span>
+            {countdown.days === 0 &&
+            countdown.hours === 0 &&
+            countdown.minutes === 0 &&
+            countdown.seconds === 0 ? (
+              <span className="text-sm font-bold text-primary">
+                Opening soon
+              </span>
+            ) : (
+              <div className="flex items-center gap-1.5 tabular-nums text-primary">
+                {countdown.days > 0 ? (
+                  <CountdownUnit value={countdown.days} label="d" />
+                ) : null}
+                <CountdownUnit value={pad(countdown.hours)} label="h" />
+                <CountdownUnit value={pad(countdown.minutes)} label="m" />
+                {countdown.days === 0 ? (
+                  <CountdownUnit value={pad(countdown.seconds)} label="s" />
+                ) : null}
+              </div>
+            )}
+          </div>
         )}
       </div>
     </article>
+  )
+}
+
+function CountdownUnit({
+  value,
+  label,
+}: {
+  value: number | string
+  label: string
+}) {
+  return (
+    <span className="inline-flex items-baseline gap-0.5">
+      <span className="text-sm font-bold">{value}</span>
+      <span className="text-[0.6rem] font-semibold tracking-wider uppercase opacity-80">
+        {label}
+      </span>
+    </span>
   )
 }

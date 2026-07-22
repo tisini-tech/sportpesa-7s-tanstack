@@ -1,7 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
-import { useAppSession } from '#/lib/session'
 import type {
   Country,
   Quiz,
@@ -11,45 +10,31 @@ import type {
 
 export const getQuizzesFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const response = await apiService.get<Quiz[]>('/engagements', {
+    return apiService.get<Quiz[]>('/engagements', {
       base: 'quiz',
       withApiKey: true,
     })
-    return response
   },
 )
 
 export const getQuizLeaderboardFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)
   .handler(async ({ data }) => {
-    const response = await apiService.get<QuizLeaderboard[]>(
+    return apiService.get<QuizLeaderboard[]>(
       `/engagements/${data.quizId}/leaderboard`,
       {
         base: 'quiz',
         withApiKey: true,
       },
     )
-    return response
   })
 
 export const getQuizFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)
   .handler(async ({ data }) => {
-    const session = await useAppSession()
-    const accessToken = session.data.accessToken
-
-    if (!accessToken) {
-      throw new Error('Not authenticated')
-    }
-
-    const response = await apiService.get<Quiz>(
-      `/engagements/${data.quizId}/questions`,
-      {
-        base: 'quiz',
-        token: accessToken,
-      },
-    )
-    return response
+    return apiService.get<Quiz>(`/engagements/${data.quizId}/questions`, {
+      base: 'quiz',
+    })
   })
 
 export type QuizSubmitAnswer = {
@@ -61,14 +46,7 @@ export type QuizSubmitAnswer = {
 export const submitQuizFn = createServerFn({ method: 'POST' })
   .validator((data: { quizId: string; answers: QuizSubmitAnswer[] }) => data)
   .handler(async ({ data }) => {
-    const session = await useAppSession()
-    const accessToken = session.data.accessToken
-
-    if (!accessToken) {
-      throw new Error('Not authenticated')
-    }
-
-    const response = await apiService.post<QuizSubmitResponse>(
+    return apiService.post<QuizSubmitResponse>(
       `/engagements/${data.quizId}/answers`,
       data.answers.map((answer) => ({
         question_id: answer.questionId,
@@ -80,20 +58,15 @@ export const submitQuizFn = createServerFn({ method: 'POST' })
       })),
       {
         base: 'quiz',
-        token: accessToken,
       },
     )
-
-    return response
   })
 
 export const getCountriesFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const response = await apiService.get<Country[]>('/countries', {
+    return apiService.get<Country[]>('/countries', {
       base: 'quiz',
       withApiKey: true,
     })
-
-    return response
   },
 )

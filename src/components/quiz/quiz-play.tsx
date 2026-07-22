@@ -5,11 +5,20 @@ import {
   ChevronRightIcon,
   ClockIcon,
   Loader2Icon,
+  PlayIcon,
   TrophyIcon,
 } from 'lucide-react'
 
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
 import { Button } from '#/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '#/components/ui/dialog'
 import { submitQuizFn } from '#/data/quiz'
 import type { Question, QuestionChoice, Quiz } from '#/lib/types'
 import { cn } from '#/lib/utils'
@@ -57,6 +66,7 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
     [quiz.questions],
   )
 
+  const [hasStarted, setHasStarted] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
   const [selectedChoiceIds, setSelectedChoiceIds] = useState<number[]>([])
@@ -69,6 +79,10 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
 
   const currentQuestion = questions[currentIndex]
   const totalQuestions = questions.length
+  const hasTimedQuestions = useMemo(
+    () => questions.some((question) => question.timer_seconds > 0),
+    [questions],
+  )
 
   const shuffledChoices = useMemo(() => {
     if (!currentQuestion) return []
@@ -141,7 +155,7 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
   }
 
   useEffect(() => {
-    if (!currentQuestion || isComplete) return
+    if (!hasStarted || !currentQuestion || isComplete) return
 
     if (currentQuestion.timer_seconds > 0) {
       setTimeLeft(currentQuestion.timer_seconds)
@@ -149,10 +163,10 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
     }
 
     setTimeLeft(null)
-  }, [currentQuestion, isComplete])
+  }, [hasStarted, currentQuestion, isComplete])
 
   useEffect(() => {
-    if (timeLeft === null || isComplete) return
+    if (!hasStarted || timeLeft === null || isComplete) return
 
     if (timeLeft <= 0) {
       goToNextQuestion()
@@ -164,12 +178,13 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
     }, 1000)
 
     return () => window.clearTimeout(timer)
-  }, [timeLeft, isComplete, goToNextQuestion])
+  }, [hasStarted, timeLeft, isComplete, goToNextQuestion])
 
   useEffect(() => {
+    if (!hasStarted) return
     questionStartedAtRef.current = Date.now()
     setSelectedChoiceIds([])
-  }, [currentIndex])
+  }, [hasStarted, currentIndex])
 
   if (totalQuestions === 0) {
     return (
@@ -182,6 +197,112 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
           This quiz does not have any questions yet. Check back later.
         </p>
       </article>
+    )
+  }
+
+  if (!hasStarted) {
+    return (
+      <>
+        <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+          <FixtureSectionHeader
+            title={quiz.title}
+            subtitle={`${totalQuestions} ${totalQuestions === 1 ? 'question' : 'questions'}`}
+          />
+          <div className="px-6 py-12 text-center">
+            <p className="text-sm text-muted-foreground">
+              Read the instructions, then press Play when you are ready.
+            </p>
+          </div>
+        </article>
+
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open) return
+          }}
+        >
+          <DialogContent showCloseButton={false} className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-lg font-bold tracking-tight">
+                Ready to play?
+              </DialogTitle>
+              <DialogDescription>
+                {quiz.description?.trim() ||
+                  'A few things to know before you start this quiz.'}
+              </DialogDescription>
+            </DialogHeader>
+
+            <ul className="space-y-2.5 text-sm text-muted-foreground">
+              <li className="flex gap-2">
+                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  There {totalQuestions === 1 ? 'is' : 'are'}{' '}
+                  <span className="font-semibold text-foreground">
+                    {totalQuestions}
+                  </span>{' '}
+                  {totalQuestions === 1 ? 'question' : 'questions'}.
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  Some questions are single choice; others may ask you to select
+                  all that apply.
+                </span>
+              </li>
+              {hasTimedQuestions ? (
+                <li className="flex gap-2">
+                  <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-secondary" />
+                  <span>
+                    Timed questions auto-advance when the countdown ends — answer
+                    before time runs out.
+                  </span>
+                </li>
+              ) : null}
+              <li className="flex gap-2">
+                <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-secondary" />
+                <span>
+                  After the last question you can review, then submit. Submitted
+                  answers cannot be changed.
+                </span>
+              </li>
+              {quiz.prize_description?.trim() ? (
+                <li className="flex gap-2">
+                  <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-secondary" />
+                  <span>
+                    Prize:{' '}
+                    <span className="font-semibold text-foreground">
+                      {quiz.prize_description}
+                    </span>
+                  </span>
+                </li>
+              ) : null}
+            </ul>
+
+            <DialogFooter className="gap-2 sm:justify-between">
+              <Link
+                to="/$seasonSlug/$legSlug/quiz"
+                params={{ seasonSlug, legSlug }}
+                className={cn(
+                  'inline-flex h-11 items-center justify-center rounded-2xl border border-border bg-background px-4 text-xs font-bold tracking-[0.08em] uppercase transition-colors',
+                  'hover:bg-muted hover:text-foreground',
+                )}
+              >
+                Back
+              </Link>
+              <Button
+                type="button"
+                size="lg"
+                onClick={() => setHasStarted(true)}
+                className="h-11 min-w-36 px-5 text-xs font-bold tracking-[0.08em] uppercase"
+              >
+                <PlayIcon className="size-4 fill-current" aria-hidden />
+                Play quiz
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     )
   }
 
