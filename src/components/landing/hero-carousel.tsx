@@ -1,19 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Link, getRouteApi } from '@tanstack/react-router'
 import {
   ArrowRightIcon,
   CalendarDaysIcon,
   HelpCircleIcon,
+  PlayIcon,
   StarIcon,
   type LucideIcon,
 } from 'lucide-react'
 
 import { venueHero } from '#/assets'
+import { hasDivisionSecondDay } from '#/components/landing/division-utils'
+import type { Division } from '#/lib/types'
 import { cn } from '#/lib/utils'
 
 const AUTO_PLAY_MS = 5500
+const legRoute = getRouteApi('/$seasonSlug/$legSlug')
 
-type SlideId = 'matches' | 'vote' | 'quiz'
+type SlideId = 'matches' | 'vote' | 'quiz' | 'live'
 
 type HeroSlide = {
   id: SlideId
@@ -22,65 +26,148 @@ type HeroSlide = {
   title: string
   description: string
   cta: string
-  to: '/matches' | '/voting' | '/quiz'
   footnote?: string
   imageSrc: string
   overlayClass: string
+  to:
+    | '/$seasonSlug/$legSlug/schedule'
+    | '/$seasonSlug/$legSlug/voting'
+    | '/$seasonSlug/$legSlug/quiz'
+    | '/$seasonSlug/$legSlug/videos'
+    | '/$seasonSlug/$legSlug/videos/$videoId'
+  videoId?: string
 }
 
 const HERO_OVERLAY =
   'bg-gradient-to-br from-background/85 via-secondary/20 to-primary/25'
 
-const SLIDES: HeroSlide[] = [
-  {
-    id: 'matches',
-    icon: CalendarDaysIcon,
-    imageSrc: venueHero,
-    overlayClass: HERO_OVERLAY,
-    eyebrow: 'Follow every try',
-    title: 'Live scores & fixtures',
-    description: 'Standings and matchdays for every leg on the tour.',
-    cta: 'View matches',
-    to: '/matches',
-  },
-  {
-    id: 'vote',
-    icon: StarIcon,
-    imageSrc: venueHero,
-    overlayClass: HERO_OVERLAY,
-    eyebrow: 'Vote for your stars',
-    title: 'Player of the Tournament',
-    description:
-      'Pick your favourites and back the players lighting up each leg.',
-    cta: 'Cast your vote',
-    to: '/voting',
-    footnote: '4,218 fan votes this leg',
-  },
-  {
-    id: 'quiz',
-    icon: HelpCircleIcon,
-    imageSrc: venueHero,
-    overlayClass: HERO_OVERLAY,
-    eyebrow: 'Matchday quiz',
-    title: '10 questions, real prizes',
-    description: 'Test your 7s knowledge and climb the leaderboard.',
-    cta: 'Start quiz',
-    to: '/quiz',
-    footnote: '~2 min · win merch',
-  },
-]
+function formatLocalYmd(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+/** Prefer Day 2 once that calendar day has started; otherwise Day 1. */
+export function pickMatchDay(division: Division, now = new Date()): 1 | 2 {
+  if (!hasDivisionSecondDay(division) || !division.date_to) return 1
+
+  const today = formatLocalYmd(now)
+  const day2 = division.date_to.slice(0, 10)
+
+  return today >= day2 ? 2 : 1
+}
+
+function resolveLiveVideo(division: Division | null): {
+  videoId: string | null
+  dayLabel: string
+} {
+  if (!division) {
+    return { videoId: null, dayLabel: 'Day 1' }
+  }
+
+  const preferredDay = pickMatchDay(division)
+  const otherDay = preferredDay === 1 ? 2 : 1
+
+  const preferredUrl =
+    preferredDay === 1 ? division.day1_video_url : division.day2_video_url
+  const otherUrl =
+    otherDay === 1 ? division.day1_video_url : division.day2_video_url
+
+  if (preferredUrl) {
+    return {
+      videoId: `${division.id}-day${preferredDay}`,
+      dayLabel: `Day ${preferredDay}`,
+    }
+  }
+
+  if (otherUrl) {
+    return {
+      videoId: `${division.id}-day${otherDay}`,
+      dayLabel: `Day ${otherDay}`,
+    }
+  }
+
+  return { videoId: null, dayLabel: `Day ${preferredDay}` }
+}
+
+function buildSlides(division: Division | null): HeroSlide[] {
+  const live = resolveLiveVideo(division)
+
+  return [
+    {
+      id: 'matches',
+      icon: CalendarDaysIcon,
+      imageSrc: venueHero,
+      overlayClass: HERO_OVERLAY,
+      eyebrow: 'Follow every try',
+      title: 'Live scores & fixtures',
+      description: 'Standings and matchdays for every leg on the tour.',
+      cta: 'View matches',
+      to: '/$seasonSlug/$legSlug/schedule',
+    },
+    {
+      id: 'live',
+      icon: PlayIcon,
+      imageSrc: venueHero,
+      overlayClass: HERO_OVERLAY,
+      eyebrow: 'Watch the action',
+      title: 'Live from the pitch',
+      description:
+        live.videoId
+          ? `Stream ${live.dayLabel} coverage from this leg.`
+          : 'Catch matchday streams and highlights from across the circuit.',
+      cta: live.videoId ? 'Watch live' : 'Browse videos',
+      footnote: live.videoId ? `${live.dayLabel} stream` : 'Videos hub',
+      to: live.videoId
+        ? '/$seasonSlug/$legSlug/videos/$videoId'
+        : '/$seasonSlug/$legSlug/videos',
+      videoId: live.videoId ?? undefined,
+    },
+    {
+      id: 'vote',
+      icon: StarIcon,
+      imageSrc: venueHero,
+      overlayClass: HERO_OVERLAY,
+      eyebrow: 'Vote for your stars',
+      title: 'Player of the Tournament',
+      description:
+        'Pick your favourites and back the players lighting up each leg.',
+      cta: 'Cast your vote',
+      to: '/$seasonSlug/$legSlug/voting',
+      footnote: '4,218 fan votes this leg',
+    },
+    {
+      id: 'quiz',
+      icon: HelpCircleIcon,
+      imageSrc: venueHero,
+      overlayClass: HERO_OVERLAY,
+      eyebrow: 'Matchday quiz',
+      title: '10 questions, real prizes',
+      description: 'Test your 7s knowledge and climb the leaderboard.',
+      cta: 'Start quiz',
+      to: '/$seasonSlug/$legSlug/quiz',
+      footnote: '~2 min · win merch',
+    },
+  ]
+}
 
 export function EngagementCarousel({
-  schedulePath,
+  division,
 }: {
-  schedulePath: string | null
+  division: Division | null
 }) {
+  const { seasonSlug, legSlug } = legRoute.useParams()
+  const slides = useMemo(() => buildSlides(division), [division])
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
-  const goTo = useCallback((index: number) => {
-    setActiveIndex((index + SLIDES.length) % SLIDES.length)
-  }, [])
+  const goTo = useCallback(
+    (index: number) => {
+      setActiveIndex((index + slides.length) % slides.length)
+    },
+    [slides.length],
+  )
 
   const next = useCallback(() => {
     goTo(activeIndex + 1)
@@ -112,7 +199,7 @@ export function EngagementCarousel({
         aria-label="Fan engagement highlights"
       >
         <div className="relative min-h-0 flex-1">
-          {SLIDES.map((slide, index) => {
+          {slides.map((slide, index) => {
             const isActive = index === activeIndex
             const Icon = slide.icon
 
@@ -121,7 +208,7 @@ export function EngagementCarousel({
                 key={slide.id}
                 role="group"
                 aria-roledescription="slide"
-                aria-label={`${index + 1} of ${SLIDES.length}`}
+                aria-label={`${index + 1} of ${slides.length}`}
                 aria-hidden={!isActive}
                 className={cn(
                   'absolute inset-0 overflow-hidden',
@@ -162,20 +249,40 @@ export function EngagementCarousel({
                     ) : null}
                   </div>
 
-                  <Link
-                    to={
-                      (slide.id === 'matches' && schedulePath
-                        ? schedulePath
-                        : slide.to) as never
-                    }
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30"
-                  >
-                    {slide.cta}
-                    <ArrowRightIcon
-                      className="size-4 transition-transform group-hover:translate-x-0.5"
-                      aria-hidden
-                    />
-                  </Link>
+                  {slide.to === '/$seasonSlug/$legSlug/videos/$videoId' &&
+                  slide.videoId ? (
+                    <Link
+                      to="/$seasonSlug/$legSlug/videos/$videoId"
+                      params={{
+                        seasonSlug,
+                        legSlug,
+                        videoId: slide.videoId,
+                      }}
+                      className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30"
+                    >
+                      {slide.cta}
+                      <ArrowRightIcon
+                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </Link>
+                  ) : (
+                    <Link
+                      to={
+                        slide.to === '/$seasonSlug/$legSlug/videos/$videoId'
+                          ? '/$seasonSlug/$legSlug/videos'
+                          : slide.to
+                      }
+                      params={{ seasonSlug, legSlug }}
+                      className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30"
+                    >
+                      {slide.cta}
+                      <ArrowRightIcon
+                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </Link>
+                  )}
                 </div>
               </article>
             )
@@ -183,7 +290,7 @@ export function EngagementCarousel({
         </div>
 
         <div className="relative z-10 flex shrink-0 items-center justify-center gap-2 border-t border-border bg-card/80 px-4 py-3 backdrop-blur-sm">
-          {SLIDES.map((slide, index) => (
+          {slides.map((slide, index) => (
             <button
               key={slide.id}
               type="button"

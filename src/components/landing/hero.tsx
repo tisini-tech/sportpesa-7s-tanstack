@@ -5,14 +5,13 @@ import { venueHero } from '#/assets'
 import { EngagementCarousel } from '#/components/landing/hero-carousel'
 import {
   formatDivisionHeroDate,
-  formatDivisionOrder,
   formatDivisionStatusLabel,
   getDivisionStatus,
   pickFeaturedDivision,
   type DivisionStatus,
 } from '#/components/landing/division-utils'
 import { cn } from '#/lib/utils'
-import { buildSchedulePath } from '#/lib/tournament-slugs'
+import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
 import type { Division, Season } from '#/lib/types'
 
 type HeroSectionProps = {
@@ -155,7 +154,11 @@ function HeroLegFeature({
 
             {(status === 'live' || status === 'upcoming') && (
               <Link
-                to={buildSchedulePath(season, division) as never}
+                to="/$seasonSlug/$legSlug/schedule"
+                params={{
+                  seasonSlug: getSeasonSlug(season),
+                  legSlug: getLegSlug(division),
+                }}
                 className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
               >
                 View fixtures
@@ -195,9 +198,6 @@ export function HeroSection({
   activeDivisionId,
 }: HeroSectionProps) {
   const featured = resolveHeroDivision(divisions, activeDivisionId)
-  const schedulePath = featured
-    ? buildSchedulePath(season, featured.division)
-    : null
 
   return (
     <section className="sp-landing-hero overflow-hidden border-b border-border text-foreground">
@@ -214,7 +214,7 @@ export function HeroSection({
             <HeroLegFallback />
           )}
 
-          <EngagementCarousel schedulePath={schedulePath} />
+          <EngagementCarousel division={featured?.division ?? null} />
         </div>
       </div>
     </section>
