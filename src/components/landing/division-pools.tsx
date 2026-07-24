@@ -7,7 +7,7 @@ import type { DivisionPool, TeamPool } from '#/lib/types'
 import { slugify } from '#/lib/tournament-slugs'
 import { cn } from '#/lib/utils'
 
-const legRoute = getRouteApi('/$seasonSlug/$legSlug')
+const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 function getTeamInitials(name: string | null | undefined): string {
   const source = name || 'TBD'
@@ -19,15 +19,17 @@ function sortPools(pools: DivisionPool[]): DivisionPool[] {
 }
 
 export function DivisionPools({
+  competitionId,
   seasonId,
   divisionId,
 }: {
+  competitionId: string
   seasonId: string
   divisionId: string
 }) {
-  const { seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
   const { data: divisionPools } = useSuspenseQuery(
-    poolsQueryOptions(seasonId, divisionId),
+    poolsQueryOptions(competitionId, seasonId, divisionId),
   )
 
   const pools = sortPools(divisionPools)
@@ -67,7 +69,12 @@ export function DivisionPools({
       >
         {pools.map((pool) => (
           <li key={pool.id}>
-            <PoolCard pool={pool} seasonSlug={seasonSlug} legSlug={legSlug} />
+            <PoolCard
+              pool={pool}
+              leagueSlug={leagueSlug}
+              seasonSlug={seasonSlug}
+              legSlug={legSlug}
+            />
           </li>
         ))}
       </ul>
@@ -77,10 +84,12 @@ export function DivisionPools({
 
 function PoolCard({
   pool,
+  leagueSlug,
   seasonSlug,
   legSlug,
 }: {
   pool: DivisionPool
+  leagueSlug: string
   seasonSlug: string
   legSlug: string
 }) {
@@ -107,6 +116,7 @@ function PoolCard({
             <PoolTeamRow
               key={team.team_id}
               team={team}
+              leagueSlug={leagueSlug}
               seasonSlug={seasonSlug}
               legSlug={legSlug}
             />
@@ -119,18 +129,21 @@ function PoolCard({
 
 function PoolTeamRow({
   team,
+  leagueSlug,
   seasonSlug,
   legSlug,
 }: {
   team: TeamPool
+  leagueSlug: string
   seasonSlug: string
   legSlug: string
 }) {
   return (
     <li>
       <Link
-        to="/$seasonSlug/$legSlug/clubs/$clubSlug"
+        to="/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug"
         params={{
+          leagueSlug,
           seasonSlug,
           legSlug,
           clubSlug: slugify(team.team_name),

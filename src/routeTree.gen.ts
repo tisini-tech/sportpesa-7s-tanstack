@@ -9,36 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SiteRouteRouteImport } from './routes/_site/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthRequestPasswordRouteImport } from './routes/_auth/request-password'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
-import { Route as SeasonSlugLegSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/route'
-import { Route as SeasonSlugLegSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/index'
-import { Route as SeasonSlugLegSlugVotingIndexRouteImport } from './routes/$seasonSlug/$legSlug/voting/index'
-import { Route as SeasonSlugLegSlugVideosIndexRouteImport } from './routes/$seasonSlug/$legSlug/videos/index'
-import { Route as SeasonSlugLegSlugStatsIndexRouteImport } from './routes/$seasonSlug/$legSlug/stats/index'
-import { Route as SeasonSlugLegSlugStandingsIndexRouteImport } from './routes/$seasonSlug/$legSlug/standings/index'
-import { Route as SeasonSlugLegSlugScheduleIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/index'
-import { Route as SeasonSlugLegSlugQuizIndexRouteImport } from './routes/$seasonSlug/$legSlug/quiz/index'
-import { Route as SeasonSlugLegSlugGalleryIndexRouteImport } from './routes/$seasonSlug/$legSlug/gallery/index'
-import { Route as SeasonSlugLegSlugClubsIndexRouteImport } from './routes/$seasonSlug/$legSlug/clubs/index'
-import { Route as SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/route'
-import { Route as SeasonSlugLegSlugClubsClubSlugRouteRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/route'
-import { Route as SeasonSlugLegSlugVotingVoteIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/voting/$voteId/index'
-import { Route as SeasonSlugLegSlugVideosVideoIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/videos/$videoId/index'
-import { Route as SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/index'
-import { Route as SeasonSlugLegSlugQuizQuizIdIndexRouteImport } from './routes/$seasonSlug/$legSlug/quiz/$quizId/index'
-import { Route as SeasonSlugLegSlugClubsClubSlugIndexRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/index'
-import { Route as SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
-import { Route as SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
-import { Route as SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport } from './routes/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
-import { Route as SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport } from './routes/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
-import { Route as SeasonSlugLegSlugClubsClubSlugStatsRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
-import { Route as SeasonSlugLegSlugClubsClubSlugFixturesRouteImport } from './routes/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
+import { Route as SiteVotingIndexRouteImport } from './routes/_site/voting/index'
+import { Route as SiteQuizIndexRouteImport } from './routes/_site/quiz/index'
+import { Route as SiteVotingVoteIdIndexRouteImport } from './routes/_site/voting/$voteId/index'
+import { Route as SiteQuizQuizIdIndexRouteImport } from './routes/_site/quiz/$quizId/index'
+import { Route as SiteQuizQuizIdLeaderboardRouteImport } from './routes/_site/quiz/$quizId/leaderboard'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugRouteRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/route'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugVideosIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/videos/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugStatsIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/stats/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/standings/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/gallery/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugClubsIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/route'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/route'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/index'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+import { Route as SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
 
+const SiteRouteRoute = SiteRouteRouteImport.update({
+  id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
@@ -68,172 +75,191 @@ const AuthRegisterRoute = AuthRegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const SeasonSlugLegSlugRouteRoute = SeasonSlugLegSlugRouteRouteImport.update({
-  id: '/$seasonSlug/$legSlug',
-  path: '/$seasonSlug/$legSlug',
-  getParentRoute: () => rootRouteImport,
+const SiteVotingIndexRoute = SiteVotingIndexRouteImport.update({
+  id: '/voting/',
+  path: '/voting/',
+  getParentRoute: () => SiteRouteRoute,
 } as any)
-const SeasonSlugLegSlugIndexRoute = SeasonSlugLegSlugIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+const SiteQuizIndexRoute = SiteQuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
+  getParentRoute: () => SiteRouteRoute,
 } as any)
-const SeasonSlugLegSlugVotingIndexRoute =
-  SeasonSlugLegSlugVotingIndexRouteImport.update({
-    id: '/voting/',
-    path: '/voting/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugVideosIndexRoute =
-  SeasonSlugLegSlugVideosIndexRouteImport.update({
-    id: '/videos/',
-    path: '/videos/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugStatsIndexRoute =
-  SeasonSlugLegSlugStatsIndexRouteImport.update({
-    id: '/stats/',
-    path: '/stats/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugStandingsIndexRoute =
-  SeasonSlugLegSlugStandingsIndexRouteImport.update({
-    id: '/standings/',
-    path: '/standings/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugScheduleIndexRoute =
-  SeasonSlugLegSlugScheduleIndexRouteImport.update({
-    id: '/schedule/',
-    path: '/schedule/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugQuizIndexRoute =
-  SeasonSlugLegSlugQuizIndexRouteImport.update({
-    id: '/quiz/',
-    path: '/quiz/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugGalleryIndexRoute =
-  SeasonSlugLegSlugGalleryIndexRouteImport.update({
-    id: '/gallery/',
-    path: '/gallery/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugClubsIndexRoute =
-  SeasonSlugLegSlugClubsIndexRouteImport.update({
-    id: '/clubs/',
-    path: '/clubs/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugScheduleFixtureIdRouteRoute =
-  SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport.update({
-    id: '/schedule/$fixtureId',
-    path: '/schedule/$fixtureId',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugClubsClubSlugRouteRoute =
-  SeasonSlugLegSlugClubsClubSlugRouteRouteImport.update({
-    id: '/clubs/$clubSlug',
-    path: '/clubs/$clubSlug',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugVotingVoteIdIndexRoute =
-  SeasonSlugLegSlugVotingVoteIdIndexRouteImport.update({
-    id: '/voting/$voteId/',
-    path: '/voting/$voteId/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugVideosVideoIdIndexRoute =
-  SeasonSlugLegSlugVideosVideoIdIndexRouteImport.update({
-    id: '/videos/$videoId/',
-    path: '/videos/$videoId/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugScheduleFixtureIdIndexRoute =
-  SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
-  } as any)
-const SeasonSlugLegSlugQuizQuizIdIndexRoute =
-  SeasonSlugLegSlugQuizQuizIdIndexRouteImport.update({
-    id: '/quiz/$quizId/',
-    path: '/quiz/$quizId/',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugClubsClubSlugIndexRoute =
-  SeasonSlugLegSlugClubsClubSlugIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => SeasonSlugLegSlugClubsClubSlugRouteRoute,
-  } as any)
-const SeasonSlugLegSlugScheduleFixtureIdStatsRoute =
-  SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport.update({
-    id: '/stats',
-    path: '/stats',
-    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
-  } as any)
-const SeasonSlugLegSlugScheduleFixtureIdLineupsRoute =
-  SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport.update({
-    id: '/lineups',
-    path: '/lineups',
-    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
-  } as any)
-const SeasonSlugLegSlugScheduleFixtureIdH2hRoute =
-  SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport.update({
-    id: '/h2h',
-    path: '/h2h',
-    getParentRoute: () => SeasonSlugLegSlugScheduleFixtureIdRouteRoute,
-  } as any)
-const SeasonSlugLegSlugQuizQuizIdLeaderboardRoute =
-  SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport.update({
+const SiteVotingVoteIdIndexRoute = SiteVotingVoteIdIndexRouteImport.update({
+  id: '/voting/$voteId/',
+  path: '/voting/$voteId/',
+  getParentRoute: () => SiteRouteRoute,
+} as any)
+const SiteQuizQuizIdIndexRoute = SiteQuizQuizIdIndexRouteImport.update({
+  id: '/quiz/$quizId/',
+  path: '/quiz/$quizId/',
+  getParentRoute: () => SiteRouteRoute,
+} as any)
+const SiteQuizQuizIdLeaderboardRoute =
+  SiteQuizQuizIdLeaderboardRouteImport.update({
     id: '/quiz/$quizId/leaderboard',
     path: '/quiz/$quizId/leaderboard',
-    getParentRoute: () => SeasonSlugLegSlugRouteRoute,
+    getParentRoute: () => SiteRouteRoute,
   } as any)
-const SeasonSlugLegSlugClubsClubSlugStatsRoute =
-  SeasonSlugLegSlugClubsClubSlugStatsRouteImport.update({
+const SiteLeagueSlugSeasonSlugLegSlugRouteRoute =
+  SiteLeagueSlugSeasonSlugLegSlugRouteRouteImport.update({
+    id: '/$leagueSlug/$seasonSlug/$legSlug',
+    path: '/$leagueSlug/$seasonSlug/$legSlug',
+    getParentRoute: () => SiteRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugVideosIndexRouteImport.update({
+    id: '/videos/',
+    path: '/videos/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugStatsIndexRouteImport.update({
+    id: '/stats/',
+    path: '/stats/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRouteImport.update({
+    id: '/standings/',
+    path: '/standings/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRouteImport.update({
+    id: '/schedule/',
+    path: '/schedule/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRouteImport.update({
+    id: '/gallery/',
+    path: '/gallery/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugClubsIndexRouteImport.update({
+    id: '/clubs/',
+    path: '/clubs/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteImport.update({
+    id: '/schedule/$fixtureId',
+    path: '/schedule/$fixtureId',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute =
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteImport.update({
+    id: '/clubs/$clubSlug',
+    path: '/clubs/$clubSlug',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRouteImport.update({
+    id: '/videos/$videoId/',
+    path: '/videos/$videoId/',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute =
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute =
+  SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRouteImport.update({
+    id: '/stats/$statsId/teams',
+    path: '/stats/$statsId/teams',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute =
+  SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRouteImport.update({
+    id: '/stats/$statsId/players',
+    path: '/stats/$statsId/players',
+    getParentRoute: () => SiteLeagueSlugSeasonSlugLegSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRouteImport.update({
     id: '/stats',
     path: '/stats',
-    getParentRoute: () => SeasonSlugLegSlugClubsClubSlugRouteRoute,
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute,
   } as any)
-const SeasonSlugLegSlugClubsClubSlugFixturesRoute =
-  SeasonSlugLegSlugClubsClubSlugFixturesRouteImport.update({
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport.update({
+    id: '/lineups',
+    path: '/lineups',
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRouteImport.update({
+    id: '/h2h',
+    path: '/h2h',
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute =
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRouteImport.update({
+    id: '/stats',
+    path: '/stats',
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute,
+  } as any)
+const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute =
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRouteImport.update({
     id: '/fixtures',
     path: '/fixtures',
-    getParentRoute: () => SeasonSlugLegSlugClubsClubSlugRouteRoute,
+    getParentRoute: () =>
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
   '/register': typeof AuthRegisterRoute
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify': typeof AuthVerifyRoute
-  '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
-  '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
-  '/$seasonSlug/$legSlug/clubs/': typeof SeasonSlugLegSlugClubsIndexRoute
-  '/$seasonSlug/$legSlug/gallery/': typeof SeasonSlugLegSlugGalleryIndexRoute
-  '/$seasonSlug/$legSlug/quiz/': typeof SeasonSlugLegSlugQuizIndexRoute
-  '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
-  '/$seasonSlug/$legSlug/standings/': typeof SeasonSlugLegSlugStandingsIndexRoute
-  '/$seasonSlug/$legSlug/stats/': typeof SeasonSlugLegSlugStatsIndexRoute
-  '/$seasonSlug/$legSlug/videos/': typeof SeasonSlugLegSlugVideosIndexRoute
-  '/$seasonSlug/$legSlug/voting/': typeof SeasonSlugLegSlugVotingIndexRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
-  '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
-  '/$seasonSlug/$legSlug/quiz/$quizId/': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
-  '/$seasonSlug/$legSlug/videos/$videoId/': typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
-  '/$seasonSlug/$legSlug/voting/$voteId/': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
+  '/quiz/': typeof SiteQuizIndexRoute
+  '/voting/': typeof SiteVotingIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug': typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren
+  '/quiz/$quizId/leaderboard': typeof SiteQuizQuizIdLeaderboardRoute
+  '/quiz/$quizId/': typeof SiteQuizQuizIdIndexRoute
+  '/voting/$voteId/': typeof SiteVotingVoteIdIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/': typeof SiteLeagueSlugSeasonSlugLegSlugIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/': typeof SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/gallery/': typeof SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/standings/': typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/stats/': typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/videos/': typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players': typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams': typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/': typeof SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -241,90 +267,97 @@ export interface FileRoutesByTo {
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify': typeof AuthVerifyRoute
-  '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugIndexRoute
-  '/$seasonSlug/$legSlug/clubs': typeof SeasonSlugLegSlugClubsIndexRoute
-  '/$seasonSlug/$legSlug/gallery': typeof SeasonSlugLegSlugGalleryIndexRoute
-  '/$seasonSlug/$legSlug/quiz': typeof SeasonSlugLegSlugQuizIndexRoute
-  '/$seasonSlug/$legSlug/schedule': typeof SeasonSlugLegSlugScheduleIndexRoute
-  '/$seasonSlug/$legSlug/standings': typeof SeasonSlugLegSlugStandingsIndexRoute
-  '/$seasonSlug/$legSlug/stats': typeof SeasonSlugLegSlugStatsIndexRoute
-  '/$seasonSlug/$legSlug/videos': typeof SeasonSlugLegSlugVideosIndexRoute
-  '/$seasonSlug/$legSlug/voting': typeof SeasonSlugLegSlugVotingIndexRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
-  '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
-  '/$seasonSlug/$legSlug/quiz/$quizId': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
-  '/$seasonSlug/$legSlug/videos/$videoId': typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
-  '/$seasonSlug/$legSlug/voting/$voteId': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
+  '/quiz': typeof SiteQuizIndexRoute
+  '/voting': typeof SiteVotingIndexRoute
+  '/quiz/$quizId/leaderboard': typeof SiteQuizQuizIdLeaderboardRoute
+  '/quiz/$quizId': typeof SiteQuizQuizIdIndexRoute
+  '/voting/$voteId': typeof SiteVotingVoteIdIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug': typeof SiteLeagueSlugSeasonSlugLegSlugIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs': typeof SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/gallery': typeof SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/standings': typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/videos': typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players': typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams': typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute
+  '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId': typeof SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/$seasonSlug/$legSlug': typeof SeasonSlugLegSlugRouteRouteWithChildren
+  '/_site': typeof SiteRouteRouteWithChildren
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/request-password': typeof AuthRequestPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/verify': typeof AuthVerifyRoute
-  '/$seasonSlug/$legSlug/': typeof SeasonSlugLegSlugIndexRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
-  '/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
-  '/$seasonSlug/$legSlug/clubs/': typeof SeasonSlugLegSlugClubsIndexRoute
-  '/$seasonSlug/$legSlug/gallery/': typeof SeasonSlugLegSlugGalleryIndexRoute
-  '/$seasonSlug/$legSlug/quiz/': typeof SeasonSlugLegSlugQuizIndexRoute
-  '/$seasonSlug/$legSlug/schedule/': typeof SeasonSlugLegSlugScheduleIndexRoute
-  '/$seasonSlug/$legSlug/standings/': typeof SeasonSlugLegSlugStandingsIndexRoute
-  '/$seasonSlug/$legSlug/stats/': typeof SeasonSlugLegSlugStatsIndexRoute
-  '/$seasonSlug/$legSlug/videos/': typeof SeasonSlugLegSlugVideosIndexRoute
-  '/$seasonSlug/$legSlug/voting/': typeof SeasonSlugLegSlugVotingIndexRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
-  '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
-  '/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
-  '/$seasonSlug/$legSlug/quiz/$quizId/': typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
-  '/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
-  '/$seasonSlug/$legSlug/videos/$videoId/': typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
-  '/$seasonSlug/$legSlug/voting/$voteId/': typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
+  '/_site/quiz/': typeof SiteQuizIndexRoute
+  '/_site/voting/': typeof SiteVotingIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug': typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren
+  '/_site/quiz/$quizId/leaderboard': typeof SiteQuizQuizIdLeaderboardRoute
+  '/_site/quiz/$quizId/': typeof SiteQuizQuizIdIndexRoute
+  '/_site/voting/$voteId/': typeof SiteVotingVoteIdIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/': typeof SiteLeagueSlugSeasonSlugLegSlugIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/': typeof SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/gallery/': typeof SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/': typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/': typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/': typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players': typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams': typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/': typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/': typeof SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/$seasonSlug/$legSlug'
     | '/register'
     | '/request-password'
     | '/reset-password'
     | '/verify'
-    | '/$seasonSlug/$legSlug/'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId'
-    | '/$seasonSlug/$legSlug/clubs/'
-    | '/$seasonSlug/$legSlug/gallery/'
-    | '/$seasonSlug/$legSlug/quiz/'
-    | '/$seasonSlug/$legSlug/schedule/'
-    | '/$seasonSlug/$legSlug/standings/'
-    | '/$seasonSlug/$legSlug/stats/'
-    | '/$seasonSlug/$legSlug/videos/'
-    | '/$seasonSlug/$legSlug/voting/'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
-    | '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/'
-    | '/$seasonSlug/$legSlug/quiz/$quizId/'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
-    | '/$seasonSlug/$legSlug/videos/$videoId/'
-    | '/$seasonSlug/$legSlug/voting/$voteId/'
+    | '/quiz/'
+    | '/voting/'
+    | '/$leagueSlug/$seasonSlug/$legSlug'
+    | '/quiz/$quizId/leaderboard'
+    | '/quiz/$quizId/'
+    | '/voting/$voteId/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/gallery/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/standings/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/stats/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/videos/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+    | '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players'
+    | '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/'
+    | '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -332,67 +365,79 @@ export interface FileRouteTypes {
     | '/request-password'
     | '/reset-password'
     | '/verify'
-    | '/$seasonSlug/$legSlug'
-    | '/$seasonSlug/$legSlug/clubs'
-    | '/$seasonSlug/$legSlug/gallery'
-    | '/$seasonSlug/$legSlug/quiz'
-    | '/$seasonSlug/$legSlug/schedule'
-    | '/$seasonSlug/$legSlug/standings'
-    | '/$seasonSlug/$legSlug/stats'
-    | '/$seasonSlug/$legSlug/videos'
-    | '/$seasonSlug/$legSlug/voting'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
-    | '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug'
-    | '/$seasonSlug/$legSlug/quiz/$quizId'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId'
-    | '/$seasonSlug/$legSlug/videos/$videoId'
-    | '/$seasonSlug/$legSlug/voting/$voteId'
+    | '/quiz'
+    | '/voting'
+    | '/quiz/$quizId/leaderboard'
+    | '/quiz/$quizId'
+    | '/voting/$voteId'
+    | '/$leagueSlug/$seasonSlug/$legSlug'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs'
+    | '/$leagueSlug/$seasonSlug/$legSlug/gallery'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule'
+    | '/$leagueSlug/$seasonSlug/$legSlug/standings'
+    | '/$leagueSlug/$seasonSlug/$legSlug/stats'
+    | '/$leagueSlug/$seasonSlug/$legSlug/videos'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+    | '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players'
+    | '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams'
+    | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId'
+    | '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
   id:
     | '__root__'
     | '/'
     | '/_auth'
-    | '/$seasonSlug/$legSlug'
+    | '/_site'
     | '/_auth/register'
     | '/_auth/request-password'
     | '/_auth/reset-password'
     | '/_auth/verify'
-    | '/$seasonSlug/$legSlug/'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId'
-    | '/$seasonSlug/$legSlug/clubs/'
-    | '/$seasonSlug/$legSlug/gallery/'
-    | '/$seasonSlug/$legSlug/quiz/'
-    | '/$seasonSlug/$legSlug/schedule/'
-    | '/$seasonSlug/$legSlug/standings/'
-    | '/$seasonSlug/$legSlug/stats/'
-    | '/$seasonSlug/$legSlug/videos/'
-    | '/$seasonSlug/$legSlug/voting/'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
-    | '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
-    | '/$seasonSlug/$legSlug/clubs/$clubSlug/'
-    | '/$seasonSlug/$legSlug/quiz/$quizId/'
-    | '/$seasonSlug/$legSlug/schedule/$fixtureId/'
-    | '/$seasonSlug/$legSlug/videos/$videoId/'
-    | '/$seasonSlug/$legSlug/voting/$voteId/'
+    | '/_site/quiz/'
+    | '/_site/voting/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug'
+    | '/_site/quiz/$quizId/leaderboard'
+    | '/_site/quiz/$quizId/'
+    | '/_site/voting/$voteId/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/gallery/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/'
+    | '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  SeasonSlugLegSlugRouteRoute: typeof SeasonSlugLegSlugRouteRouteWithChildren
+  SiteRouteRoute: typeof SiteRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_site': {
+      id: '/_site'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof SiteRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -435,166 +480,180 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/$seasonSlug/$legSlug': {
-      id: '/$seasonSlug/$legSlug'
-      path: '/$seasonSlug/$legSlug'
-      fullPath: '/$seasonSlug/$legSlug'
-      preLoaderRoute: typeof SeasonSlugLegSlugRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$seasonSlug/$legSlug/': {
-      id: '/$seasonSlug/$legSlug/'
-      path: '/'
-      fullPath: '/$seasonSlug/$legSlug/'
-      preLoaderRoute: typeof SeasonSlugLegSlugIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/voting/': {
-      id: '/$seasonSlug/$legSlug/voting/'
+    '/_site/voting/': {
+      id: '/_site/voting/'
       path: '/voting'
-      fullPath: '/$seasonSlug/$legSlug/voting/'
-      preLoaderRoute: typeof SeasonSlugLegSlugVotingIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+      fullPath: '/voting/'
+      preLoaderRoute: typeof SiteVotingIndexRouteImport
+      parentRoute: typeof SiteRouteRoute
     }
-    '/$seasonSlug/$legSlug/videos/': {
-      id: '/$seasonSlug/$legSlug/videos/'
-      path: '/videos'
-      fullPath: '/$seasonSlug/$legSlug/videos/'
-      preLoaderRoute: typeof SeasonSlugLegSlugVideosIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/stats/': {
-      id: '/$seasonSlug/$legSlug/stats/'
-      path: '/stats'
-      fullPath: '/$seasonSlug/$legSlug/stats/'
-      preLoaderRoute: typeof SeasonSlugLegSlugStatsIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/standings/': {
-      id: '/$seasonSlug/$legSlug/standings/'
-      path: '/standings'
-      fullPath: '/$seasonSlug/$legSlug/standings/'
-      preLoaderRoute: typeof SeasonSlugLegSlugStandingsIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/schedule/': {
-      id: '/$seasonSlug/$legSlug/schedule/'
-      path: '/schedule'
-      fullPath: '/$seasonSlug/$legSlug/schedule/'
-      preLoaderRoute: typeof SeasonSlugLegSlugScheduleIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/quiz/': {
-      id: '/$seasonSlug/$legSlug/quiz/'
+    '/_site/quiz/': {
+      id: '/_site/quiz/'
       path: '/quiz'
-      fullPath: '/$seasonSlug/$legSlug/quiz/'
-      preLoaderRoute: typeof SeasonSlugLegSlugQuizIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+      fullPath: '/quiz/'
+      preLoaderRoute: typeof SiteQuizIndexRouteImport
+      parentRoute: typeof SiteRouteRoute
     }
-    '/$seasonSlug/$legSlug/gallery/': {
-      id: '/$seasonSlug/$legSlug/gallery/'
-      path: '/gallery'
-      fullPath: '/$seasonSlug/$legSlug/gallery/'
-      preLoaderRoute: typeof SeasonSlugLegSlugGalleryIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/clubs/': {
-      id: '/$seasonSlug/$legSlug/clubs/'
-      path: '/clubs'
-      fullPath: '/$seasonSlug/$legSlug/clubs/'
-      preLoaderRoute: typeof SeasonSlugLegSlugClubsIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/schedule/$fixtureId': {
-      id: '/$seasonSlug/$legSlug/schedule/$fixtureId'
-      path: '/schedule/$fixtureId'
-      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId'
-      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/clubs/$clubSlug': {
-      id: '/$seasonSlug/$legSlug/clubs/$clubSlug'
-      path: '/clubs/$clubSlug'
-      fullPath: '/$seasonSlug/$legSlug/clubs/$clubSlug'
-      preLoaderRoute: typeof SeasonSlugLegSlugClubsClubSlugRouteRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/voting/$voteId/': {
-      id: '/$seasonSlug/$legSlug/voting/$voteId/'
+    '/_site/voting/$voteId/': {
+      id: '/_site/voting/$voteId/'
       path: '/voting/$voteId'
-      fullPath: '/$seasonSlug/$legSlug/voting/$voteId/'
-      preLoaderRoute: typeof SeasonSlugLegSlugVotingVoteIdIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+      fullPath: '/voting/$voteId/'
+      preLoaderRoute: typeof SiteVotingVoteIdIndexRouteImport
+      parentRoute: typeof SiteRouteRoute
     }
-    '/$seasonSlug/$legSlug/videos/$videoId/': {
-      id: '/$seasonSlug/$legSlug/videos/$videoId/'
-      path: '/videos/$videoId'
-      fullPath: '/$seasonSlug/$legSlug/videos/$videoId/'
-      preLoaderRoute: typeof SeasonSlugLegSlugVideosVideoIdIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/schedule/$fixtureId/': {
-      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/'
-      path: '/'
-      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/'
-      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
-    }
-    '/$seasonSlug/$legSlug/quiz/$quizId/': {
-      id: '/$seasonSlug/$legSlug/quiz/$quizId/'
+    '/_site/quiz/$quizId/': {
+      id: '/_site/quiz/$quizId/'
       path: '/quiz/$quizId'
-      fullPath: '/$seasonSlug/$legSlug/quiz/$quizId/'
-      preLoaderRoute: typeof SeasonSlugLegSlugQuizQuizIdIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+      fullPath: '/quiz/$quizId/'
+      preLoaderRoute: typeof SiteQuizQuizIdIndexRouteImport
+      parentRoute: typeof SiteRouteRoute
     }
-    '/$seasonSlug/$legSlug/clubs/$clubSlug/': {
-      id: '/$seasonSlug/$legSlug/clubs/$clubSlug/'
-      path: '/'
-      fullPath: '/$seasonSlug/$legSlug/clubs/$clubSlug/'
-      preLoaderRoute: typeof SeasonSlugLegSlugClubsClubSlugIndexRouteImport
-      parentRoute: typeof SeasonSlugLegSlugClubsClubSlugRouteRoute
-    }
-    '/$seasonSlug/$legSlug/schedule/$fixtureId/stats': {
-      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
-      path: '/stats'
-      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
-      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdStatsRouteImport
-      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
-    }
-    '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': {
-      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
-      path: '/lineups'
-      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
-      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport
-      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
-    }
-    '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': {
-      id: '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
-      path: '/h2h'
-      fullPath: '/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
-      preLoaderRoute: typeof SeasonSlugLegSlugScheduleFixtureIdH2hRouteImport
-      parentRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRoute
-    }
-    '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard': {
-      id: '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
+    '/_site/quiz/$quizId/leaderboard': {
+      id: '/_site/quiz/$quizId/leaderboard'
       path: '/quiz/$quizId/leaderboard'
-      fullPath: '/$seasonSlug/$legSlug/quiz/$quizId/leaderboard'
-      preLoaderRoute: typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRouteImport
-      parentRoute: typeof SeasonSlugLegSlugRouteRoute
+      fullPath: '/quiz/$quizId/leaderboard'
+      preLoaderRoute: typeof SiteQuizQuizIdLeaderboardRouteImport
+      parentRoute: typeof SiteRouteRoute
     }
-    '/$seasonSlug/$legSlug/clubs/$clubSlug/stats': {
-      id: '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+    '/_site/$leagueSlug/$seasonSlug/$legSlug': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug'
+      path: '/$leagueSlug/$seasonSlug/$legSlug'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteImport
+      parentRoute: typeof SiteRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/'
+      path: '/'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/'
+      path: '/videos'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/videos/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/'
       path: '/stats'
-      fullPath: '/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
-      preLoaderRoute: typeof SeasonSlugLegSlugClubsClubSlugStatsRouteImport
-      parentRoute: typeof SeasonSlugLegSlugClubsClubSlugRouteRoute
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/stats/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
     }
-    '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': {
-      id: '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/'
+      path: '/standings'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/standings/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/'
+      path: '/schedule'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/schedule/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/gallery/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/gallery/'
+      path: '/gallery'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/gallery/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/'
+      path: '/clubs'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/clubs/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId'
+      path: '/schedule/$fixtureId'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug'
+      path: '/clubs/$clubSlug'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/'
+      path: '/videos/$videoId'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/'
+      path: '/'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/'
+      path: '/'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams'
+      path: '/stats/$statsId/teams'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players'
+      path: '/stats/$statsId/players'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+      path: '/stats'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+      path: '/lineups'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+      path: '/h2h'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+      path: '/stats'
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute
+    }
+    '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': {
+      id: '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
       path: '/fixtures'
-      fullPath: '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
-      preLoaderRoute: typeof SeasonSlugLegSlugClubsClubSlugFixturesRouteImport
-      parentRoute: typeof SeasonSlugLegSlugClubsClubSlugRouteRoute
+      fullPath: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
+      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRouteImport
+      parentRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute
     }
   }
 }
@@ -617,103 +676,126 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
-interface SeasonSlugLegSlugClubsClubSlugRouteRouteChildren {
-  SeasonSlugLegSlugClubsClubSlugFixturesRoute: typeof SeasonSlugLegSlugClubsClubSlugFixturesRoute
-  SeasonSlugLegSlugClubsClubSlugStatsRoute: typeof SeasonSlugLegSlugClubsClubSlugStatsRoute
-  SeasonSlugLegSlugClubsClubSlugIndexRoute: typeof SeasonSlugLegSlugClubsClubSlugIndexRoute
+interface SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteChildren {
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute
 }
 
-const SeasonSlugLegSlugClubsClubSlugRouteRouteChildren: SeasonSlugLegSlugClubsClubSlugRouteRouteChildren =
+const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteChildren: SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteChildren =
   {
-    SeasonSlugLegSlugClubsClubSlugFixturesRoute:
-      SeasonSlugLegSlugClubsClubSlugFixturesRoute,
-    SeasonSlugLegSlugClubsClubSlugStatsRoute:
-      SeasonSlugLegSlugClubsClubSlugStatsRoute,
-    SeasonSlugLegSlugClubsClubSlugIndexRoute:
-      SeasonSlugLegSlugClubsClubSlugIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute:
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute,
+    SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute:
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute,
+    SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugIndexRoute,
   }
 
-const SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren =
-  SeasonSlugLegSlugClubsClubSlugRouteRoute._addFileChildren(
-    SeasonSlugLegSlugClubsClubSlugRouteRouteChildren,
+const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren =
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute._addFileChildren(
+    SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteChildren,
   )
 
-interface SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren {
-  SeasonSlugLegSlugScheduleFixtureIdH2hRoute: typeof SeasonSlugLegSlugScheduleFixtureIdH2hRoute
-  SeasonSlugLegSlugScheduleFixtureIdLineupsRoute: typeof SeasonSlugLegSlugScheduleFixtureIdLineupsRoute
-  SeasonSlugLegSlugScheduleFixtureIdStatsRoute: typeof SeasonSlugLegSlugScheduleFixtureIdStatsRoute
-  SeasonSlugLegSlugScheduleFixtureIdIndexRoute: typeof SeasonSlugLegSlugScheduleFixtureIdIndexRoute
+interface SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren {
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute
 }
 
-const SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren: SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren =
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren: SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren =
   {
-    SeasonSlugLegSlugScheduleFixtureIdH2hRoute:
-      SeasonSlugLegSlugScheduleFixtureIdH2hRoute,
-    SeasonSlugLegSlugScheduleFixtureIdLineupsRoute:
-      SeasonSlugLegSlugScheduleFixtureIdLineupsRoute,
-    SeasonSlugLegSlugScheduleFixtureIdStatsRoute:
-      SeasonSlugLegSlugScheduleFixtureIdStatsRoute,
-    SeasonSlugLegSlugScheduleFixtureIdIndexRoute:
-      SeasonSlugLegSlugScheduleFixtureIdIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute:
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdH2hRoute,
+    SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute:
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdLineupsRoute,
+    SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute:
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdStatsRoute,
+    SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdIndexRoute,
   }
 
-const SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren =
-  SeasonSlugLegSlugScheduleFixtureIdRouteRoute._addFileChildren(
-    SeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren,
+const SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren =
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute._addFileChildren(
+    SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteChildren,
   )
 
-interface SeasonSlugLegSlugRouteRouteChildren {
-  SeasonSlugLegSlugIndexRoute: typeof SeasonSlugLegSlugIndexRoute
-  SeasonSlugLegSlugClubsClubSlugRouteRoute: typeof SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
-  SeasonSlugLegSlugScheduleFixtureIdRouteRoute: typeof SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
-  SeasonSlugLegSlugClubsIndexRoute: typeof SeasonSlugLegSlugClubsIndexRoute
-  SeasonSlugLegSlugGalleryIndexRoute: typeof SeasonSlugLegSlugGalleryIndexRoute
-  SeasonSlugLegSlugQuizIndexRoute: typeof SeasonSlugLegSlugQuizIndexRoute
-  SeasonSlugLegSlugScheduleIndexRoute: typeof SeasonSlugLegSlugScheduleIndexRoute
-  SeasonSlugLegSlugStandingsIndexRoute: typeof SeasonSlugLegSlugStandingsIndexRoute
-  SeasonSlugLegSlugStatsIndexRoute: typeof SeasonSlugLegSlugStatsIndexRoute
-  SeasonSlugLegSlugVideosIndexRoute: typeof SeasonSlugLegSlugVideosIndexRoute
-  SeasonSlugLegSlugVotingIndexRoute: typeof SeasonSlugLegSlugVotingIndexRoute
-  SeasonSlugLegSlugQuizQuizIdLeaderboardRoute: typeof SeasonSlugLegSlugQuizQuizIdLeaderboardRoute
-  SeasonSlugLegSlugQuizQuizIdIndexRoute: typeof SeasonSlugLegSlugQuizQuizIdIndexRoute
-  SeasonSlugLegSlugVideosVideoIdIndexRoute: typeof SeasonSlugLegSlugVideosVideoIdIndexRoute
-  SeasonSlugLegSlugVotingVoteIdIndexRoute: typeof SeasonSlugLegSlugVotingVoteIdIndexRoute
+interface SiteLeagueSlugSeasonSlugLegSlugRouteRouteChildren {
+  SiteLeagueSlugSeasonSlugLegSlugIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren
+  SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren
+  SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute
+  SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute: typeof SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute
+  SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute: typeof SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute
 }
 
-const SeasonSlugLegSlugRouteRouteChildren: SeasonSlugLegSlugRouteRouteChildren =
+const SiteLeagueSlugSeasonSlugLegSlugRouteRouteChildren: SiteLeagueSlugSeasonSlugLegSlugRouteRouteChildren =
   {
-    SeasonSlugLegSlugIndexRoute: SeasonSlugLegSlugIndexRoute,
-    SeasonSlugLegSlugClubsClubSlugRouteRoute:
-      SeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren,
-    SeasonSlugLegSlugScheduleFixtureIdRouteRoute:
-      SeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren,
-    SeasonSlugLegSlugClubsIndexRoute: SeasonSlugLegSlugClubsIndexRoute,
-    SeasonSlugLegSlugGalleryIndexRoute: SeasonSlugLegSlugGalleryIndexRoute,
-    SeasonSlugLegSlugQuizIndexRoute: SeasonSlugLegSlugQuizIndexRoute,
-    SeasonSlugLegSlugScheduleIndexRoute: SeasonSlugLegSlugScheduleIndexRoute,
-    SeasonSlugLegSlugStandingsIndexRoute: SeasonSlugLegSlugStandingsIndexRoute,
-    SeasonSlugLegSlugStatsIndexRoute: SeasonSlugLegSlugStatsIndexRoute,
-    SeasonSlugLegSlugVideosIndexRoute: SeasonSlugLegSlugVideosIndexRoute,
-    SeasonSlugLegSlugVotingIndexRoute: SeasonSlugLegSlugVotingIndexRoute,
-    SeasonSlugLegSlugQuizQuizIdLeaderboardRoute:
-      SeasonSlugLegSlugQuizQuizIdLeaderboardRoute,
-    SeasonSlugLegSlugQuizQuizIdIndexRoute:
-      SeasonSlugLegSlugQuizQuizIdIndexRoute,
-    SeasonSlugLegSlugVideosVideoIdIndexRoute:
-      SeasonSlugLegSlugVideosVideoIdIndexRoute,
-    SeasonSlugLegSlugVotingVoteIdIndexRoute:
-      SeasonSlugLegSlugVotingVoteIdIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRoute:
+      SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugRouteRouteWithChildren,
+    SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRoute:
+      SiteLeagueSlugSeasonSlugLegSlugScheduleFixtureIdRouteRouteWithChildren,
+    SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugClubsIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugGalleryIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugScheduleIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute,
+    SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute:
+      SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdPlayersRoute,
+    SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute:
+      SiteLeagueSlugSeasonSlugLegSlugStatsStatsIdTeamsRoute,
+    SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute:
+      SiteLeagueSlugSeasonSlugLegSlugVideosVideoIdIndexRoute,
   }
 
-const SeasonSlugLegSlugRouteRouteWithChildren =
-  SeasonSlugLegSlugRouteRoute._addFileChildren(
-    SeasonSlugLegSlugRouteRouteChildren,
+const SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren =
+  SiteLeagueSlugSeasonSlugLegSlugRouteRoute._addFileChildren(
+    SiteLeagueSlugSeasonSlugLegSlugRouteRouteChildren,
   )
+
+interface SiteRouteRouteChildren {
+  SiteQuizIndexRoute: typeof SiteQuizIndexRoute
+  SiteVotingIndexRoute: typeof SiteVotingIndexRoute
+  SiteLeagueSlugSeasonSlugLegSlugRouteRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren
+  SiteQuizQuizIdLeaderboardRoute: typeof SiteQuizQuizIdLeaderboardRoute
+  SiteQuizQuizIdIndexRoute: typeof SiteQuizQuizIdIndexRoute
+  SiteVotingVoteIdIndexRoute: typeof SiteVotingVoteIdIndexRoute
+}
+
+const SiteRouteRouteChildren: SiteRouteRouteChildren = {
+  SiteQuizIndexRoute: SiteQuizIndexRoute,
+  SiteVotingIndexRoute: SiteVotingIndexRoute,
+  SiteLeagueSlugSeasonSlugLegSlugRouteRoute:
+    SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren,
+  SiteQuizQuizIdLeaderboardRoute: SiteQuizQuizIdLeaderboardRoute,
+  SiteQuizQuizIdIndexRoute: SiteQuizQuizIdIndexRoute,
+  SiteVotingVoteIdIndexRoute: SiteVotingVoteIdIndexRoute,
+}
+
+const SiteRouteRouteWithChildren = SiteRouteRoute._addFileChildren(
+  SiteRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  SeasonSlugLegSlugRouteRoute: SeasonSlugLegSlugRouteRouteWithChildren,
+  SiteRouteRoute: SiteRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

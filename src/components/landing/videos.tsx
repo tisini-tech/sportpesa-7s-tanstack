@@ -5,7 +5,7 @@ import { ChevronRightIcon, PlayIcon } from 'lucide-react'
 import type { Season } from '#/lib/types'
 import { cn, collectVideos, formatVideoDate } from '#/lib/utils'
 
-const legRoute = getRouteApi('/$seasonSlug/$legSlug')
+const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 export type LandingVideo = {
   id: string
@@ -20,7 +20,7 @@ export type LandingVideo = {
 }
 
 export function VideosSection({ data }: { data: Season[] }) {
-  const { seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
 
   const videos = useMemo(() => collectVideos(data).slice(0, 6), [data])
 
@@ -71,8 +71,8 @@ export function VideosSection({ data }: { data: Season[] }) {
         </div>
 
         <Link
-          to="/$seasonSlug/$legSlug/videos"
-          params={{ seasonSlug, legSlug }}
+          to="/$leagueSlug/$seasonSlug/$legSlug/videos"
+          params={{ leagueSlug, seasonSlug, legSlug }}
           className="inline-flex items-center gap-1 text-xs font-bold tracking-[0.08em] text-secondary uppercase transition-colors hover:text-secondary/80"
         >
           View all
@@ -92,10 +92,13 @@ export function VideosSection({ data }: { data: Season[] }) {
 }
 
 export function VideoCard({ video }: { video: LandingVideo }) {
+  const { leagueSlug } = legRoute.useParams()
+
   return (
     <Link
-      to="/$seasonSlug/$legSlug/videos/$videoId"
+      to="/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId"
       params={{
+        leagueSlug,
         seasonSlug: video.seasonSlug,
         legSlug: video.legSlug,
         videoId: video.id,

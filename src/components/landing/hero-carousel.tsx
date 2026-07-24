@@ -15,7 +15,7 @@ import type { Division } from '#/lib/types'
 import { cn } from '#/lib/utils'
 
 const AUTO_PLAY_MS = 5500
-const legRoute = getRouteApi('/$seasonSlug/$legSlug')
+const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 type SlideId = 'matches' | 'vote' | 'quiz' | 'live'
 
@@ -30,11 +30,11 @@ type HeroSlide = {
   imageSrc: string
   overlayClass: string
   to:
-    | '/$seasonSlug/$legSlug/schedule'
-    | '/$seasonSlug/$legSlug/voting'
-    | '/$seasonSlug/$legSlug/quiz'
-    | '/$seasonSlug/$legSlug/videos'
-    | '/$seasonSlug/$legSlug/videos/$videoId'
+    | '/$leagueSlug/$seasonSlug/$legSlug/schedule'
+    | '/voting'
+    | '/quiz'
+    | '/$leagueSlug/$seasonSlug/$legSlug/videos'
+    | '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
   videoId?: string
 }
 
@@ -104,7 +104,7 @@ function buildSlides(division: Division | null): HeroSlide[] {
       title: 'Live scores & fixtures',
       description: 'Standings and matchdays for every leg on the tour.',
       cta: 'View matches',
-      to: '/$seasonSlug/$legSlug/schedule',
+      to: '/$leagueSlug/$seasonSlug/$legSlug/schedule',
     },
     {
       id: 'live',
@@ -120,8 +120,8 @@ function buildSlides(division: Division | null): HeroSlide[] {
       cta: live.videoId ? 'Watch live' : 'Browse videos',
       footnote: live.videoId ? `${live.dayLabel} stream` : 'Videos hub',
       to: live.videoId
-        ? '/$seasonSlug/$legSlug/videos/$videoId'
-        : '/$seasonSlug/$legSlug/videos',
+        ? '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
+        : '/$leagueSlug/$seasonSlug/$legSlug/videos',
       videoId: live.videoId ?? undefined,
     },
     {
@@ -134,7 +134,7 @@ function buildSlides(division: Division | null): HeroSlide[] {
       description:
         'Pick your favourites and back the players lighting up each leg.',
       cta: 'Cast your vote',
-      to: '/$seasonSlug/$legSlug/voting',
+      to: '/voting',
       footnote: '4,218 fan votes this leg',
     },
     {
@@ -146,18 +146,21 @@ function buildSlides(division: Division | null): HeroSlide[] {
       title: '10 questions, real prizes',
       description: 'Test your 7s knowledge and climb the leaderboard.',
       cta: 'Start quiz',
-      to: '/$seasonSlug/$legSlug/quiz',
+      to: '/quiz',
       footnote: '~2 min · win merch',
     },
   ]
 }
+
+const ctaClassName =
+  'group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30'
 
 export function EngagementCarousel({
   division,
 }: {
   division: Division | null
 }) {
-  const { seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
   const slides = useMemo(() => buildSlides(division), [division])
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -249,16 +252,26 @@ export function EngagementCarousel({
                     ) : null}
                   </div>
 
-                  {slide.to === '/$seasonSlug/$legSlug/videos/$videoId' &&
-                  slide.videoId ? (
+                  {slide.to === '/quiz' || slide.to === '/voting' ? (
+                    <Link to={slide.to} className={ctaClassName}>
+                      {slide.cta}
+                      <ArrowRightIcon
+                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </Link>
+                  ) : slide.to ===
+                      '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId' &&
+                    slide.videoId ? (
                     <Link
-                      to="/$seasonSlug/$legSlug/videos/$videoId"
+                      to="/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId"
                       params={{
+                        leagueSlug,
                         seasonSlug,
                         legSlug,
                         videoId: slide.videoId,
                       }}
-                      className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30"
+                      className={ctaClassName}
                     >
                       {slide.cta}
                       <ArrowRightIcon
@@ -269,12 +282,13 @@ export function EngagementCarousel({
                   ) : (
                     <Link
                       to={
-                        slide.to === '/$seasonSlug/$legSlug/videos/$videoId'
-                          ? '/$seasonSlug/$legSlug/videos'
+                        slide.to ===
+                        '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
+                          ? '/$leagueSlug/$seasonSlug/$legSlug/videos'
                           : slide.to
                       }
-                      params={{ seasonSlug, legSlug }}
-                      className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary/20 px-4 py-3 text-sm font-bold tracking-wide text-secondary uppercase ring-1 ring-secondary/40 backdrop-blur-sm transition-colors hover:bg-secondary/30"
+                      params={{ leagueSlug, seasonSlug, legSlug }}
+                      className={ctaClassName}
                     >
                       {slide.cta}
                       <ArrowRightIcon

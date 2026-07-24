@@ -8,6 +8,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function getInitials(name: string | null | undefined): string {
+  const source = name || 'TBD'
+  return source.slice(0, 2).toUpperCase()
+}
+
 export const getStat = (arry: EventStat[], name: string) => {
   const event = Object.values(arry).find(
     (item) => item.event_name.toString() === name,

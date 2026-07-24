@@ -9,22 +9,21 @@ import {
 import { cn } from '#/lib/utils'
 import { SiteLogo } from './logo'
 
-const rootRoute = getRouteApi('__root__')
+const siteRoute = getRouteApi('/_site')
 
-type NavItem = {
-  segment: string
-  label: string
-}
+type NavItem =
+  | { kind: 'tournament'; segment: string; label: string }
+  | { kind: 'absolute'; to: string; label: string }
 
 const NAV_ITEMS: NavItem[] = [
-  { segment: 'schedule', label: 'Schedule' },
-  { segment: 'standings', label: 'Standings' },
-  { segment: 'clubs', label: 'Clubs' },
-  { segment: 'stats', label: 'Stats' },
-  { segment: 'voting', label: 'Voting' },
-  { segment: 'quiz', label: 'Quiz' },
-  { segment: 'videos', label: 'Videos' },
-  { segment: 'gallery', label: 'Gallery' },
+  { kind: 'tournament', segment: 'schedule', label: 'Schedule' },
+  { kind: 'tournament', segment: 'standings', label: 'Standings' },
+  { kind: 'tournament', segment: 'clubs', label: 'Clubs' },
+  { kind: 'tournament', segment: 'stats', label: 'Stats' },
+  { kind: 'absolute', to: '/voting', label: 'Voting' },
+  { kind: 'absolute', to: '/quiz', label: 'Quiz' },
+  { kind: 'tournament', segment: 'videos', label: 'Videos' },
+  { kind: 'tournament', segment: 'gallery', label: 'Gallery' },
 ]
 
 type HeaderNavLinkProps = {
@@ -65,16 +64,21 @@ function HeaderNavLink({
 }
 
 function useTournamentNavBase(): string {
-  const { seasons } = rootRoute.useRouteContext()
+  const { defaultSeasons, defaultLeague } = siteRoute.useRouteContext()
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
 
   return (
     getTournamentBaseFromPathname(pathname) ??
-    buildFeaturedTournamentPath(seasons) ??
+    buildFeaturedTournamentPath(defaultSeasons, defaultLeague.slug) ??
     '/'
   )
+}
+
+function resolveNavTo(item: NavItem, tournamentBase: string): string {
+  if (item.kind === 'absolute') return item.to
+  return `${tournamentBase}/${item.segment}`
 }
 
 export function SiteHeader() {
@@ -95,7 +99,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 overflow-visible border-b-2 bg-card">
       <div className="sp-shell-wide">
         <div className="flex items-center justify-between gap-4 py-2 lg:py-2.5">
-          <SiteLogo variant="header" onNavigate={closeMobileMenu} />
+          <SiteLogo
+            to={tournamentBase}
+            variant="header"
+            onNavigate={closeMobileMenu}
+          />
 
           <nav
             aria-label="Main navigation"
@@ -103,8 +111,8 @@ export function SiteHeader() {
           >
             {NAV_ITEMS.map((item) => (
               <HeaderNavLink
-                key={item.segment}
-                to={`${tournamentBase}/${item.segment}`}
+                key={item.label}
+                to={resolveNavTo(item, tournamentBase)}
                 label={item.label}
               />
             ))}
@@ -134,9 +142,9 @@ export function SiteHeader() {
           >
             <ul className="divide-y divide-border">
               {NAV_ITEMS.map((item) => (
-                <li key={item.segment}>
+                <li key={item.label}>
                   <HeaderNavLink
-                    to={`${tournamentBase}/${item.segment}`}
+                    to={resolveNavTo(item, tournamentBase)}
                     label={item.label}
                     onNavigate={closeMobileMenu}
                     className="block w-full px-1 py-3 after:inset-x-1"

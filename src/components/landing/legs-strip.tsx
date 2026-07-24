@@ -10,28 +10,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
+import { LEAGUES } from '#/lib/leagues'
 import type { Division, Season } from '#/lib/types'
 import { cn } from '#/lib/utils'
 
 type LegStripProps = {
+  leagueSlug: string
   seasons: Season[]
   season: Season
   divisions: Division[]
   activeDivisionId: number | null
+  onSelectLeague: (leagueSlug: string) => void
   onSelectSeason: (seasonId: number) => void
   onSelectDivision: (id: number) => void
 }
 
 export function LegStrip({
+  leagueSlug,
   seasons,
   season,
   divisions,
   activeDivisionId,
+  onSelectLeague,
   onSelectSeason,
   onSelectDivision,
 }: LegStripProps) {
   if (!divisions.length) return null
 
+  const leagueItems = LEAGUES.map((league) => ({
+    value: league.slug,
+    label: league.title,
+  }))
   const seasonItems = seasons.map((item) => ({
     value: item.id.toString(),
     label: item.name,
@@ -40,28 +49,49 @@ export function LegStrip({
   return (
     <section className="border-y border-border bg-card py-4">
       <div className="sp-shell-wide space-y-3">
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-0">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 sm:px-0">
           <p className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-            Season
+            Competition
           </p>
-          <Select
-            value={season.id.toString()}
-            items={seasonItems}
-            onValueChange={(value) => {
-              if (value) onSelectSeason(Number(value))
-            }}
-          >
-            <SelectTrigger className="h-8 min-w-[7.5rem] border-border bg-background text-xs font-semibold">
-              <SelectValue placeholder="Season" />
-            </SelectTrigger>
-            <SelectContent align="end">
-              {seasons.map((item) => (
-                <SelectItem key={item.id} value={item.id.toString()}>
-                  {item.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Select
+              value={leagueSlug}
+              items={leagueItems}
+              onValueChange={(value) => {
+                if (value) onSelectLeague(value)
+              }}
+            >
+              <SelectTrigger className="h-8 min-w-[8.5rem] border-border bg-background text-xs font-semibold">
+                <SelectValue placeholder="Competition" />
+              </SelectTrigger>
+              <SelectContent align="end">
+                {LEAGUES.map((league) => (
+                  <SelectItem key={league.slug} value={league.slug}>
+                    {league.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={season.id.toString()}
+              items={seasonItems}
+              onValueChange={(value) => {
+                if (value) onSelectSeason(Number(value))
+              }}
+            >
+              <SelectTrigger className="h-8 min-w-[7.5rem] border-border bg-background text-xs font-semibold">
+                <SelectValue placeholder="Season" />
+              </SelectTrigger>
+              <SelectContent align="end">
+                {seasons.map((item) => (
+                  <SelectItem key={item.id} value={item.id.toString()}>
+                    {item.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="-mx-4 sm:mx-0">

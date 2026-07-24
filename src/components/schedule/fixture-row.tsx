@@ -2,7 +2,7 @@ import { cn } from '#/lib/utils'
 import type { Fixture, TeamLogo } from '#/lib/types'
 import { getRouteApi, Link } from '@tanstack/react-router'
 
-const legRoute = getRouteApi('/$seasonSlug/$legSlug')
+const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 type FixtureStatus = 'live' | 'completed' | 'upcoming'
 export type FixtureResult = 'W' | 'D' | 'L'
@@ -248,13 +248,18 @@ function FixtureRowLink({
   logos?: TeamLogo[]
   result?: FixtureResult
 }) {
-  const { seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
 
   return (
     <li className="border-b border-border/70 last:border-b-0">
       <Link
-        to="/$seasonSlug/$legSlug/schedule/$fixtureId"
-        params={{ seasonSlug, legSlug, fixtureId: fixture.id.toString() }}
+        to="/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId"
+        params={{
+          leagueSlug,
+          seasonSlug,
+          legSlug,
+          fixtureId: fixture.id.toString(),
+        }}
       >
         <FixtureRowContent
           fixture={fixture}

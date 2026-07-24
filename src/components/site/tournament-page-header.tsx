@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react'
 import { MapPinIcon } from 'lucide-react'
 
+import { cn } from '#/lib/utils'
+import { LEAGUES } from '#/lib/leagues'
+import type { Division, Season } from '#/lib/types'
 import {
   formatDivisionCardDateRange,
-  formatDivisionOrder,
   formatDivisionStatusLabel,
   getDivisionStatus,
 } from '#/components/landing/division-utils'
@@ -14,15 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { cn } from '#/lib/utils'
-import type { Division, Season } from '#/lib/types'
 
 export type TournamentPageHeaderProps = {
+  leagueSlug: string
   seasons: Season[]
   season?: Season
   division?: Division
   seasonId?: number
   divisionId?: number
+  onLeagueChange: (leagueSlug: string) => void
   onSeasonChange: (seasonId: number) => void
   onDivisionChange: (divisionId: number) => void
   emptyMessage?: string
@@ -42,11 +44,13 @@ function statusBadgeClass(
 }
 
 export function TournamentPageHeader({
+  leagueSlug,
   seasons,
   season,
   division,
   seasonId,
   divisionId,
+  onLeagueChange,
   onSeasonChange,
   onDivisionChange,
   emptyMessage = 'Select a season and leg to continue.',
@@ -54,6 +58,10 @@ export function TournamentPageHeader({
 }: TournamentPageHeaderProps) {
   const status = division ? getDivisionStatus(division) : null
 
+  const leagueItems = LEAGUES.map((league) => ({
+    value: league.slug,
+    label: league.title,
+  }))
   const seasonItems = seasons.map((item) => ({
     value: item.id.toString(),
     label: item.name,
@@ -111,7 +119,26 @@ export function TournamentPageHeader({
           )}
 
           <div className="flex w-full flex-col gap-4 sm:gap-5 lg:w-auto lg:shrink-0 lg:items-end lg:gap-6 lg:pt-2">
-            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:justify-end">
+            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:justify-end lg:grid-cols-3">
+              <Select
+                value={leagueSlug}
+                items={leagueItems}
+                onValueChange={(value) => {
+                  if (value) onLeagueChange(value)
+                }}
+              >
+                <SelectTrigger className="col-span-2 w-full min-w-0 border-border bg-background sm:col-span-1 sm:min-w-[8.5rem]">
+                  <SelectValue placeholder="Competition" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEAGUES.map((league) => (
+                    <SelectItem key={league.slug} value={league.slug}>
+                      {league.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               <Select
                 value={seasonId?.toString()}
                 items={seasonItems}

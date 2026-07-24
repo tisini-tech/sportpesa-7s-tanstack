@@ -1,11 +1,6 @@
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
-import {
-  createFileRoute,
-  getRouteApi,
-  Link,
-  useNavigate,
-} from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Loader2Icon } from 'lucide-react'
 
 import { InputField } from '#/components/forms/input-field'
@@ -25,18 +20,12 @@ import {
 import { resetPasswordSchema } from '#/lib/schemas'
 import { cn } from '#/lib/utils'
 import { resetPasswordFn } from '#/data/auth'
-import { pickFeaturedDivision } from '#/components/landing/division-utils'
-import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
-
-const rootRoute = getRouteApi('__root__')
 
 export const Route = createFileRoute('/_auth/reset-password')({
   component: ResetPasswordPage,
 })
 
 function ResetPasswordPage() {
-  const { seasons } = rootRoute.useRouteContext()
-
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const navigate = useNavigate()
@@ -55,22 +44,7 @@ function ResetPasswordPage() {
 
       try {
         await resetPasswordFn({ data: value })
-
-        const season = seasons[0]
-        const featured = season ? pickFeaturedDivision(season.divisions) : null
-
-        if (!season || !featured) {
-          void navigate({ to: '/' })
-          return
-        }
-
-        void navigate({
-          to: '/$seasonSlug/$legSlug/quiz',
-          params: {
-            seasonSlug: getSeasonSlug(season),
-            legSlug: getLegSlug(featured.division),
-          },
-        })
+        void navigate({ to: '/quiz' })
       } catch (error) {
         setSubmitError(
           error instanceof Error ? error.message : 'Could not reset password',

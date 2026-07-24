@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import { Loader2Icon } from 'lucide-react'
 import { useForm } from '@tanstack/react-form'
-import {
-  createFileRoute,
-  getRouteApi,
-  useNavigate,
-} from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { cn } from '#/lib/utils'
 import { verifySchema } from '#/lib/schemas'
@@ -20,17 +16,12 @@ import {
   FieldLabel,
 } from '#/components/ui/field'
 import { verifyFn } from '#/data/auth'
-import { pickFeaturedDivision } from '#/components/landing/division-utils'
-import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
-
-const rootRoute = getRouteApi('__root__')
 
 export const Route = createFileRoute('/_auth/verify')({
   component: VerifyPage,
 })
 
 function VerifyPage() {
-  const { seasons } = rootRoute.useRouteContext()
   const [submitError, setSubmitError] = useState<string | null>(null)
   const navigate = useNavigate()
 
@@ -46,22 +37,7 @@ function VerifyPage() {
 
       try {
         await verifyFn({ data: value })
-
-        const season = seasons[0]
-        const featured = season ? pickFeaturedDivision(season.divisions) : null
-
-        if (!season || !featured) {
-          void navigate({ to: '/' })
-          return
-        }
-
-        void navigate({
-          to: '/$seasonSlug/$legSlug/quiz',
-          params: {
-            seasonSlug: getSeasonSlug(season),
-            legSlug: getLegSlug(featured.division),
-          },
-        })
+        void navigate({ to: '/quiz' })
       } catch (error) {
         setSubmitError(
           error instanceof Error

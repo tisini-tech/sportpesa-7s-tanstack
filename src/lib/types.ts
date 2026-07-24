@@ -291,6 +291,32 @@ export interface TopTeamStats {
   sub_events: SubEvent[]
 }
 
+export interface PaginatedResponse<T> {
+  total: number
+  page: number
+  page_size: number
+  total_pages: number
+  has_next: boolean
+  has_previous: boolean
+  next: string
+  previous: string
+  items: T[]
+}
+
+export interface TopPlayerStats {
+  player_id: number
+  name: string
+  passportphoto: string
+  team_player_id: string
+  nationality: string
+  team_id: number
+  team_name: string
+  team_short_name: string
+  team_logo: string
+  total: number
+  sub_events: SubEvent[]
+}
+
 export interface VoteCause {
   id: number
   reason: string

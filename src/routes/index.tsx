@@ -1,16 +1,22 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { buildFeaturedTournamentPath } from '#/lib/tournament-slugs'
+import { getSeasonsFn } from '#/data/seasons'
+import { DEFAULT_LEAGUE } from '#/lib/leagues'
+import { getFeaturedTournamentParams } from '#/lib/tournament-slugs'
 
 export const Route = createFileRoute('/')({
-  beforeLoad: ({ context }) => {
-    const featuredPath = buildFeaturedTournamentPath(context.seasons)
+  beforeLoad: async () => {
+    const seasons = await getSeasonsFn({
+      data: { id: String(DEFAULT_LEAGUE.id) },
+    })
+    const featured = getFeaturedTournamentParams(seasons, DEFAULT_LEAGUE.slug)
 
-    if (featuredPath) {
-      throw redirect({
-        to: featuredPath,
-        replace: true,
-      })
-    }
+    if (!featured) return
+
+    throw redirect({
+      to: '/$leagueSlug/$seasonSlug/$legSlug',
+      params: featured,
+      replace: true,
+    })
   },
 })

@@ -14,20 +14,31 @@ export const getSeasonsFn = createServerFn({ method: 'GET' })
   })
 
 export const getDivisionPoolsFn = createServerFn({ method: 'GET' })
-  .validator((data: { seasonId: string; divisionId: string }) => data)
+  .validator(
+    (data: {
+      competitionId: string
+      seasonId: string
+      divisionId: string
+    }) => data,
+  )
   .handler(async ({ data }) => {
     const divisionPools = await apiService.get<DivisionPool[]>(
-      `/competitions/238/seasons/${data.seasonId}/pools?division_id=${data.divisionId}`,
+      `/competitions/${data.competitionId}/seasons/${data.seasonId}/pools?division_id=${data.divisionId}`,
     )
     return divisionPools
   })
 
-export const poolsQueryOptions = (seasonId: string, divisionId: string) =>
+export const poolsQueryOptions = (
+  competitionId: string,
+  seasonId: string,
+  divisionId: string,
+) =>
   queryOptions({
-    queryKey: ['divisionPools', seasonId, divisionId],
+    queryKey: ['divisionPools', competitionId, seasonId, divisionId],
     queryFn: () =>
       getDivisionPoolsFn({
         data: {
+          competitionId,
           seasonId,
           divisionId,
         },

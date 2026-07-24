@@ -16,10 +16,12 @@ function getTeamInitials(name: string | null | undefined): string {
 
 export function ClubsGrid({
   teams,
+  leagueSlug,
   seasonSlug,
   legSlug,
 }: {
   teams: Team[]
+  leagueSlug: string
   seasonSlug: string
   legSlug: string
 }) {
@@ -43,8 +45,9 @@ export function ClubsGrid({
       {sorted.map((team) => (
         <li key={team.team_id}>
           <Link
-            to="/$seasonSlug/$legSlug/clubs/$clubSlug"
+            to="/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug"
             params={{
+              leagueSlug,
               seasonSlug,
               legSlug,
               clubSlug: getClubSlug(team),

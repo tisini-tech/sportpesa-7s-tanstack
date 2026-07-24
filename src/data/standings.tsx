@@ -3,11 +3,17 @@ import type { CompetitionStanding } from '#/lib/types'
 import { createServerFn } from '@tanstack/react-start'
 
 export const getGroupStandingsFn = createServerFn({ method: 'GET' })
-  .validator((data: { seasonId: string; divisionId: string }) => data)
+  .validator(
+    (data: {
+      competitionId: string
+      seasonId: string
+      divisionId: string
+    }) => data,
+  )
   .handler(async ({ data }) => {
     try {
       const standings: CompetitionStanding = await apiService.get(
-        `/competitions/238/seasons/${data.seasonId}/standings?division_id=${data.divisionId}`,
+        `/competitions/${data.competitionId}/seasons/${data.seasonId}/standings?division_id=${data.divisionId}`,
       )
 
       return standings?.stages ?? []
@@ -17,11 +23,17 @@ export const getGroupStandingsFn = createServerFn({ method: 'GET' })
   })
 
 export const getDivisionStandingsFn = createServerFn({ method: 'GET' })
-  .validator((data: { seasonId: string; divisionId: string }) => data)
+  .validator(
+    (data: {
+      competitionId: string
+      seasonId: string
+      divisionId: string
+    }) => data,
+  )
   .handler(async ({ data }) => {
     try {
       const standings: CompetitionStanding = await apiService.get(
-        `/competitions/238/seasons/${data.seasonId}/standings?division_id=${data.divisionId}&leg=True`,
+        `/competitions/${data.competitionId}/seasons/${data.seasonId}/standings?division_id=${data.divisionId}&leg=True`,
       )
 
       return standings
@@ -41,11 +53,11 @@ export const getDivisionStandingsFn = createServerFn({ method: 'GET' })
   })
 
 export const getOverallStandingsFn = createServerFn({ method: 'GET' })
-  .validator((data: { seasonId: string }) => data)
+  .validator((data: { competitionId: string; seasonId: string }) => data)
   .handler(async ({ data }) => {
     try {
       const standings: CompetitionStanding = await apiService.get(
-        `/competitions/238/seasons/${data.seasonId}/standings?overall=True`,
+        `/competitions/${data.competitionId}/seasons/${data.seasonId}/standings?overall=True`,
       )
 
       return standings

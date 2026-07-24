@@ -7,12 +7,14 @@ import { cn } from '#/lib/utils'
 import type { Division, Season } from '#/lib/types'
 
 type ScheduleHeaderProps = {
+  leagueSlug: string
   seasons: Season[]
   season?: Season
   division?: Division
   seasonId?: number
   divisionId?: number
   activeStage: ScheduleStage
+  onLeagueChange: (leagueSlug: string) => void
   onSeasonChange: (seasonId: number) => void
   onDivisionChange: (divisionId: number) => void
   onStageChange: (stage: ScheduleStage) => void
@@ -24,23 +26,27 @@ function getStageTabLabel(stage: (typeof SCHEDULE_STAGES)[number]): string {
 }
 
 export function ScheduleHeader({
+  leagueSlug,
   seasons,
   season,
   division,
   seasonId,
   divisionId,
   activeStage,
+  onLeagueChange,
   onSeasonChange,
   onDivisionChange,
   onStageChange,
 }: ScheduleHeaderProps) {
   return (
     <TournamentPageHeader
+      leagueSlug={leagueSlug}
       seasons={seasons}
       season={season}
       division={division}
       seasonId={seasonId}
       divisionId={divisionId}
+      onLeagueChange={onLeagueChange}
       onSeasonChange={onSeasonChange}
       onDivisionChange={onDivisionChange}
       emptyMessage="Select a season and leg to view fixtures."

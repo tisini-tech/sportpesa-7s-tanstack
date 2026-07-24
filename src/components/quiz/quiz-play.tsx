@@ -25,8 +25,6 @@ import { cn } from '#/lib/utils'
 
 type QuizPlayProps = {
   quiz: Quiz
-  seasonSlug: string
-  legSlug: string
 }
 
 type QuizAnswer = {
@@ -60,7 +58,7 @@ function formatTimer(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
+export function QuizPlay({ quiz }: QuizPlayProps) {
   const questions = useMemo(
     () => sortQuestions(quiz.questions ?? []),
     [quiz.questions],
@@ -281,8 +279,7 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
 
             <DialogFooter className="gap-2 sm:justify-between">
               <Link
-                to="/$seasonSlug/$legSlug/quiz"
-                params={{ seasonSlug, legSlug }}
+                to="/quiz"
                 className={cn(
                   'inline-flex h-11 items-center justify-center rounded-2xl border border-border bg-background px-4 text-xs font-bold tracking-[0.08em] uppercase transition-colors',
                   'hover:bg-muted hover:text-foreground',
@@ -336,8 +333,8 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
                 type="button"
                 render={
                   <Link
-                    to="/$seasonSlug/$legSlug/quiz/$quizId/leaderboard"
-                    params={{ seasonSlug, legSlug, quizId: String(quiz.id) }}
+                    to="/quiz/$quizId/leaderboard"
+                    params={{ quizId: String(quiz.id) }}
                   />
                 }
                 variant="secondary"
@@ -348,12 +345,7 @@ export function QuizPlay({ quiz, seasonSlug, legSlug }: QuizPlayProps) {
               </Button>
               <Button
                 type="button"
-                render={
-                  <Link
-                    to="/$seasonSlug/$legSlug/quiz"
-                    params={{ seasonSlug, legSlug }}
-                  />
-                }
+                render={<Link to="/quiz" />}
                 variant="outline"
                 size="lg"
                 className="h-11 px-5 text-xs font-bold tracking-[0.08em] uppercase"

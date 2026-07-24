@@ -4,6 +4,7 @@ import { cn } from '#/lib/utils'
 import { sportpesaLogo } from '#/assets'
 
 type SiteLogoProps = {
+  to?: string
   onNavigate?: () => void
   variant?: 'header' | 'default'
   className?: string
@@ -11,6 +12,7 @@ type SiteLogoProps = {
 }
 
 export function SiteLogo({
+  to = '/',
   onNavigate,
   variant = 'default',
   className,
@@ -21,7 +23,7 @@ export function SiteLogo({
   return (
     <div className={cn('flex shrink-0 items-stretch', className)}>
       <Link
-        to="/"
+        to={to as never}
         onClick={onNavigate}
         className={cn(
           'flex items-center transition-opacity hover:opacity-95',

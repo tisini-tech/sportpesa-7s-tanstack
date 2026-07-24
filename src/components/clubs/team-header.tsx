@@ -7,17 +7,17 @@ import { cn } from '#/lib/utils'
 const tabs = [
   {
     label: 'Players',
-    to: '/$seasonSlug/$legSlug/clubs/$clubSlug' as const,
+    to: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug' as const,
     exact: true,
   },
   {
     label: 'Fixtures',
-    to: '/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures' as const,
+    to: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures' as const,
     exact: false,
   },
   {
     label: 'Stats',
-    to: '/$seasonSlug/$legSlug/clubs/$clubSlug/stats' as const,
+    to: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats' as const,
     exact: false,
   },
 ]
@@ -35,12 +35,14 @@ function getTeamInitials(name: string | null | undefined): string {
 export function TeamHeader({
   team,
   teamId,
+  leagueSlug,
   seasonSlug,
   legSlug,
   clubSlug,
 }: {
   team: Team
   teamId: number
+  leagueSlug: string
   seasonSlug: string
   legSlug: string
   clubSlug: string
@@ -53,8 +55,8 @@ export function TeamHeader({
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         <div className="border-b border-border/60 bg-muted/15 px-3 py-2 sm:px-4">
           <Link
-            to="/$seasonSlug/$legSlug/clubs"
-            params={{ seasonSlug, legSlug }}
+            to="/$leagueSlug/$seasonSlug/$legSlug/clubs"
+            params={{ leagueSlug, seasonSlug, legSlug }}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3.5" aria-hidden />
@@ -104,7 +106,7 @@ export function TeamHeader({
           <Link
             key={tab.to}
             to={tab.to}
-            params={{ seasonSlug, legSlug, clubSlug }}
+            params={{ leagueSlug, seasonSlug, legSlug, clubSlug }}
             search={{ teamId }}
             className={tabLinkClass}
             activeProps={{ className: cn(tabLinkClass, tabLinkActiveClass) }}

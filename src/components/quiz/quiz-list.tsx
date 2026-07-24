@@ -82,15 +82,7 @@ function actionBadgeClass(action: QuizAction): string {
   return 'bg-primary/15 text-primary ring-primary/30'
 }
 
-export function QuizList({
-  quizzes,
-  seasonSlug,
-  legSlug,
-}: {
-  quizzes: Quiz[]
-  seasonSlug: string
-  legSlug: string
-}) {
+export function QuizList({ quizzes }: { quizzes: Quiz[] }) {
   const visible = quizzes
     .filter((quiz) => quiz.is_public && quiz.status.toUpperCase() !== 'DR')
     .sort((a, b) => {
@@ -118,22 +110,14 @@ export function QuizList({
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {visible.map((quiz) => (
         <li key={quiz.id}>
-          <QuizCard quiz={quiz} seasonSlug={seasonSlug} legSlug={legSlug} />
+          <QuizCard quiz={quiz} />
         </li>
       ))}
     </ul>
   )
 }
 
-function QuizCard({
-  quiz,
-  seasonSlug,
-  legSlug,
-}: {
-  quiz: Quiz
-  seasonSlug: string
-  legSlug: string
-}) {
+function QuizCard({ quiz }: { quiz: Quiz }) {
   const [now, setNow] = useState(() => new Date())
   const action = getQuizAction(quiz, now)
   const startsAt = parseQuizDate(quiz.starts_at)
@@ -204,12 +188,8 @@ function QuizCard({
 
         {action === 'play' ? (
           <Link
-            to="/$seasonSlug/$legSlug/quiz/$quizId"
-            params={{
-              seasonSlug,
-              legSlug,
-              quizId: quiz.id.toString(),
-            }}
+            to="/quiz/$quizId"
+            params={{ quizId: quiz.id.toString() }}
             className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-secondary px-4 text-sm font-bold tracking-wide text-secondary-foreground uppercase transition-colors hover:bg-secondary/90"
           >
             <PlayIcon className="size-4" aria-hidden />
@@ -218,12 +198,8 @@ function QuizCard({
           </Link>
         ) : action === 'leaderboard' ? (
           <Link
-            to="/$seasonSlug/$legSlug/quiz/$quizId/leaderboard"
-            params={{
-              seasonSlug,
-              legSlug,
-              quizId: quiz.id.toString(),
-            }}
+            to="/quiz/$quizId/leaderboard"
+            params={{ quizId: quiz.id.toString() }}
             className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-muted/40 px-4 text-sm font-bold tracking-wide text-primary uppercase transition-colors hover:bg-muted"
           >
             <TrophyIcon className="size-4" aria-hidden />

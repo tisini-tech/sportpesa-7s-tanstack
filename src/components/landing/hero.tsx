@@ -19,6 +19,7 @@ type HeroSectionProps = {
   season: Season
   seasonName: string
   activeDivisionId?: number | null
+  leagueSlug?: string
 }
 
 function resolveHeroDivision(
@@ -97,11 +98,13 @@ function HeroLegFeature({
   status,
   season,
   seasonName,
+  leagueSlug,
 }: {
   division: Division
   status: DivisionStatus
   season: Season
   seasonName: string
+  leagueSlug?: string
 }) {
   const legNumber =
     season.divisions.findIndex((item) => item.id === division.id) + 1
@@ -152,10 +155,11 @@ function HeroLegFeature({
               {formatDivisionStatusLabel(status)}
             </span>
 
-            {(status === 'live' || status === 'upcoming') && (
+            {(status === 'live' || status === 'upcoming') && leagueSlug ? (
               <Link
-                to="/$seasonSlug/$legSlug/schedule"
+                to="/$leagueSlug/$seasonSlug/$legSlug/schedule"
                 params={{
+                  leagueSlug,
                   seasonSlug: getSeasonSlug(season),
                   legSlug: getLegSlug(division),
                 }}
@@ -167,7 +171,7 @@ function HeroLegFeature({
                   aria-hidden
                 />
               </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
@@ -196,6 +200,7 @@ export function HeroSection({
   season,
   seasonName,
   activeDivisionId,
+  leagueSlug,
 }: HeroSectionProps) {
   const featured = resolveHeroDivision(divisions, activeDivisionId)
 
@@ -209,6 +214,7 @@ export function HeroSection({
               status={featured.status}
               season={season}
               seasonName={seasonName}
+              leagueSlug={leagueSlug}
             />
           ) : (
             <HeroLegFallback />

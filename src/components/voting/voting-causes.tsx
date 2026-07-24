@@ -73,15 +73,7 @@ function statusClass(status: VoteStatus): string {
   return 'bg-primary/15 text-primary ring-primary/30'
 }
 
-export function VotingCauses({
-  causes,
-  seasonSlug,
-  legSlug,
-}: {
-  causes: VoteCause[]
-  seasonSlug: string
-  legSlug: string
-}) {
+export function VotingCauses({ causes }: { causes: VoteCause[] }) {
   const sorted = [...causes].sort((a, b) => {
     const statusOrder = { open: 0, upcoming: 1, ended: 2 }
     const statusDiff =
@@ -108,26 +100,14 @@ export function VotingCauses({
     <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {sorted.map((cause) => (
         <li key={cause.id}>
-          <VoteCauseCard
-            cause={cause}
-            seasonSlug={seasonSlug}
-            legSlug={legSlug}
-          />
+          <VoteCauseCard cause={cause} />
         </li>
       ))}
     </ul>
   )
 }
 
-function VoteCauseCard({
-  cause,
-  seasonSlug,
-  legSlug,
-}: {
-  cause: VoteCause
-  seasonSlug: string
-  legSlug: string
-}) {
+function VoteCauseCard({ cause }: { cause: VoteCause }) {
   const [now, setNow] = useState(() => new Date())
   const status = getVoteStatus(cause, now)
   const startsAt = parseVoteDate(cause.date_from)
@@ -184,12 +164,8 @@ function VoteCauseCard({
 
         {isActionable ? (
           <Link
-            to="/$seasonSlug/$legSlug/voting/$voteId"
-            params={{
-              seasonSlug,
-              legSlug,
-              voteId: cause.id.toString(),
-            }}
+            to="/voting/$voteId"
+            params={{ voteId: cause.id.toString() }}
             search={{ view: status === 'ended' ? 'results' : undefined }}
             className={cn(
               'inline-flex h-10 items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-bold tracking-wide uppercase transition-colors',
