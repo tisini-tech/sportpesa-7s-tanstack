@@ -53,17 +53,18 @@ export function TournamentPageHeader({
   children,
 }: TournamentPageHeaderProps) {
   const status = division ? getDivisionStatus(division) : null
-  const sortedDivisions = [...(season?.divisions ?? [])].sort(
-    (a, b) => a.order - b.order,
-  )
+
   const seasonItems = seasons.map((item) => ({
     value: item.id.toString(),
     label: item.name,
   }))
-  const divisionItems = sortedDivisions.map((leg) => ({
+  const divisionItems = season?.divisions.map((leg) => ({
     value: leg.id.toString(),
     label: leg.name,
   }))
+
+  const legNumber =
+    (season?.divisions.findIndex((item) => item.id === divisionId) ?? 0) + 1
 
   return (
     <section className="border-b border-border bg-card">
@@ -81,7 +82,7 @@ export function TournamentPageHeader({
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <span className="rounded-md bg-muted px-2 py-1 text-[0.6rem] font-black tracking-[0.15em] text-secondary uppercase sm:text-[0.65rem]">
-                    Leg {formatDivisionOrder(division.order)}
+                    Leg {legNumber}
                   </span>
                   {status ? (
                     <span
@@ -141,7 +142,7 @@ export function TournamentPageHeader({
                   <SelectValue placeholder="Select leg" />
                 </SelectTrigger>
                 <SelectContent>
-                  {sortedDivisions.map((leg) => (
+                  {season?.divisions.map((leg) => (
                     <SelectItem key={leg.id} value={leg.id.toString()}>
                       {leg.name}
                     </SelectItem>

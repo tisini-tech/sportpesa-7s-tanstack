@@ -48,5 +48,6 @@ export const castVoteFn = createServerFn({ method: 'POST' })
         withApiKey: true,
       },
     )
+
     return response
   })

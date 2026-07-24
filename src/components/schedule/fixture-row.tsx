@@ -45,7 +45,12 @@ function formatFixtureStatusLabel(status: FixtureStatus): string {
 }
 
 function formatFixtureKickoff(fixture: Fixture): string {
-  if (fixture.matchtime) return fixture.matchtime
+  if (fixture.matchtime) {
+    // API often sends "HH:MM:SS" — show kickoff as HH:MM
+    const match = fixture.matchtime.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/)
+    if (match) return `${match[1].padStart(2, '0')}:${match[2]}`
+    return fixture.matchtime
+  }
 
   if (!fixture.game_date) return 'TBC'
 
@@ -135,7 +140,8 @@ function ResultBadge({ result }: { result: FixtureResult }) {
         'inline-flex size-7 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-bold ring-1',
         result === 'W' && 'bg-secondary/15 text-secondary ring-secondary/30',
         result === 'D' && 'bg-muted text-muted-foreground ring-border',
-        result === 'L' && 'bg-destructive/15 text-destructive ring-destructive/30',
+        result === 'L' &&
+          'bg-destructive/15 text-destructive ring-destructive/30',
       )}
     >
       {result}
@@ -159,16 +165,8 @@ function FixtureRowContent({
     homeScore !== null && awayScore !== null && homeScore > awayScore
   const awayLeads =
     homeScore !== null && awayScore !== null && awayScore > homeScore
-  const team1Logo = resolveTeamLogo(
-    fixture.team1_id,
-    fixture.team1_logo,
-    logos,
-  )
-  const team2Logo = resolveTeamLogo(
-    fixture.team2_id,
-    fixture.team2_logo,
-    logos,
-  )
+  const team1Logo = resolveTeamLogo(fixture.team1_id, fixture.team1_logo, logos)
+  const team2Logo = resolveTeamLogo(fixture.team2_id, fixture.team2_logo, logos)
 
   return (
     <div
@@ -238,9 +236,7 @@ export function FixtureRow({
     )
   }
 
-  return (
-    <FixtureRowLink fixture={fixture} logos={logos} result={result} />
-  )
+  return <FixtureRowLink fixture={fixture} logos={logos} result={result} />
 }
 
 function FixtureRowLink({

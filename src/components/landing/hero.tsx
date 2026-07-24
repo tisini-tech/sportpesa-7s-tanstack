@@ -104,7 +104,8 @@ function HeroLegFeature({
   season: Season
   seasonName: string
 }) {
-  const legNumber = formatDivisionOrder(division.order)
+  const legNumber =
+    season.divisions.findIndex((item) => item.id === division.id) + 1
 
   return (
     <article className="relative min-h-[30rem] overflow-hidden rounded-2xl border border-border bg-card/50 shadow-lg sm:min-h-[32rem] lg:min-h-[35rem]">
