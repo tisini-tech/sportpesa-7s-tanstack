@@ -5,6 +5,7 @@ import type {
   Country,
   Quiz,
   QuizLeaderboard,
+  QuizParticipation,
   QuizSubmitResponse,
 } from '#/lib/types'
 
@@ -16,6 +17,17 @@ export const getQuizzesFn = createServerFn({ method: 'GET' }).handler(
     })
   },
 )
+
+export const getQuizParticipationFn = createServerFn({ method: 'GET' })
+  .validator((data: { quizId: string }) => data)
+  .handler(async ({ data }) => {
+    return apiService.get<QuizParticipation>(
+      `/engagements/${data.quizId}/participation`,
+      {
+        base: 'quiz',
+      },
+    )
+  })
 
 export const getQuizLeaderboardFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)

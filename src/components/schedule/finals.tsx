@@ -7,7 +7,19 @@ import type { Fixture } from '#/lib/types'
 
 export function FinalsTab({ fixtures }: { fixtures: Fixture[] }) {
   const finals = fixtures.filter((fixture) =>
-    ['383', '385', '386', '387', '388'].includes(fixture.stage ?? ''),
+    [
+      '383',
+      '385',
+      '386',
+      '387',
+      '388',
+      '495',
+      '497',
+      '508',
+      '509',
+      '510',
+      '512',
+    ].includes(fixture.stage ?? ''),
   )
 
   const groupedQuarters = useMemo(() => {

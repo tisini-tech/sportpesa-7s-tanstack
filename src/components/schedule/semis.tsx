@@ -7,7 +7,18 @@ import { ScheduleEmptyState } from './schedule-empty-state'
 
 export function SemisTab({ fixtures }: { fixtures: Fixture[] }) {
   const quarters = fixtures.filter((fixture) =>
-    ['379', '380', '381', '382'].includes(fixture.stage ?? ''),
+    [
+      '379',
+      '380',
+      '381',
+      '382',
+      '493',
+      '494',
+      '504',
+      '505',
+      '506',
+      '507',
+    ].includes(fixture.stage ?? ''),
   )
 
   const groupedQuarters = useMemo(() => {

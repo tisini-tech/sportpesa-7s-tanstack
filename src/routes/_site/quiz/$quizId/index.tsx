@@ -1,11 +1,17 @@
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  isRedirect,
+  Link,
+  redirect,
+  useRouter,
+} from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { ArrowLeftIcon } from 'lucide-react'
 
 import { LoginModal } from '#/components/auth/login'
 import { QuizPlay } from '#/components/quiz/quiz-play'
 import { clearSessionFn, getOptionalUserFn } from '#/data/auth'
-import { getQuizFn } from '#/data/quiz'
+import { getQuizFn, getQuizParticipationFn } from '#/data/quiz'
 
 function isAuthError(message: string): boolean {
   return /not authenticated|token not valid|token expired|unauthorized|401/i.test(
@@ -24,9 +30,23 @@ export const Route = createFileRoute('/_site/quiz/$quizId/')({
     }
 
     try {
-      const quiz = await getQuizFn({ data: { quizId: params.quizId } })
+      const [quiz, quizParticipation] = await Promise.all([
+        getQuizFn({ data: { quizId: params.quizId } }),
+        getQuizParticipationFn({ data: { quizId: params.quizId } }),
+      ])
+
+      if (quizParticipation.has_played) {
+        throw redirect({
+          to: '/quiz/$quizId/leaderboard',
+          params: { quizId: params.quizId },
+        })
+      }
+
       return { quiz, sessionExpired: false }
     } catch (error) {
+      // Redirects are thrown — don't treat them as load failures.
+      if (isRedirect(error)) throw error
+
       const message =
         error instanceof Error ? error.message : 'Could not load quiz'
 

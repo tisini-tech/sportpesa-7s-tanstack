@@ -390,6 +390,10 @@ export interface Quiz {
   questions?: Question[]
 }
 
+export interface QuizParticipation {
+  has_played: boolean
+}
+
 export interface QuizUser {
   id: number
   username: string

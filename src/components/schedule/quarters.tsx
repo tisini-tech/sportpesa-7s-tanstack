@@ -6,7 +6,7 @@ import { ScheduleEmptyState } from './schedule-empty-state'
 
 export function QuartersTab({ fixtures }: { fixtures: Fixture[] }) {
   const quarters = fixtures.filter((fixture) =>
-    ['377', '378'].includes(fixture.stage ?? ''),
+    ['377', '378', '502', '503', '492'].includes(fixture.stage ?? ''),
   )
 
   const groupedQuarters = useMemo(() => {

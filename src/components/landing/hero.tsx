@@ -141,7 +141,7 @@ function HeroLegFeature({
           </h1>
           <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
             <MapPinIcon className="size-4 shrink-0 text-primary" aria-hidden />
-            Leg {division.order} · {division.county}
+            Leg {legNumber} · {division.county}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
