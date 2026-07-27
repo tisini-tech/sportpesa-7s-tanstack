@@ -65,7 +65,21 @@ export function getTournamentBaseFromPathname(pathname: string): string | null {
   const match = pathname.match(/^\/([^/]+)\/([^/]+)\/([^/]+)/)
   if (!match) return null
 
+  // Ignore season-scoped pages like /div1/2026/gallery (3rd segment is not a leg).
+  if (match[3] === 'gallery') {
+    return null
+  }
+
   return `/${match[1]}/${match[2]}/${match[3]}`
+}
+
+/** `/$leagueSlug/$seasonSlug` from a tournament base or pathname. */
+export function getSeasonBaseFromTournamentBase(
+  tournamentBase: string,
+): string | null {
+  const match = tournamentBase.match(/^\/([^/]+)\/([^/]+)/)
+  if (!match) return null
+  return `/${match[1]}/${match[2]}`
 }
 
 export function getFeaturedTournamentParams(

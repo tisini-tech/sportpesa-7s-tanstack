@@ -1,0 +1,85 @@
+import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { ArrowLeftIcon } from 'lucide-react'
+
+import { getSeasonsFn, seasonImagesQueryOptions } from '#/data/seasons'
+import { resolveLeagueBySlug } from '#/lib/leagues'
+import { resolveSeasonBySlug } from '#/lib/tournament-slugs'
+
+export const Route = createFileRoute(
+  '/_site/$leagueSlug/$seasonSlug/gallery/$imageId/',
+)({
+  beforeLoad: async ({ params }) => {
+    const league = resolveLeagueBySlug(params.leagueSlug)
+    if (!league) throw notFound()
+
+    // Gallery assets live on Division 1 (238) only.
+    const seasons = await getSeasonsFn({ data: { id: '238' } })
+    const season = resolveSeasonBySlug(seasons, params.seasonSlug)
+    if (!season) throw notFound()
+
+    return { league, season }
+  },
+  loader: async ({ context, params }) => {
+    const images = await context.queryClient.ensureQueryData(
+      seasonImagesQueryOptions(context.season.id.toString()),
+    )
+
+    const image = images.find((item) => String(item.id) === params.imageId)
+    if (!image) throw notFound()
+
+    return { image }
+  },
+  component: GalleryImagePage,
+})
+
+function GalleryImagePage() {
+  const { league, season } = Route.useRouteContext()
+  const { leagueSlug, seasonSlug } = Route.useParams()
+  const { image } = Route.useLoaderData()
+
+  return (
+    <div>
+      <section className="border-b border-border bg-card">
+        <div className="sp-content-shell flex flex-col gap-x-3 gap-y-1.5 px-4 py-2.5 sm:px-6">
+          <Link
+            to="/$leagueSlug/$seasonSlug/gallery"
+            params={{ leagueSlug, seasonSlug }}
+            className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeftIcon className="size-3.5" aria-hidden />
+            All photos
+          </Link>
+
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <h1 className="text-sm font-bold tracking-tight text-foreground sm:text-base">
+              {image.caption || 'Photo'}
+            </h1>
+            <span className="hidden text-border sm:inline" aria-hidden>
+              |
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {league.title} · {season.name}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="sp-content-shell py-8">
+        <article className="overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="bg-muted/30">
+            <img
+              src={image.image}
+              alt={image.caption || ''}
+              className="mx-auto max-h-[min(80vh,52rem)] w-full object-contain"
+            />
+          </div>
+          {image.caption ? (
+            <div className="border-t border-border px-4 py-4 sm:px-5">
+              <p className="text-sm text-foreground/90">{image.caption}</p>
+            </div>
+          ) : null}
+        </article>
+      </section>
+    </div>
+  )
+}

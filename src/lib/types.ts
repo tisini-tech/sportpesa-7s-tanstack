@@ -8,6 +8,12 @@ export interface Season {
   divisions: Division[]
 }
 
+export interface SeasonImage {
+  id: number
+  image: string
+  caption: string
+}
+
 export interface Division {
   id: number
   name: string

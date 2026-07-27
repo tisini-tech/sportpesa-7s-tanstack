@@ -4,6 +4,7 @@ import { getRouteApi, Link, useRouterState } from '@tanstack/react-router'
 
 import {
   buildFeaturedTournamentPath,
+  getSeasonBaseFromTournamentBase,
   getTournamentBaseFromPathname,
 } from '#/lib/tournament-slugs'
 import { cn } from '#/lib/utils'
@@ -13,6 +14,7 @@ const siteRoute = getRouteApi('/_site')
 
 type NavItem =
   | { kind: 'tournament'; segment: string; label: string }
+  | { kind: 'season'; segment: string; label: string }
   | { kind: 'absolute'; to: string; label: string }
 
 const NAV_ITEMS: NavItem[] = [
@@ -23,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
   { kind: 'absolute', to: '/voting', label: 'Voting' },
   { kind: 'absolute', to: '/quiz', label: 'Quiz' },
   { kind: 'tournament', segment: 'videos', label: 'Videos' },
-  { kind: 'tournament', segment: 'gallery', label: 'Gallery' },
+  { kind: 'season', segment: 'gallery', label: 'Gallery' },
 ]
 
 type HeaderNavLinkProps = {
@@ -78,6 +80,12 @@ function useTournamentNavBase(): string {
 
 function resolveNavTo(item: NavItem, tournamentBase: string): string {
   if (item.kind === 'absolute') return item.to
+
+  if (item.kind === 'season') {
+    const seasonBase = getSeasonBaseFromTournamentBase(tournamentBase)
+    return seasonBase ? `${seasonBase}/${item.segment}` : `/${item.segment}`
+  }
+
   return `${tournamentBase}/${item.segment}`
 }
 

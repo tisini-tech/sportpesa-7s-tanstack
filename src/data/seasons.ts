@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query'
 import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
-import type { DivisionPool, Season } from '#/lib/types'
+import type { DivisionPool, Season, SeasonImage } from '#/lib/types'
 
 export const getSeasonsFn = createServerFn({ method: 'GET' })
   .validator((data: { id: string }) => data)
@@ -15,11 +15,8 @@ export const getSeasonsFn = createServerFn({ method: 'GET' })
 
 export const getDivisionPoolsFn = createServerFn({ method: 'GET' })
   .validator(
-    (data: {
-      competitionId: string
-      seasonId: string
-      divisionId: string
-    }) => data,
+    (data: { competitionId: string; seasonId: string; divisionId: string }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const divisionPools = await apiService.get<DivisionPool[]>(
@@ -43,4 +40,19 @@ export const poolsQueryOptions = (
           divisionId,
         },
       }),
+  })
+
+export const getSeasonImagesFn = createServerFn({ method: 'GET' })
+  .validator((data: { seasonId: string }) => data)
+  .handler(async ({ data }) => {
+    const seasonImages = await apiService.get<SeasonImage[]>(
+      `/competitions/238/seasons/${data.seasonId}/images`,
+    )
+    return seasonImages
+  })
+
+export const seasonImagesQueryOptions = (seasonId: string) =>
+  queryOptions({
+    queryKey: ['seasonImages', seasonId],
+    queryFn: () => getSeasonImagesFn({ data: { seasonId } }),
   })
