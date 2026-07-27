@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
 
 import { CastVote } from '#/components/voting/cast-vote'
 import { VoteResults } from '#/components/voting/results'
 import { getVoteStatus } from '#/components/voting/voting-causes'
+import { hasVotedForCause } from '#/components/voting/voting-session'
 import { getVoteParticipantsFn } from '#/data/voting'
 
 export const Route = createFileRoute('/_site/voting/$voteId/')({
@@ -24,9 +26,25 @@ export const Route = createFileRoute('/_site/voting/$voteId/')({
 function RouteComponent() {
   const { poll } = Route.useLoaderData()
   const { view } = Route.useSearch()
+  const navigate = Route.useNavigate()
   const status = getVoteStatus(poll)
+  const [alreadyVoted, setAlreadyVoted] = useState(false)
 
-  const showResults = status === 'ended' || view === 'results'
+  useEffect(() => {
+    if (!hasVotedForCause(poll.id)) return
+
+    setAlreadyVoted(true)
+
+    if (status === 'ended' || view === 'results') return
+
+    void navigate({
+      search: { view: 'results' },
+      replace: true,
+    })
+  }, [navigate, poll.id, status, view])
+
+  const showResults =
+    status === 'ended' || view === 'results' || alreadyVoted
 
   return (
     <div className="sp-content-shell py-6">
