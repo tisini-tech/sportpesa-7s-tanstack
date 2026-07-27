@@ -326,6 +326,7 @@ export interface TopPlayerStats {
 export interface VoteCause {
   id: number
   reason: string
+  image_url: string | null
   date_from: string
   date_to: string
   tournament: number | null
@@ -334,6 +335,7 @@ export interface VoteCause {
 export interface VoteParticipant {
   id: number
   reason: string
+  image_url: string | null
   tournament: number | null
   date_from: string
   date_to: string

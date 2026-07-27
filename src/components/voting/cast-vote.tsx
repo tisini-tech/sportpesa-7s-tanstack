@@ -152,7 +152,7 @@ export function CastVote({ poll: initialPoll }: { poll: VoteParticipant }) {
           </p>
         </div>
       ) : (
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-3">
           {participants.map((participant) => (
             <ParticipantVoteCard
               key={participant.id}

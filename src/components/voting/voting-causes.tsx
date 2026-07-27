@@ -134,10 +134,20 @@ function VoteCauseCard({ cause }: { cause: VoteCause }) {
           aria-hidden
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
-          <ImageIcon className="size-8 opacity-60" aria-hidden />
-          <span className="text-[0.65rem] font-bold tracking-[0.14em] uppercase">
-            Image
-          </span>
+          {cause.image_url ? (
+            <img
+              src={cause.image_url}
+              alt={cause.reason}
+              className="size-full object-cover"
+            />
+          ) : (
+            <>
+              <ImageIcon className="size-8 opacity-60" aria-hidden />
+              <span className="text-[0.65rem] font-bold tracking-[0.14em] uppercase">
+                No image
+              </span>
+            </>
+          )}
         </div>
 
         <span
