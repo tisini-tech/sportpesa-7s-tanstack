@@ -71,14 +71,18 @@ export default function SiteFooter() {
           <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
             In partnership with
           </span>
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-4 sm:gap-x-6">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
             {PARTNERS.map((partner) => (
-              <img
+              <span
                 key={partner.name}
-                src={partner.logo}
-                alt={partner.name}
-                className="h-9 w-auto max-w-[7.5rem] object-contain sm:h-10 sm:max-w-[8.5rem]"
-              />
+                className="inline-flex h-12 items-center justify-center rounded-lg bg-black px-3 py-2 ring-1 ring-white/20 sm:h-14 sm:px-4"
+              >
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  className="h-7 w-auto max-w-[6.5rem] object-contain sm:h-8 sm:max-w-[7.5rem]"
+                />
+              </span>
             ))}
           </div>
         </div>

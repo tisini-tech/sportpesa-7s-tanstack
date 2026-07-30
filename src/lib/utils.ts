@@ -85,8 +85,9 @@ export function collectVideos(seasons: Season[]): LandingVideo[] {
     const divisions = [...season.divisions].sort((a, b) => a.order - b.order)
 
     for (const division of divisions) {
-      pushVideo(videos, season, seasonSlug, division, 'day1', 'Day 1')
+      // Day 2 first so the latest stream leads the grid when both exist.
       pushVideo(videos, season, seasonSlug, division, 'day2', 'Day 2')
+      pushVideo(videos, season, seasonSlug, division, 'day1', 'Day 1')
     }
   }
 
@@ -106,13 +107,14 @@ function pushVideo(
   if (!url) return
 
   videos.push({
-    id: `${division.id}-${dayKey}`,
+    // Include season id — division ids repeat across seasons (e.g. Prinsloo).
+    id: `${season.id}-${division.id}-${dayKey}`,
     url,
     seasonName: season.name,
     divisionName: division.name,
     seasonSlug,
     legSlug: getLegSlug(division),
-    date: division.date_from,
+    date: dayKey === 'day2' ? division.date_to ?? division.date_from : division.date_from,
     dayLabel,
     thumbnailUrl: getYouTubeThumbnail(url),
   })

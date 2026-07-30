@@ -1,3 +1,4 @@
+import { queryOptions } from '@tanstack/react-query'
 import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
@@ -21,6 +22,19 @@ export const getFixturesFn = createServerFn({ method: 'GET' })
       `/competitions/${data.competitionId}/seasons/${data.seasonId}/fixtures?division_id=${data.divisionId}`,
     )
     return fixtures
+  })
+
+export const fixturesQueryOptions = (
+  competitionId: string,
+  seasonId: string,
+  divisionId: string,
+) =>
+  queryOptions({
+    queryKey: ['fixtures', competitionId, seasonId, divisionId],
+    queryFn: () =>
+      getFixturesFn({
+        data: { competitionId, seasonId, divisionId },
+      }),
   })
 
 export const getFixtureDetailsFn = createServerFn({ method: 'GET' })

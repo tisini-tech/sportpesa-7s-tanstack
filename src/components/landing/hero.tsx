@@ -220,7 +220,10 @@ export function HeroSection({
             <HeroLegFallback />
           )}
 
-          <EngagementCarousel division={featured?.division ?? null} />
+          <EngagementCarousel
+            division={featured?.division ?? null}
+            seasonId={season.id}
+          />
         </div>
       </div>
     </section>

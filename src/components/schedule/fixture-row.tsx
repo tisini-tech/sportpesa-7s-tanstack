@@ -1,6 +1,7 @@
 import { cn } from '#/lib/utils'
 import type { Fixture, TeamLogo } from '#/lib/types'
 import { getRouteApi, Link } from '@tanstack/react-router'
+import { useScheduleLegSlug } from '#/components/schedule/schedule-leg-context'
 
 const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
@@ -248,7 +249,8 @@ function FixtureRowLink({
   logos?: TeamLogo[]
   result?: FixtureResult
 }) {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug, seasonSlug } = legRoute.useParams()
+  const legSlug = useScheduleLegSlug()
 
   return (
     <li className="border-b border-border/70 last:border-b-0">

@@ -1,6 +1,8 @@
+import { queryOptions } from '@tanstack/react-query'
+import { createServerFn } from '@tanstack/react-start'
+
 import { apiService } from '#/lib/api'
 import type { CompetitionStanding } from '#/lib/types'
-import { createServerFn } from '@tanstack/react-start'
 
 export const getGroupStandingsFn = createServerFn({ method: 'GET' })
   .validator(
@@ -74,4 +76,29 @@ export const getOverallStandingsFn = createServerFn({ method: 'GET' })
         overall_standings: [],
       } satisfies CompetitionStanding
     }
+  })
+
+export const overallStandingsQueryOptions = (
+  competitionId: string,
+  seasonId: string,
+) =>
+  queryOptions({
+    queryKey: ['standings', 'overall', competitionId, seasonId],
+    queryFn: () =>
+      getOverallStandingsFn({
+        data: { competitionId, seasonId },
+      }),
+  })
+
+export const divisionStandingsQueryOptions = (
+  competitionId: string,
+  seasonId: string,
+  divisionId: string,
+) =>
+  queryOptions({
+    queryKey: ['standings', 'division', competitionId, seasonId, divisionId],
+    queryFn: () =>
+      getDivisionStandingsFn({
+        data: { competitionId, seasonId, divisionId },
+      }),
   })

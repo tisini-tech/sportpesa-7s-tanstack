@@ -1,32 +1,19 @@
 import { Link } from '@tanstack/react-router'
 
 import type { SeasonImage } from '#/lib/types'
-import { cn } from '#/lib/utils'
-
-function gridSpanClass(index: number): string {
-  // Irregular bento-style spans for a custom gallery rhythm.
-  const pattern = index % 10
-  if (pattern === 0) return 'col-span-2 row-span-2'
-  if (pattern === 4) return 'row-span-2'
-  if (pattern === 7) return 'col-span-2'
-  return ''
-}
 
 export function GalleryGridSkeleton() {
-  const cells = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  const cells = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
   return (
     <ul
-      className="grid auto-rows-[9rem] grid-cols-2 gap-2 sm:auto-rows-[11rem] sm:grid-cols-3 sm:gap-3 lg:auto-rows-[13rem] lg:grid-cols-4"
+      className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4"
       aria-hidden
     >
       {cells.map((index) => (
         <li
           key={index}
-          className={cn(
-            'overflow-hidden rounded-xl bg-muted/40',
-            gridSpanClass(index),
-          )}
+          className="aspect-square overflow-hidden rounded-xl bg-muted/40"
         >
           <div className="size-full animate-pulse bg-muted/60" />
         </li>
@@ -57,14 +44,11 @@ export function GalleryGrid({
   }
 
   return (
-    <ul className="grid auto-rows-[9rem] grid-cols-2 gap-2 sm:auto-rows-[11rem] sm:grid-cols-3 sm:gap-3 lg:auto-rows-[13rem] lg:grid-cols-4">
+    <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
       {images.map((image, index) => (
         <li
           key={image.id}
-          className={cn(
-            'group min-h-0 overflow-hidden rounded-xl border border-border/60 bg-muted/30',
-            gridSpanClass(index),
-          )}
+          className="group aspect-square overflow-hidden rounded-xl border border-border/60 bg-muted/30"
         >
           <Link
             to="/$leagueSlug/$seasonSlug/gallery/$imageId"

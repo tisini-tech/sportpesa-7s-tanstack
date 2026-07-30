@@ -1,84 +1,43 @@
-import {
-  SCHEDULE_STAGES,
-  type ScheduleStage,
-} from '#/components/schedule/schedule-stages'
 import { TournamentPageHeader } from '#/components/site/tournament-page-header'
-import { cn } from '#/lib/utils'
-import type { Division, Season } from '#/lib/types'
+import type { Season } from '#/lib/types'
+import type { ScheduleStage } from '#/components/schedule/schedule-stages'
 
 type ScheduleHeaderProps = {
   leagueSlug: string
   seasons: Season[]
   season?: Season
-  division?: Division
   seasonId?: number
-  divisionId?: number
-  activeStage: ScheduleStage
   onLeagueChange: (leagueSlug: string) => void
   onSeasonChange: (seasonId: number) => void
-  onDivisionChange: (divisionId: number) => void
-  onStageChange: (stage: ScheduleStage) => void
-}
-
-function getStageTabLabel(stage: (typeof SCHEDULE_STAGES)[number]): string {
-  if (stage.id === 'semi-finals') return 'Semis'
-  return stage.label
 }
 
 export function ScheduleHeader({
   leagueSlug,
   seasons,
   season,
-  division,
   seasonId,
-  divisionId,
-  activeStage,
   onLeagueChange,
   onSeasonChange,
-  onDivisionChange,
-  onStageChange,
 }: ScheduleHeaderProps) {
   return (
     <TournamentPageHeader
       leagueSlug={leagueSlug}
       seasons={seasons}
       season={season}
-      division={division}
       seasonId={seasonId}
-      divisionId={divisionId}
       onLeagueChange={onLeagueChange}
       onSeasonChange={onSeasonChange}
-      onDivisionChange={onDivisionChange}
-      emptyMessage="Select a season and leg to view fixtures."
-    >
-      <div
-        className="grid w-full grid-cols-2 gap-0.5 rounded-xl border border-border bg-muted/30 p-0.5 sm:grid-cols-4 lg:w-auto"
-        role="tablist"
-        aria-label="Tournament stage"
-      >
-        {SCHEDULE_STAGES.map((stage) => {
-          const isActive = activeStage === stage.id
-
-          return (
-            <button
-              key={stage.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => onStageChange(stage.id)}
-              className={cn(
-                'w-full rounded-lg px-2 py-2 text-[0.6rem] font-bold tracking-[0.1em] uppercase transition-colors sm:px-3.5 sm:text-[0.65rem] sm:tracking-[0.12em] lg:min-w-[5.25rem] lg:px-4',
-                isActive
-                  ? 'bg-secondary/15 text-secondary shadow-sm'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-              )}
-            >
-              <span className="sm:hidden">{getStageTabLabel(stage)}</span>
-              <span className="hidden sm:inline">{stage.label}</span>
-            </button>
-          )
-        })}
-      </div>
-    </TournamentPageHeader>
+      showDivisionSelect={false}
+      banded
+      title="Schedule"
+      subtitle={
+        season
+          ? `${season.name} · ${season.divisions.length} legs`
+          : undefined
+      }
+      emptyMessage="Select a season to view fixtures."
+    />
   )
 }
+
+export type { ScheduleStage }

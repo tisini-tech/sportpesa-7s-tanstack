@@ -58,11 +58,14 @@ export function pickMatchDay(division: Division, now = new Date()): 1 | 2 {
   return today >= day2 ? 2 : 1
 }
 
-function resolveLiveVideo(division: Division | null): {
+function resolveLiveVideo(
+  division: Division | null,
+  seasonId: number | null,
+): {
   videoId: string | null
   dayLabel: string
 } {
-  if (!division) {
+  if (!division || seasonId == null) {
     return { videoId: null, dayLabel: 'Day 1' }
   }
 
@@ -76,14 +79,14 @@ function resolveLiveVideo(division: Division | null): {
 
   if (preferredUrl) {
     return {
-      videoId: `${division.id}-day${preferredDay}`,
+      videoId: `${seasonId}-${division.id}-day${preferredDay}`,
       dayLabel: `Day ${preferredDay}`,
     }
   }
 
   if (otherUrl) {
     return {
-      videoId: `${division.id}-day${otherDay}`,
+      videoId: `${seasonId}-${division.id}-day${otherDay}`,
       dayLabel: `Day ${otherDay}`,
     }
   }
@@ -91,8 +94,11 @@ function resolveLiveVideo(division: Division | null): {
   return { videoId: null, dayLabel: `Day ${preferredDay}` }
 }
 
-function buildSlides(division: Division | null): HeroSlide[] {
-  const live = resolveLiveVideo(division)
+function buildSlides(
+  division: Division | null,
+  seasonId: number | null,
+): HeroSlide[] {
+  const live = resolveLiveVideo(division, seasonId)
 
   return [
     {
@@ -157,11 +163,16 @@ const ctaClassName =
 
 export function EngagementCarousel({
   division,
+  seasonId,
 }: {
   division: Division | null
+  seasonId: number | null
 }) {
   const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
-  const slides = useMemo(() => buildSlides(division), [division])
+  const slides = useMemo(
+    () => buildSlides(division, seasonId),
+    [division, seasonId],
+  )
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
