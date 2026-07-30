@@ -6,7 +6,7 @@ import type { FixtureLineup } from '#/lib/types'
 import { Route as MatchLayoutRoute } from './route'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups',
+  '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/lineups',
 )({
   loader: async ({ context, params }) => {
     const lineups = await getFixtureLineupsFn({

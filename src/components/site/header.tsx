@@ -4,9 +4,11 @@ import { getRouteApi, Link, useRouterState } from '@tanstack/react-router'
 
 import {
   buildFeaturedTournamentPath,
+  getSeasonBaseFromPathname,
   getSeasonBaseFromTournamentBase,
   getTournamentBaseFromPathname,
 } from '#/lib/tournament-slugs'
+import { DEFAULT_LEAGUE } from '#/lib/leagues'
 import { cn } from '#/lib/utils'
 import { SiteLogo } from './logo'
 
@@ -18,7 +20,7 @@ type NavItem =
   | { kind: 'absolute'; to: string; label: string }
 
 const NAV_ITEMS: NavItem[] = [
-  { kind: 'tournament', segment: 'schedule', label: 'Schedule' },
+  { kind: 'season', segment: 'schedule', label: 'Schedule' },
   { kind: 'tournament', segment: 'standings', label: 'Standings' },
   { kind: 'tournament', segment: 'clubs', label: 'Clubs' },
   { kind: 'tournament', segment: 'stats', label: 'Stats' },
@@ -66,7 +68,9 @@ function HeaderNavLink({
 }
 
 function useTournamentNavBase(): string {
-  const { defaultSeasons, defaultLeague } = siteRoute.useRouteContext()
+  const context = siteRoute.useRouteContext()
+  const defaultSeasons = context.defaultSeasons ?? []
+  const defaultLeague = context.defaultLeague ?? DEFAULT_LEAGUE
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
@@ -78,11 +82,17 @@ function useTournamentNavBase(): string {
   )
 }
 
-function resolveNavTo(item: NavItem, tournamentBase: string): string {
+function resolveNavTo(
+  item: NavItem,
+  tournamentBase: string,
+  pathname: string,
+): string {
   if (item.kind === 'absolute') return item.to
 
   if (item.kind === 'season') {
-    const seasonBase = getSeasonBaseFromTournamentBase(tournamentBase)
+    const seasonBase =
+      getSeasonBaseFromPathname(pathname) ??
+      getSeasonBaseFromTournamentBase(tournamentBase)
     return seasonBase ? `${seasonBase}/${item.segment}` : `/${item.segment}`
   }
 
@@ -92,6 +102,9 @@ function resolveNavTo(item: NavItem, tournamentBase: string): string {
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const tournamentBase = useTournamentNavBase()
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -120,7 +133,7 @@ export function SiteHeader() {
             {NAV_ITEMS.map((item) => (
               <HeaderNavLink
                 key={item.label}
-                to={resolveNavTo(item, tournamentBase)}
+                to={resolveNavTo(item, tournamentBase, pathname)}
                 label={item.label}
               />
             ))}
@@ -152,7 +165,7 @@ export function SiteHeader() {
               {NAV_ITEMS.map((item) => (
                 <li key={item.label}>
                   <HeaderNavLink
-                    to={resolveNavTo(item, tournamentBase)}
+                    to={resolveNavTo(item, tournamentBase, pathname)}
                     label={item.label}
                     onNavigate={closeMobileMenu}
                     className="block w-full px-1 py-3 after:inset-x-1"

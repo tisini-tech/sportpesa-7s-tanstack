@@ -9,6 +9,13 @@ export const Route = createFileRoute('/_site/quiz/')({
     return { quizzes }
   },
   component: QuizPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'SportPesa 7s | Quiz',
+      },
+    ],
+  }),
 })
 
 function QuizPage() {

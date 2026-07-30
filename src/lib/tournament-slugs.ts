@@ -43,9 +43,8 @@ export function buildTournamentPath(
 export function buildSchedulePath(
   leagueSlug: string,
   season: Season,
-  division: Division,
 ): string {
-  return `${buildTournamentPath(leagueSlug, season, division)}/schedule`
+  return `/${leagueSlug}/${getSeasonSlug(season)}/schedule`
 }
 
 export function buildFeaturedTournamentPath(
@@ -65,8 +64,8 @@ export function getTournamentBaseFromPathname(pathname: string): string | null {
   const match = pathname.match(/^\/([^/]+)\/([^/]+)\/([^/]+)/)
   if (!match) return null
 
-  // Ignore season-scoped pages like /div1/2026/gallery (3rd segment is not a leg).
-  if (match[3] === 'gallery') {
+  // Season-scoped pages (3rd segment is not a leg).
+  if (match[3] === 'gallery' || match[3] === 'schedule') {
     return null
   }
 
@@ -78,6 +77,12 @@ export function getSeasonBaseFromTournamentBase(
   tournamentBase: string,
 ): string | null {
   const match = tournamentBase.match(/^\/([^/]+)\/([^/]+)/)
+  if (!match) return null
+  return `/${match[1]}/${match[2]}`
+}
+
+export function getSeasonBaseFromPathname(pathname: string): string | null {
+  const match = pathname.match(/^\/([^/]+)\/([^/]+)/)
   if (!match) return null
   return `/${match[1]}/${match[2]}`
 }

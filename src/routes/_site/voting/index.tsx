@@ -9,6 +9,13 @@ export const Route = createFileRoute('/_site/voting/')({
     return { causes }
   },
   component: VotingPage,
+  head: () => ({
+    meta: [
+      {
+        title: 'SportPesa 7s | Voting',
+      },
+    ],
+  }),
 })
 
 function VotingPage() {

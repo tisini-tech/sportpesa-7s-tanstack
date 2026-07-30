@@ -11,7 +11,7 @@ import type { Fixture, TeamLogo } from '#/lib/types'
 import { Route as MatchLayoutRoute } from './route'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h',
+  '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/h2h',
 )({
   loader: async ({ context, params }) => {
     const h2h = await getFixtureH2HFn({

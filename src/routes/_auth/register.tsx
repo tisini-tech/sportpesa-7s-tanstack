@@ -23,6 +23,15 @@ import { getDefaultCountry, PhoneField } from '#/components/forms/phone-field'
 const authRoute = getRouteApi('/_auth')
 
 export const Route = createFileRoute('/_auth/register')({
+  head: () => ({
+    title: 'SportPesa 7s | register',
+    meta: [
+      {
+        name: 'description',
+        content: 'Create an account to play quizzes and join the circuit.',
+      },
+    ],
+  }),
   component: RegisterPage,
 })
 

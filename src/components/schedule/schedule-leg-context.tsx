@@ -1,7 +1,4 @@
 import { createContext, useContext, type ReactNode } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 const ScheduleLegSlugContext = createContext<string | null>(null)
 
@@ -19,9 +16,7 @@ export function ScheduleLegProvider({
   )
 }
 
-/** Prefer the section’s leg slug when schedule shows multiple legs. */
-export function useScheduleLegSlug(): string {
-  const sectionLegSlug = useContext(ScheduleLegSlugContext)
-  const { legSlug } = legRoute.useParams()
-  return sectionLegSlug ?? legSlug
+/** Leg slug for the current schedule section (required under stacked legs). */
+export function useScheduleLegSlug(): string | null {
+  return useContext(ScheduleLegSlugContext)
 }

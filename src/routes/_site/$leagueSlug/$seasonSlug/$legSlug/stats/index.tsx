@@ -10,7 +10,9 @@ import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
 
 const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
-export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/stats/')({
+export const Route = createFileRoute(
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/',
+)({
   loader: async ({ context, params }) => {
     const seasonId = context.season.id.toString()
     const divisionId = context.division.id.toString()
@@ -89,6 +91,13 @@ export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/st
   },
   component: StatsPage,
   pendingComponent: Loading,
+  head: () => ({
+    meta: [
+      {
+        title: 'SportPesa 7s | Stats',
+      },
+    ],
+  }),
 })
 
 function StatsPage() {

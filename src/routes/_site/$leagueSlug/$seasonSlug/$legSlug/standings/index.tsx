@@ -5,10 +5,7 @@ import { DivisionStandingsTable } from '#/components/standings/division-standing
 import { OverallStandingsTable } from '#/components/standings/overall-standings-table'
 import { TournamentPageHeader } from '#/components/site/tournament-page-header'
 import { Loading } from '#/components/error/loading'
-import {
-  getDivisionStandingsFn,
-  getOverallStandingsFn,
-} from '#/data/standings'
+import { getDivisionStandingsFn, getOverallStandingsFn } from '#/data/standings'
 import type { CompetitionStanding } from '#/lib/types'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
 import { cn } from '#/lib/utils'
@@ -17,7 +14,9 @@ const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 type StandingsView = 'leg' | 'overall'
 
-export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/standings/')({
+export const Route = createFileRoute(
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/',
+)({
   loader: async ({ context }) => {
     const seasonId = context.season.id.toString()
     const divisionId = context.division.id.toString()
@@ -33,10 +32,18 @@ export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/st
   },
   component: StandingsPage,
   pendingComponent: Loading,
+  head: () => ({
+    meta: [
+      {
+        title: 'SportPesa 7s | Standings',
+      },
+    ],
+  }),
 })
 
 function StandingsPage() {
-  const { seasons, season, division, competitionId } = legRoute.useRouteContext()
+  const { seasons, season, division, competitionId } =
+    legRoute.useRouteContext()
   const { standings } = Route.useLoaderData()
   const navigate = Route.useNavigate()
   const { leagueSlug } = Route.useParams()
@@ -150,9 +157,7 @@ function StandingsPage() {
         ) : isLoadingOverall ? (
           <Loading label="Loading overall standings" />
         ) : (
-          <OverallStandingsTable
-            standings={overall?.overall_standings ?? []}
-          />
+          <OverallStandingsTable standings={overall?.overall_standings ?? []} />
         )}
       </section>
     </div>

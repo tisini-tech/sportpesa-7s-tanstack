@@ -158,7 +158,7 @@ export function MatchesToday({
   divisionId: string
   limit?: number
 }) {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug, seasonSlug } = legRoute.useParams()
   const { data: allFixtures } = useSuspenseQuery(
     fixturesQueryOptions(competitionId, seasonId, divisionId),
   )
@@ -177,7 +177,6 @@ export function MatchesToday({
                 fixture={fixture}
                 leagueSlug={leagueSlug}
                 seasonSlug={seasonSlug}
-                legSlug={legSlug}
               />
             </li>
           ))}
@@ -190,8 +189,8 @@ export function MatchesToday({
 
       <div className="mt-auto border-t border-border bg-muted/15 px-4 py-3">
         <Link
-          to="/$leagueSlug/$seasonSlug/$legSlug/schedule"
-          params={{ leagueSlug, seasonSlug, legSlug }}
+          to="/$leagueSlug/$seasonSlug/schedule"
+          params={{ leagueSlug, seasonSlug }}
           className={cn(
             'inline-flex rounded-full border border-primary/40 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase hover:bg-primary/5',
           )}
@@ -207,12 +206,10 @@ function MatchSnippetRow({
   fixture,
   leagueSlug,
   seasonSlug,
-  legSlug,
 }: {
   fixture: Fixture
   leagueSlug: string
   seasonSlug: string
-  legSlug: string
 }) {
   const upcoming = isUpcoming(fixture)
   const homeScore = Number(fixture.home_score)
@@ -229,11 +226,10 @@ function MatchSnippetRow({
 
   return (
     <Link
-      to="/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId"
+      to="/$leagueSlug/$seasonSlug/schedule/$fixtureId"
       params={{
         leagueSlug,
         seasonSlug,
-        legSlug,
         fixtureId: fixture.id.toString(),
       }}
       className="flex h-full w-full items-center gap-2.5 px-3 py-3 transition-colors hover:bg-muted/20 sm:gap-3 sm:px-4"

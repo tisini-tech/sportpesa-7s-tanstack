@@ -13,7 +13,7 @@ import type { Highlight } from '#/lib/types'
 import { Route as MatchLayoutRoute } from './route'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/',
+  '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/',
 )({
   component: RouteComponent,
 })

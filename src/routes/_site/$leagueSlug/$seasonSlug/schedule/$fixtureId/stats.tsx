@@ -3,7 +3,7 @@ import { Route as MatchLayoutRoute } from './route'
 import { TeamStats } from '#/components/schedule/stats/stats'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats',
+  '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/stats',
 )({
   component: RouteComponent,
 })

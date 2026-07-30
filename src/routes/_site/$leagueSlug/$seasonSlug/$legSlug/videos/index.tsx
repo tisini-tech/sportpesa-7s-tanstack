@@ -5,8 +5,17 @@ import { collectVideos } from '#/lib/utils'
 
 const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
-export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/videos/')({
+export const Route = createFileRoute(
+  '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/',
+)({
   component: RouteComponent,
+  head: () => ({
+    meta: [
+      {
+        title: 'SportPesa 7s | Videos',
+      },
+    ],
+  }),
 })
 
 function RouteComponent() {

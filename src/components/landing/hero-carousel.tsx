@@ -30,7 +30,7 @@ type HeroSlide = {
   imageSrc: string
   overlayClass: string
   to:
-    | '/$leagueSlug/$seasonSlug/$legSlug/schedule'
+    | '/$leagueSlug/$seasonSlug/schedule'
     | '/voting'
     | '/quiz'
     | '/$leagueSlug/$seasonSlug/$legSlug/videos'
@@ -110,7 +110,7 @@ function buildSlides(
       title: 'Live scores & fixtures',
       description: 'Standings and matchdays for every leg on the tour.',
       cta: 'View matches',
-      to: '/$leagueSlug/$seasonSlug/$legSlug/schedule',
+      to: '/$leagueSlug/$seasonSlug/schedule',
     },
     {
       id: 'live',
@@ -282,6 +282,18 @@ export function EngagementCarousel({
                         legSlug,
                         videoId: slide.videoId,
                       }}
+                      className={ctaClassName}
+                    >
+                      {slide.cta}
+                      <ArrowRightIcon
+                        className="size-4 transition-transform group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </Link>
+                  ) : slide.to === '/$leagueSlug/$seasonSlug/schedule' ? (
+                    <Link
+                      to="/$leagueSlug/$seasonSlug/schedule"
+                      params={{ leagueSlug, seasonSlug }}
                       className={ctaClassName}
                     >
                       {slide.cta}

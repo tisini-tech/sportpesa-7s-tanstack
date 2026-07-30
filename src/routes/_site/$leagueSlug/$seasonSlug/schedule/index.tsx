@@ -1,4 +1,4 @@
-import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { getFixturesFn } from '#/data/fixtures'
 import { getGroupStandingsFn } from '#/data/standings'
@@ -6,16 +6,22 @@ import { ScheduleHeader } from '#/components/schedule/schedule-header'
 import { LegScheduleSection } from '#/components/schedule/leg-schedule-section'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
 import type { Fixture, StageStanding } from '#/lib/types'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
+import { loadScheduleSeasonContext } from './load-context'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/',
+  '/_site/$leagueSlug/$seasonSlug/schedule/',
 )({
+  // Same-route beforeLoad avoids parent/child context races on first navigation.
+  beforeLoad: async ({ params }) => loadScheduleSeasonContext(params),
   loader: async ({ context }) => {
-    const seasonId = context.season.id.toString()
+    const season = context.season
     const competitionId = context.competitionId
-    const divisions = [...context.season.divisions]
+    if (!season || !competitionId) {
+      throw new Error('Schedule season context is missing')
+    }
+
+    const seasonId = season.id.toString()
+    const divisions = [...season.divisions].sort((a, b) => a.order - b.order)
 
     const legs = await Promise.all(
       divisions.map(async (division) => {
@@ -36,10 +42,17 @@ export const Route = createFileRoute(
     return { legs }
   },
   component: ScheduleLayout,
+  head: () => ({
+    meta: [
+      {
+        title: 'SportPesa 7s | Schedule',
+      },
+    ],
+  }),
 })
 
 function ScheduleLayout() {
-  const { seasons, season } = legRoute.useRouteContext()
+  const { seasons, season } = Route.useRouteContext()
   const { legs } = Route.useLoaderData()
   const { leagueSlug } = Route.useParams()
   const navigate = Route.useNavigate()
@@ -50,8 +63,11 @@ function ScheduleLayout() {
     season,
     onNavigate: (params) => {
       navigate({
-        to: '/$leagueSlug/$seasonSlug/$legSlug/schedule',
-        params,
+        to: '/$leagueSlug/$seasonSlug/schedule',
+        params: {
+          leagueSlug: params.leagueSlug,
+          seasonSlug: params.seasonSlug,
+        },
       })
     },
   })

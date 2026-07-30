@@ -3,10 +3,17 @@ import { getFixtureDetailsFn } from '#/data/fixtures'
 import { cn } from '#/lib/utils'
 import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
 
+import { loadScheduleSeasonContext } from '../load-context'
+
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId',
+  '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId',
 )({
+  beforeLoad: async ({ params }) => loadScheduleSeasonContext(params),
   loader: async ({ context, params }) => {
+    if (!context.season || !context.competitionId) {
+      throw new Error('Schedule season context is missing')
+    }
+
     const details = await getFixtureDetailsFn({
       data: {
         competitionId: context.competitionId,
@@ -23,22 +30,22 @@ export const Route = createFileRoute(
 const tabs = [
   {
     label: 'Overview',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId' as const,
+    to: '/$leagueSlug/$seasonSlug/schedule/$fixtureId' as const,
     exact: true,
   },
   {
     label: 'Lineups',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/lineups' as const,
+    to: '/$leagueSlug/$seasonSlug/schedule/$fixtureId/lineups' as const,
     exact: false,
   },
   {
     label: 'Stats',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/stats' as const,
+    to: '/$leagueSlug/$seasonSlug/schedule/$fixtureId/stats' as const,
     exact: false,
   },
   {
     label: 'H2H',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/schedule/$fixtureId/h2h' as const,
+    to: '/$leagueSlug/$seasonSlug/schedule/$fixtureId/h2h' as const,
     exact: false,
   },
 ]
@@ -50,7 +57,7 @@ const tabLinkActiveClass = 'bg-secondary/15 text-secondary shadow-sm'
 
 function RouteComponent() {
   const { details, fixtureId } = Route.useLoaderData()
-  const { leagueSlug, seasonSlug, legSlug } = Route.useParams()
+  const { leagueSlug, seasonSlug } = Route.useParams()
 
   return (
     <div className="sp-content-shell flex flex-col gap-4 py-6">
@@ -61,7 +68,7 @@ function RouteComponent() {
           <Link
             key={tab.to}
             to={tab.to}
-            params={{ leagueSlug, seasonSlug, legSlug, fixtureId }}
+            params={{ leagueSlug, seasonSlug, fixtureId }}
             className={tabLinkClass}
             activeProps={{ className: cn(tabLinkClass, tabLinkActiveClass) }}
             activeOptions={{ exact: tab.exact }}

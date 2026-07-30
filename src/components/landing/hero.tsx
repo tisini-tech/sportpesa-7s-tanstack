@@ -11,7 +11,7 @@ import {
   type DivisionStatus,
 } from '#/components/landing/division-utils'
 import { cn } from '#/lib/utils'
-import { getLegSlug, getSeasonSlug } from '#/lib/tournament-slugs'
+import { getSeasonSlug } from '#/lib/tournament-slugs'
 import type { Division, Season } from '#/lib/types'
 
 type HeroSectionProps = {
@@ -157,11 +157,10 @@ function HeroLegFeature({
 
             {(status === 'live' || status === 'upcoming') && leagueSlug ? (
               <Link
-                to="/$leagueSlug/$seasonSlug/$legSlug/schedule"
+                to="/$leagueSlug/$seasonSlug/schedule"
                 params={{
                   leagueSlug,
                   seasonSlug: getSeasonSlug(season),
-                  legSlug: getLegSlug(division),
                 }}
                 className="group inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
               >

@@ -29,6 +29,13 @@ export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/gallery/')(
       )
     },
     component: GalleryPage,
+    head: () => ({
+      meta: [
+        {
+          title: 'SportPesa 7s | Gallery',
+        },
+      ],
+    }),
   },
 )
 
@@ -71,9 +78,7 @@ function GalleryGridContent({
   leagueSlug: string
   seasonSlug: string
 }) {
-  const { data: images } = useSuspenseQuery(
-    seasonImagesQueryOptions(seasonId),
-  )
+  const { data: images } = useSuspenseQuery(seasonImagesQueryOptions(seasonId))
 
   return (
     <GalleryGrid
