@@ -21,7 +21,7 @@ export const Route = createFileRoute(
     }
 
     const seasonId = season.id.toString()
-    const divisions = [...season.divisions].sort((a, b) => a.order - b.order)
+    const divisions = [...season.divisions]
 
     const legs = await Promise.all(
       divisions.map(async (division) => {
