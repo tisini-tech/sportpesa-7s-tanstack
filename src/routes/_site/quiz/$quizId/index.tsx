@@ -58,6 +58,13 @@ export const Route = createFileRoute('/_site/quiz/$quizId/')({
       throw error
     }
   },
+  head: ({ loaderData }) => ({
+    meta: [
+      {
+        title: `Quiz | ${loaderData?.quiz?.title ?? 'Quiz'}`,
+      },
+    ],
+  }),
   component: QuizPlayPage,
 })
 

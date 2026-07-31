@@ -9,8 +9,11 @@ import {
   TrophyIcon,
 } from 'lucide-react'
 
-import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
+import { cn } from '#/lib/utils'
+import { submitQuizFn } from '#/data/quiz'
 import { Button } from '#/components/ui/button'
+import type { QuestionChoice, Quiz } from '#/lib/types'
+import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
 import {
   Dialog,
   DialogContent,
@@ -19,9 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '#/components/ui/dialog'
-import { submitQuizFn } from '#/data/quiz'
-import type { Question, QuestionChoice, Quiz } from '#/lib/types'
-import { cn } from '#/lib/utils'
 
 type QuizPlayProps = {
   quiz: Quiz
@@ -48,10 +48,6 @@ function shuffle<T>(items: T[]): T[] {
   return copy
 }
 
-function sortQuestions(questions: Question[]): Question[] {
-  return [...questions].sort((a, b) => a.order - b.order)
-}
-
 function formatTimer(seconds: number): string {
   const mins = Math.floor(seconds / 60)
   const secs = seconds % 60
@@ -59,9 +55,14 @@ function formatTimer(seconds: number): string {
 }
 
 export function QuizPlay({ quiz }: QuizPlayProps) {
+  // Shuffle once per play session so order can't be shared across players.
   const questions = useMemo(
-    () => sortQuestions(quiz.questions ?? []),
-    [quiz.questions],
+    () =>
+      shuffle(quiz.questions ?? []).map((question) => ({
+        ...question,
+        choices: shuffle(question.choices),
+      })),
+    [quiz.id],
   )
 
   const [hasStarted, setHasStarted] = useState(false)
@@ -81,11 +82,6 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
     () => questions.some((question) => question.timer_seconds > 0),
     [questions],
   )
-
-  const shuffledChoices = useMemo(() => {
-    if (!currentQuestion) return []
-    return shuffle(currentQuestion.choices)
-  }, [currentQuestion])
 
   const isMultiple = isMultipleAnswerType(currentQuestion?.answer_type ?? '')
 
@@ -252,8 +248,8 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
                 <li className="flex gap-2">
                   <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-secondary" />
                   <span>
-                    Timed questions auto-advance when the countdown ends — answer
-                    before time runs out.
+                    Timed questions auto-advance when the countdown ends —
+                    answer before time runs out.
                   </span>
                 </li>
               ) : null}
@@ -469,7 +465,7 @@ export function QuizPlay({ quiz }: QuizPlayProps) {
           </div>
 
           <div className="grid gap-3">
-            {shuffledChoices.map((choice) => (
+            {(currentQuestion.choices ?? []).map((choice) => (
               <ChoiceButton
                 key={choice.id}
                 choice={choice}
