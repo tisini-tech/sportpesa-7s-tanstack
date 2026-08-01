@@ -82,16 +82,21 @@ export function collectVideos(seasons: Season[]): LandingVideo[] {
 
   for (const season of seasons) {
     const seasonSlug = getSeasonSlug(season)
-    const divisions = [...season.divisions].sort((a, b) => a.order - b.order)
 
-    for (const division of divisions) {
-      // Day 2 first so the latest stream leads the grid when both exist.
+    for (const division of season.divisions) {
+      // Day 2 first within a leg; final list is sorted by date below.
       pushVideo(videos, season, seasonSlug, division, 'day2', 'Day 2')
       pushVideo(videos, season, seasonSlug, division, 'day1', 'Day 1')
     }
   }
 
-  return videos
+  // Newest first so the current leg leads the landing grid.
+  return videos.sort((a, b) => {
+    const aTime = a.date ? new Date(a.date).getTime() : 0
+    const bTime = b.date ? new Date(b.date).getTime() : 0
+    if (aTime !== bTime) return bTime - aTime
+    return a.dayLabel.localeCompare(b.dayLabel)
+  })
 }
 
 function pushVideo(
@@ -114,7 +119,10 @@ function pushVideo(
     divisionName: division.name,
     seasonSlug,
     legSlug: getLegSlug(division),
-    date: dayKey === 'day2' ? division.date_to ?? division.date_from : division.date_from,
+    date:
+      dayKey === 'day2'
+        ? (division.date_to ?? division.date_from)
+        : division.date_from,
     dayLabel,
     thumbnailUrl: getYouTubeThumbnail(url),
   })
