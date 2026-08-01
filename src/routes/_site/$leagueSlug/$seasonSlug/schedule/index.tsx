@@ -1,12 +1,55 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import {
+  getDivisionStatus,
+  pickFeaturedDivision,
+} from '#/components/landing/division-utils'
 import { getFixturesFn } from '#/data/fixtures'
 import { getGroupStandingsFn } from '#/data/standings'
 import { ScheduleHeader } from '#/components/schedule/schedule-header'
 import { LegScheduleSection } from '#/components/schedule/leg-schedule-section'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
-import type { Fixture, StageStanding } from '#/lib/types'
+import type { Division, Fixture, StageStanding } from '#/lib/types'
 import { loadScheduleSeasonContext } from './load-context'
+
+function divisionStartTime(division: Division): number {
+  if (!division.date_from) return Number.POSITIVE_INFINITY
+  const time = new Date(division.date_from).getTime()
+  return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time
+}
+
+/** Active leg first, then remaining legs by date_from. */
+function sortLegsForSchedule<T extends { division: Division }>(legs: T[]): T[] {
+  const featured = pickFeaturedDivision(legs.map((leg) => leg.division))
+  const featuredId = featured?.division.id
+
+  return [...legs].sort((a, b) => {
+    if (featuredId != null) {
+      if (a.division.id === featuredId) return -1
+      if (b.division.id === featuredId) return 1
+    }
+
+    const statusRank = (division: Division) => {
+      const status = getDivisionStatus(division)
+      if (status === 'live') return 0
+      if (status === 'upcoming') return 1
+      return 2
+    }
+
+    const rankDiff = statusRank(a.division) - statusRank(b.division)
+    if (rankDiff !== 0) return rankDiff
+
+    const aStart = divisionStartTime(a.division)
+    const bStart = divisionStartTime(b.division)
+
+    // Upcoming: soonest first. Completed: most recent first.
+    if (getDivisionStatus(a.division) === 'completed') {
+      return bStart - aStart
+    }
+
+    return aStart - bStart
+  })
+}
 
 export const Route = createFileRoute(
   '/_site/$leagueSlug/$seasonSlug/schedule/',
@@ -39,7 +82,7 @@ export const Route = createFileRoute(
       }),
     )
 
-    return { legs }
+    return { legs: sortLegsForSchedule(legs) }
   },
   component: ScheduleLayout,
   head: () => ({
@@ -72,6 +115,10 @@ function ScheduleLayout() {
     },
   })
 
+  const legNumberById = new Map(
+    [...season.divisions].map((division, index) => [division.id, index + 1]),
+  )
+
   return (
     <div>
       <ScheduleHeader
@@ -94,11 +141,11 @@ function ScheduleLayout() {
           </div>
         </section>
       ) : (
-        legs.map((leg, index) => (
+        legs.map((leg) => (
           <LegScheduleSection
             key={leg.division.id}
             leg={leg}
-            legNumber={index + 1}
+            legNumber={legNumberById.get(leg.division.id) ?? leg.division.order}
           />
         ))
       )}
