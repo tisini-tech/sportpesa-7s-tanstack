@@ -24,20 +24,19 @@ export function GalleryGridSkeleton() {
 
 export function GalleryGrid({
   images,
-  leagueSlug,
   seasonSlug,
+  legSlug,
 }: {
   images: SeasonImage[]
-  leagueSlug: string
   seasonSlug: string
+  legSlug: string
 }) {
   if (images.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
         <p className="text-sm font-semibold text-foreground">No photos yet</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Gallery images for this season will appear here once they are
-          published.
+          Gallery images for this leg will appear here once they are published.
         </p>
       </div>
     )
@@ -51,12 +50,9 @@ export function GalleryGrid({
           className="group aspect-square overflow-hidden rounded-xl border border-border/60 bg-muted/30"
         >
           <Link
-            to="/$leagueSlug/$seasonSlug/gallery/$imageId"
-            params={{
-              leagueSlug,
-              seasonSlug,
-              imageId: String(image.id),
-            }}
+            to="/gallery/$imageId"
+            params={{ imageId: String(image.id) }}
+            search={{ season: seasonSlug, leg: legSlug }}
             className="relative block size-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label={image.caption || `Gallery image ${index + 1}`}
           >

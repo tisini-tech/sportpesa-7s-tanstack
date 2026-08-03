@@ -22,6 +22,8 @@ export interface Division {
   date_to: string | null
   day1_video_url: string | null
   day2_video_url: string | null
+  winner_url: string | null
+  winner_team: string | null
   county: string
   stages: Stage[]
 }

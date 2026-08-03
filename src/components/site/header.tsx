@@ -27,7 +27,7 @@ const NAV_ITEMS: NavItem[] = [
   { kind: 'absolute', to: '/voting', label: 'Voting' },
   { kind: 'absolute', to: '/quiz', label: 'Quiz' },
   { kind: 'tournament', segment: 'videos', label: 'Videos' },
-  { kind: 'season', segment: 'gallery', label: 'Gallery' },
+  { kind: 'absolute', to: '/gallery', label: 'Gallery' },
 ]
 
 type HeaderNavLinkProps = {

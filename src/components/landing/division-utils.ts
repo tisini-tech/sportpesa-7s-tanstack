@@ -142,3 +142,42 @@ export function pickFeaturedDivision(divisions: Division[]): {
 
   return completed[0] ?? ranked[0]
 }
+
+/**
+ * Default leg for gallery: prefer content that exists after match weekends.
+ * Live → most recent completed → first leg (season start).
+ * Avoids landing on a far-off upcoming leg with an empty grid.
+ */
+export function pickGalleryDivision(divisions: Division[]): {
+  division: Division
+  status: DivisionStatus
+} | null {
+  if (divisions.length === 0) return null
+
+  const ranked = [...divisions]
+    .sort((a, b) => a.order - b.order)
+    .map((division) => ({
+      division,
+      status: getDivisionStatus(division),
+    }))
+
+  const live = ranked.find((entry) => entry.status === 'live')
+  if (live) return live
+
+  const completed = ranked
+    .filter((entry) => entry.status === 'completed')
+    .sort((a, b) => {
+      if (!hasDivisionDates(a.division) || !hasDivisionDates(b.division)) {
+        return b.division.order - a.division.order
+      }
+
+      return (
+        parseDate(b.division.date_to).getTime() -
+        parseDate(a.division.date_to).getTime()
+      )
+    })
+  if (completed[0]) return completed[0]
+
+  return ranked[0]
+}
+

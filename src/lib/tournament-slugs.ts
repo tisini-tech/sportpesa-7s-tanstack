@@ -65,7 +65,7 @@ export function getTournamentBaseFromPathname(pathname: string): string | null {
   if (!match) return null
 
   // Season-scoped pages (3rd segment is not a leg).
-  if (match[3] === 'gallery' || match[3] === 'schedule') {
+  if (match[3] === 'schedule') {
     return null
   }
 

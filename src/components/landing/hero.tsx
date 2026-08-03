@@ -49,7 +49,11 @@ function statusBadgeClass(status: DivisionStatus): string {
   return 'bg-primary/15 text-primary ring-primary/30'
 }
 
-function statusHeadline(status: DivisionStatus): string {
+function statusHeadline(
+  status: DivisionStatus,
+  showChampions: boolean,
+): string {
+  if (showChampions) return 'Cup winners'
   if (status === 'live') return 'Leg in progress'
   if (status === 'completed') return 'Leg completed'
   return 'Next leg'
@@ -99,26 +103,49 @@ function HeroLegFeature({
   season,
   seasonName,
   leagueSlug,
+  backgroundDivision,
 }: {
   division: Division
   status: DivisionStatus
   season: Season
   seasonName: string
   leagueSlug?: string
+  /** Completed leg whose winner photo backs the card. */
+  backgroundDivision: Division | null
 }) {
   const legNumber =
     season.divisions.findIndex((item) => item.id === division.id) + 1
+  const showChampions =
+    status === 'completed' &&
+    Boolean(division.winner_url || division.winner_team)
+  const winnerBg = backgroundDivision?.winner_url ?? null
+  const backgroundSrc = winnerBg ?? venueHero
+  const usingWinnerBg = Boolean(winnerBg)
+  const winnerLabel = division.winner_team?.trim() || null
+  const winnerAlt = winnerLabel
+    ? `${winnerLabel}, ${division.name} cup winners`
+    : `${division.name} cup winners`
 
   return (
     <article className="relative min-h-[30rem] overflow-hidden rounded-2xl border border-border bg-card/50 shadow-lg sm:min-h-[32rem] lg:min-h-[35rem]">
       <img
-        src={venueHero}
-        alt=""
+        src={backgroundSrc}
+        alt={showChampions ? winnerAlt : ''}
         width={1600}
         height={1200}
-        className="absolute inset-0 h-full w-full object-cover opacity-40"
+        className={cn(
+          'absolute inset-0 h-full w-full object-cover',
+          usingWinnerBg ? 'opacity-65' : 'opacity-40',
+        )}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-primary/20 to-primary/5" />
+      <div
+        className={cn(
+          'absolute inset-0',
+          usingWinnerBg
+            ? 'bg-gradient-to-t from-background via-background/80 to-background/25'
+            : 'bg-gradient-to-r from-background/90 via-primary/20 to-primary/5',
+        )}
+      />
 
       <span
         aria-hidden
@@ -130,19 +157,51 @@ function HeroLegFeature({
       <div className="relative z-10 flex h-full min-h-[30rem] flex-col justify-between p-8 md:min-h-[32rem] md:p-12 lg:min-h-[35rem]">
         <div>
           <p className="text-xs font-bold tracking-[0.2em] text-primary uppercase">
-            {statusHeadline(status)} · {legNumber}
+            {statusHeadline(status, showChampions)} · {legNumber}
           </p>
-          <HeroDateBlock division={division} />
+          {showChampions ? (
+            winnerLabel ? (
+              <h1 className="mt-6 text-4xl font-black tracking-tight text-foreground uppercase md:text-5xl">
+                {winnerLabel}
+              </h1>
+            ) : (
+              <p className="mt-6 max-w-md text-lg font-semibold text-foreground/90 md:text-xl">
+                Champions of {division.name}
+              </p>
+            )
+          ) : (
+            <HeroDateBlock division={division} />
+          )}
         </div>
 
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground uppercase md:text-5xl">
-            {division.name}
-          </h1>
-          <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPinIcon className="size-4 shrink-0 text-primary" aria-hidden />
-            Leg {legNumber} · {division.county}
-          </p>
+          {showChampions && winnerLabel ? (
+            <>
+              <p className="text-sm font-semibold tracking-wide text-primary uppercase">
+                Champions of {division.name}
+              </p>
+              <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPinIcon
+                  className="size-4 shrink-0 text-primary"
+                  aria-hidden
+                />
+                Leg {legNumber} · {division.county}
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl font-black tracking-tight text-foreground uppercase md:text-5xl">
+                {division.name}
+              </h1>
+              <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPinIcon
+                  className="size-4 shrink-0 text-primary"
+                  aria-hidden
+                />
+                Leg {legNumber} · {division.county}
+              </p>
+            </>
+          )}
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <span
@@ -202,6 +261,10 @@ export function HeroSection({
   leagueSlug,
 }: HeroSectionProps) {
   const featured = resolveHeroDivision(divisions, activeDivisionId)
+  const backgroundDivision =
+    featured?.status === 'completed' && featured.division.winner_url
+      ? featured.division
+      : null
 
   return (
     <section className="sp-landing-hero overflow-hidden border-b border-border text-foreground">
@@ -214,6 +277,7 @@ export function HeroSection({
               season={season}
               seasonName={seasonName}
               leagueSlug={leagueSlug}
+              backgroundDivision={backgroundDivision}
             />
           ) : (
             <HeroLegFallback />

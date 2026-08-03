@@ -18,8 +18,10 @@ import { Route as AuthRequestPasswordRouteImport } from './routes/_auth/request-
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as SiteVotingIndexRouteImport } from './routes/_site/voting/index'
 import { Route as SiteQuizIndexRouteImport } from './routes/_site/quiz/index'
+import { Route as SiteGalleryIndexRouteImport } from './routes/_site/gallery/index'
 import { Route as SiteVotingVoteIdIndexRouteImport } from './routes/_site/voting/$voteId/index'
 import { Route as SiteQuizQuizIdIndexRouteImport } from './routes/_site/quiz/$quizId/index'
+import { Route as SiteGalleryImageIdIndexRouteImport } from './routes/_site/gallery/$imageId/index'
 import { Route as SiteQuizQuizIdLeaderboardRouteImport } from './routes/_site/quiz/$quizId/leaderboard'
 import { Route as SiteLeagueSlugSeasonSlugScheduleRouteRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/schedule/route'
 import { Route as SiteLeagueSlugSeasonSlugLegSlugRouteRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/route'
@@ -28,7 +30,6 @@ import { Route as SiteLeagueSlugSeasonSlugGalleryIndexRouteImport } from './rout
 import { Route as SiteLeagueSlugSeasonSlugLegSlugIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/index'
 import { Route as SiteLeagueSlugSeasonSlugScheduleFixtureIdRouteRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/route'
 import { Route as SiteLeagueSlugSeasonSlugScheduleFixtureIdIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/index'
-import { Route as SiteLeagueSlugSeasonSlugGalleryImageIdIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/gallery/$imageId/index'
 import { Route as SiteLeagueSlugSeasonSlugLegSlugVideosIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/videos/index'
 import { Route as SiteLeagueSlugSeasonSlugLegSlugStatsIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/stats/index'
 import { Route as SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRouteImport } from './routes/_site/$leagueSlug/$seasonSlug/$legSlug/standings/index'
@@ -87,6 +88,11 @@ const SiteQuizIndexRoute = SiteQuizIndexRouteImport.update({
   path: '/quiz/',
   getParentRoute: () => SiteRouteRoute,
 } as any)
+const SiteGalleryIndexRoute = SiteGalleryIndexRouteImport.update({
+  id: '/gallery/',
+  path: '/gallery/',
+  getParentRoute: () => SiteRouteRoute,
+} as any)
 const SiteVotingVoteIdIndexRoute = SiteVotingVoteIdIndexRouteImport.update({
   id: '/voting/$voteId/',
   path: '/voting/$voteId/',
@@ -95,6 +101,11 @@ const SiteVotingVoteIdIndexRoute = SiteVotingVoteIdIndexRouteImport.update({
 const SiteQuizQuizIdIndexRoute = SiteQuizQuizIdIndexRouteImport.update({
   id: '/quiz/$quizId/',
   path: '/quiz/$quizId/',
+  getParentRoute: () => SiteRouteRoute,
+} as any)
+const SiteGalleryImageIdIndexRoute = SiteGalleryImageIdIndexRouteImport.update({
+  id: '/gallery/$imageId/',
+  path: '/gallery/$imageId/',
   getParentRoute: () => SiteRouteRoute,
 } as any)
 const SiteQuizQuizIdLeaderboardRoute =
@@ -144,12 +155,6 @@ const SiteLeagueSlugSeasonSlugScheduleFixtureIdIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => SiteLeagueSlugSeasonSlugScheduleFixtureIdRouteRoute,
-  } as any)
-const SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute =
-  SiteLeagueSlugSeasonSlugGalleryImageIdIndexRouteImport.update({
-    id: '/$leagueSlug/$seasonSlug/gallery/$imageId/',
-    path: '/$leagueSlug/$seasonSlug/gallery/$imageId/',
-    getParentRoute: () => SiteRouteRoute,
   } as any)
 const SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute =
   SiteLeagueSlugSeasonSlugLegSlugVideosIndexRouteImport.update({
@@ -245,11 +250,13 @@ export interface FileRoutesByFullPath {
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify': typeof AuthVerifyRoute
+  '/gallery/': typeof SiteGalleryIndexRoute
   '/quiz/': typeof SiteQuizIndexRoute
   '/voting/': typeof SiteVotingIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug': typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren
   '/$leagueSlug/$seasonSlug/schedule': typeof SiteLeagueSlugSeasonSlugScheduleRouteRouteWithChildren
   '/quiz/$quizId/leaderboard': typeof SiteQuizQuizIdLeaderboardRoute
+  '/gallery/$imageId/': typeof SiteGalleryImageIdIndexRoute
   '/quiz/$quizId/': typeof SiteQuizQuizIdIndexRoute
   '/voting/$voteId/': typeof SiteVotingVoteIdIndexRoute
   '/$leagueSlug/$seasonSlug/schedule/$fixtureId': typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdRouteRouteWithChildren
@@ -264,7 +271,6 @@ export interface FileRoutesByFullPath {
   '/$leagueSlug/$seasonSlug/$legSlug/standings/': typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug/stats/': typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug/videos/': typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
-  '/$leagueSlug/$seasonSlug/gallery/$imageId/': typeof SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute
   '/$leagueSlug/$seasonSlug/schedule/$fixtureId/': typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -279,9 +285,11 @@ export interface FileRoutesByTo {
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify': typeof AuthVerifyRoute
+  '/gallery': typeof SiteGalleryIndexRoute
   '/quiz': typeof SiteQuizIndexRoute
   '/voting': typeof SiteVotingIndexRoute
   '/quiz/$quizId/leaderboard': typeof SiteQuizQuizIdLeaderboardRoute
+  '/gallery/$imageId': typeof SiteGalleryImageIdIndexRoute
   '/quiz/$quizId': typeof SiteQuizQuizIdIndexRoute
   '/voting/$voteId': typeof SiteVotingVoteIdIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug': typeof SiteLeagueSlugSeasonSlugLegSlugIndexRoute
@@ -294,7 +302,6 @@ export interface FileRoutesByTo {
   '/$leagueSlug/$seasonSlug/$legSlug/standings': typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug/videos': typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
-  '/$leagueSlug/$seasonSlug/gallery/$imageId': typeof SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute
   '/$leagueSlug/$seasonSlug/schedule/$fixtureId': typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdIndexRoute
   '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -312,11 +319,13 @@ export interface FileRoutesById {
   '/_auth/request-password': typeof AuthRequestPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/verify': typeof AuthVerifyRoute
+  '/_site/gallery/': typeof SiteGalleryIndexRoute
   '/_site/quiz/': typeof SiteQuizIndexRoute
   '/_site/voting/': typeof SiteVotingIndexRoute
   '/_site/$leagueSlug/$seasonSlug/$legSlug': typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren
   '/_site/$leagueSlug/$seasonSlug/schedule': typeof SiteLeagueSlugSeasonSlugScheduleRouteRouteWithChildren
   '/_site/quiz/$quizId/leaderboard': typeof SiteQuizQuizIdLeaderboardRoute
+  '/_site/gallery/$imageId/': typeof SiteGalleryImageIdIndexRoute
   '/_site/quiz/$quizId/': typeof SiteQuizQuizIdIndexRoute
   '/_site/voting/$voteId/': typeof SiteVotingVoteIdIndexRoute
   '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId': typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdRouteRouteWithChildren
@@ -331,7 +340,6 @@ export interface FileRoutesById {
   '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/': typeof SiteLeagueSlugSeasonSlugLegSlugStandingsIndexRoute
   '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/': typeof SiteLeagueSlugSeasonSlugLegSlugStatsIndexRoute
   '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/': typeof SiteLeagueSlugSeasonSlugLegSlugVideosIndexRoute
-  '/_site/$leagueSlug/$seasonSlug/gallery/$imageId/': typeof SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute
   '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/': typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdIndexRoute
   '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute
   '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats': typeof SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugStatsRoute
@@ -348,11 +356,13 @@ export interface FileRouteTypes {
     | '/request-password'
     | '/reset-password'
     | '/verify'
+    | '/gallery/'
     | '/quiz/'
     | '/voting/'
     | '/$leagueSlug/$seasonSlug/$legSlug'
     | '/$leagueSlug/$seasonSlug/schedule'
     | '/quiz/$quizId/leaderboard'
+    | '/gallery/$imageId/'
     | '/quiz/$quizId/'
     | '/voting/$voteId/'
     | '/$leagueSlug/$seasonSlug/schedule/$fixtureId'
@@ -367,7 +377,6 @@ export interface FileRouteTypes {
     | '/$leagueSlug/$seasonSlug/$legSlug/standings/'
     | '/$leagueSlug/$seasonSlug/$legSlug/stats/'
     | '/$leagueSlug/$seasonSlug/$legSlug/videos/'
-    | '/$leagueSlug/$seasonSlug/gallery/$imageId/'
     | '/$leagueSlug/$seasonSlug/schedule/$fixtureId/'
     | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -382,9 +391,11 @@ export interface FileRouteTypes {
     | '/request-password'
     | '/reset-password'
     | '/verify'
+    | '/gallery'
     | '/quiz'
     | '/voting'
     | '/quiz/$quizId/leaderboard'
+    | '/gallery/$imageId'
     | '/quiz/$quizId'
     | '/voting/$voteId'
     | '/$leagueSlug/$seasonSlug/$legSlug'
@@ -397,7 +408,6 @@ export interface FileRouteTypes {
     | '/$leagueSlug/$seasonSlug/$legSlug/standings'
     | '/$leagueSlug/$seasonSlug/$legSlug/stats'
     | '/$leagueSlug/$seasonSlug/$legSlug/videos'
-    | '/$leagueSlug/$seasonSlug/gallery/$imageId'
     | '/$leagueSlug/$seasonSlug/schedule/$fixtureId'
     | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -414,11 +424,13 @@ export interface FileRouteTypes {
     | '/_auth/request-password'
     | '/_auth/reset-password'
     | '/_auth/verify'
+    | '/_site/gallery/'
     | '/_site/quiz/'
     | '/_site/voting/'
     | '/_site/$leagueSlug/$seasonSlug/$legSlug'
     | '/_site/$leagueSlug/$seasonSlug/schedule'
     | '/_site/quiz/$quizId/leaderboard'
+    | '/_site/gallery/$imageId/'
     | '/_site/quiz/$quizId/'
     | '/_site/voting/$voteId/'
     | '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId'
@@ -433,7 +445,6 @@ export interface FileRouteTypes {
     | '/_site/$leagueSlug/$seasonSlug/$legSlug/standings/'
     | '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/'
     | '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/'
-    | '/_site/$leagueSlug/$seasonSlug/gallery/$imageId/'
     | '/_site/$leagueSlug/$seasonSlug/schedule/$fixtureId/'
     | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures'
     | '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats'
@@ -514,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteQuizIndexRouteImport
       parentRoute: typeof SiteRouteRoute
     }
+    '/_site/gallery/': {
+      id: '/_site/gallery/'
+      path: '/gallery'
+      fullPath: '/gallery/'
+      preLoaderRoute: typeof SiteGalleryIndexRouteImport
+      parentRoute: typeof SiteRouteRoute
+    }
     '/_site/voting/$voteId/': {
       id: '/_site/voting/$voteId/'
       path: '/voting/$voteId'
@@ -526,6 +544,13 @@ declare module '@tanstack/react-router' {
       path: '/quiz/$quizId'
       fullPath: '/quiz/$quizId/'
       preLoaderRoute: typeof SiteQuizQuizIdIndexRouteImport
+      parentRoute: typeof SiteRouteRoute
+    }
+    '/_site/gallery/$imageId/': {
+      id: '/_site/gallery/$imageId/'
+      path: '/gallery/$imageId'
+      fullPath: '/gallery/$imageId/'
+      preLoaderRoute: typeof SiteGalleryImageIdIndexRouteImport
       parentRoute: typeof SiteRouteRoute
     }
     '/_site/quiz/$quizId/leaderboard': {
@@ -583,13 +608,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$leagueSlug/$seasonSlug/schedule/$fixtureId/'
       preLoaderRoute: typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdIndexRouteImport
       parentRoute: typeof SiteLeagueSlugSeasonSlugScheduleFixtureIdRouteRoute
-    }
-    '/_site/$leagueSlug/$seasonSlug/gallery/$imageId/': {
-      id: '/_site/$leagueSlug/$seasonSlug/gallery/$imageId/'
-      path: '/$leagueSlug/$seasonSlug/gallery/$imageId'
-      fullPath: '/$leagueSlug/$seasonSlug/gallery/$imageId/'
-      preLoaderRoute: typeof SiteLeagueSlugSeasonSlugGalleryImageIdIndexRouteImport
-      parentRoute: typeof SiteRouteRoute
     }
     '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/': {
       id: '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/'
@@ -813,18 +831,20 @@ const SiteLeagueSlugSeasonSlugScheduleRouteRouteWithChildren =
   )
 
 interface SiteRouteRouteChildren {
+  SiteGalleryIndexRoute: typeof SiteGalleryIndexRoute
   SiteQuizIndexRoute: typeof SiteQuizIndexRoute
   SiteVotingIndexRoute: typeof SiteVotingIndexRoute
   SiteLeagueSlugSeasonSlugLegSlugRouteRoute: typeof SiteLeagueSlugSeasonSlugLegSlugRouteRouteWithChildren
   SiteLeagueSlugSeasonSlugScheduleRouteRoute: typeof SiteLeagueSlugSeasonSlugScheduleRouteRouteWithChildren
   SiteQuizQuizIdLeaderboardRoute: typeof SiteQuizQuizIdLeaderboardRoute
+  SiteGalleryImageIdIndexRoute: typeof SiteGalleryImageIdIndexRoute
   SiteQuizQuizIdIndexRoute: typeof SiteQuizQuizIdIndexRoute
   SiteVotingVoteIdIndexRoute: typeof SiteVotingVoteIdIndexRoute
   SiteLeagueSlugSeasonSlugGalleryIndexRoute: typeof SiteLeagueSlugSeasonSlugGalleryIndexRoute
-  SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute: typeof SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute
 }
 
 const SiteRouteRouteChildren: SiteRouteRouteChildren = {
+  SiteGalleryIndexRoute: SiteGalleryIndexRoute,
   SiteQuizIndexRoute: SiteQuizIndexRoute,
   SiteVotingIndexRoute: SiteVotingIndexRoute,
   SiteLeagueSlugSeasonSlugLegSlugRouteRoute:
@@ -832,12 +852,11 @@ const SiteRouteRouteChildren: SiteRouteRouteChildren = {
   SiteLeagueSlugSeasonSlugScheduleRouteRoute:
     SiteLeagueSlugSeasonSlugScheduleRouteRouteWithChildren,
   SiteQuizQuizIdLeaderboardRoute: SiteQuizQuizIdLeaderboardRoute,
+  SiteGalleryImageIdIndexRoute: SiteGalleryImageIdIndexRoute,
   SiteQuizQuizIdIndexRoute: SiteQuizQuizIdIndexRoute,
   SiteVotingVoteIdIndexRoute: SiteVotingVoteIdIndexRoute,
   SiteLeagueSlugSeasonSlugGalleryIndexRoute:
     SiteLeagueSlugSeasonSlugGalleryIndexRoute,
-  SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute:
-    SiteLeagueSlugSeasonSlugGalleryImageIdIndexRoute,
 }
 
 const SiteRouteRouteWithChildren = SiteRouteRoute._addFileChildren(

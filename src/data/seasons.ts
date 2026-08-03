@@ -43,16 +43,30 @@ export const poolsQueryOptions = (
   })
 
 export const getSeasonImagesFn = createServerFn({ method: 'GET' })
-  .validator((data: { seasonId: string }) => data)
+  .validator(
+    (data: { competitionId: string; seasonId: string; divisionId: string }) =>
+      data,
+  )
   .handler(async ({ data }) => {
-    const seasonImages = await apiService.get<SeasonImage[]>(
-      `/competitions/238/seasons/${data.seasonId}/images`,
-    )
-    return seasonImages
+    try {
+      const seasonImages = await apiService.get<SeasonImage[]>(
+        `/competitions/${data.competitionId}/seasons/${data.seasonId}/images?division_id=${data.divisionId}`,
+      )
+      return seasonImages
+    } catch {
+      return []
+    }
   })
 
-export const seasonImagesQueryOptions = (seasonId: string) =>
+export const seasonImagesQueryOptions = (
+  competitionId: string,
+  seasonId: string,
+  divisionId: string,
+) =>
   queryOptions({
-    queryKey: ['seasonImages', seasonId],
-    queryFn: () => getSeasonImagesFn({ data: { seasonId } }),
+    queryKey: ['seasonImages', competitionId, seasonId, divisionId],
+    queryFn: () =>
+      getSeasonImagesFn({
+        data: { competitionId, seasonId, divisionId },
+      }),
   })
