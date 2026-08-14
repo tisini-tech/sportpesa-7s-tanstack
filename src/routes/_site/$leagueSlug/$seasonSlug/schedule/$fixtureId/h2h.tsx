@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
-import {
-  FixtureRow,
-  getResultForTeam,
-} from '#/components/schedule/fixture-row'
+import { FixtureRow, getResultForTeam } from '#/components/schedule/fixture-row'
 import { getFixtureH2HFn } from '#/data/fixtures'
 import type { Fixture, TeamLogo } from '#/lib/types'
 import { Route as MatchLayoutRoute } from './route'

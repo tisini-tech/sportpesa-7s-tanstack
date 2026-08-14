@@ -11,11 +11,8 @@ import type {
 
 export const getFixturesFn = createServerFn({ method: 'GET' })
   .validator(
-    (data: {
-      competitionId: string
-      seasonId: string
-      divisionId: string
-    }) => data,
+    (data: { competitionId: string; seasonId: string; divisionId: string }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const fixtures: Fixture[] = await apiService.get(
@@ -39,11 +36,8 @@ export const fixturesQueryOptions = (
 
 export const getFixtureDetailsFn = createServerFn({ method: 'GET' })
   .validator(
-    (data: {
-      competitionId: string
-      seasonId: string
-      fixtureId: string
-    }) => data,
+    (data: { competitionId: string; seasonId: string; fixtureId: string }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const fixture: FixtureDetails = await apiService.get(
@@ -55,11 +49,8 @@ export const getFixtureDetailsFn = createServerFn({ method: 'GET' })
 
 export const getFixtureLineupsFn = createServerFn({ method: 'GET' })
   .validator(
-    (data: {
-      competitionId: string
-      seasonId: string
-      fixtureId: string
-    }) => data,
+    (data: { competitionId: string; seasonId: string; fixtureId: string }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const lineups: FixtureLineups = await apiService.get(
@@ -70,11 +61,8 @@ export const getFixtureLineupsFn = createServerFn({ method: 'GET' })
 
 export const getFixtureH2HFn = createServerFn({ method: 'GET' })
   .validator(
-    (data: {
-      competitionId: string
-      seasonId: string
-      fixtureId: string
-    }) => data,
+    (data: { competitionId: string; seasonId: string; fixtureId: string }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const h2h: FixtureH2H = await apiService.get(

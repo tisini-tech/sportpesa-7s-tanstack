@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   ArrowRightLeftIcon,
   CircleDotIcon,
+  CircleXIcon,
   FlagIcon,
   GoalIcon,
   RectangleVerticalIcon,
@@ -38,6 +39,8 @@ function RouteComponent() {
         <div className="space-y-2">
           {highlights.map((highlight) => {
             const Icon = getEventIcon(highlight)
+            const label = getEventLabel(highlight)
+            const iconClassName = getEventIconClassName(highlight)
             const isHome = isHomeTeam(highlight.team)
 
             return (
@@ -53,23 +56,23 @@ function RouteComponent() {
                     <span className="bg-muted text-muted-foreground min-w-10 rounded px-2 py-0.5 text-center text-xs font-semibold tabular-nums">
                       {highlight.game_minute || '-'}
                     </span>
-                    <Icon className="text-primary size-4 shrink-0" />
+                    <Icon className={cn('size-4 shrink-0', iconClassName)} />
                     <span className="text-foreground/75 font-normal">
                       {highlight.pname || 'Unknown player'}
                     </span>
                     <span className="text-[0.65rem] font-normal tracking-wide text-muted-foreground/65 uppercase">
-                      {highlight.event_name}
+                      {label}
                     </span>
                   </>
                 ) : (
                   <>
                     <span className="text-[0.65rem] font-normal tracking-wide text-muted-foreground/65 uppercase">
-                      {highlight.event_name}
+                      {label}
                     </span>
                     <span className="text-foreground/75 font-normal">
                       {highlight.pname || 'Unknown player'}
                     </span>
-                    <Icon className="text-primary size-4 shrink-0" />
+                    <Icon className={cn('size-4 shrink-0', iconClassName)} />
                     <span className="bg-muted text-muted-foreground min-w-10 rounded px-2 py-0.5 text-center text-xs font-semibold tabular-nums">
                       {highlight.game_minute || '-'}
                     </span>
@@ -86,6 +89,39 @@ function RouteComponent() {
 
 type EventIcon = typeof CircleDotIcon
 
+type SubeventMeta = {
+  label: string
+  icon: EventIcon
+  iconClassName?: string
+}
+
+/** Score + card sub-events from the match events catalogue. */
+const SUBEVENT_BY_ID: Record<string, SubeventMeta> = {
+  '632': { label: 'Missed Conversion', icon: CircleXIcon },
+  '633': { label: 'Drop Goal', icon: GoalIcon },
+  '634': { label: 'Penalty', icon: ShieldAlertIcon },
+  '635': { label: 'Conversion', icon: GoalIcon },
+  '636': { label: 'Missed Penalty', icon: CircleXIcon },
+  '637': { label: 'Missed Drop Goal', icon: CircleXIcon },
+  '638': { label: 'Try', icon: CircleDotIcon },
+  '639': { label: 'Penalty Try', icon: CircleDotIcon },
+  '693': {
+    label: 'Red Card',
+    icon: RectangleVerticalIcon,
+    iconClassName: 'fill-red-500 text-red-500',
+  },
+  '694': {
+    label: 'Yellow Card',
+    icon: RectangleVerticalIcon,
+    iconClassName: 'fill-amber-400 text-amber-400',
+  },
+  '695': {
+    label: 'Second Yellow',
+    icon: RectangleVerticalIcon,
+    iconClassName: 'fill-red-500 text-red-500',
+  },
+}
+
 const EVENT_ICON_BY_ID: Record<number, EventIcon> = {
   5: GoalIcon,
   18: RectangleVerticalIcon,
@@ -96,7 +132,18 @@ const EVENT_ICON_BY_ID: Record<number, EventIcon> = {
   82: ArrowRightLeftIcon,
 }
 
+function getSubevent(event: Highlight) {
+  return SUBEVENT_BY_ID[event.subevent_id] ?? null
+}
+
+function getEventLabel(event: Highlight): string {
+  return getSubevent(event)?.label ?? event.event_name
+}
+
 function getEventIcon(event: Highlight): EventIcon {
+  const sub = getSubevent(event)
+  if (sub) return sub.icon
+
   const mapped = EVENT_ICON_BY_ID[event.event_id]
   if (mapped) return mapped
 
@@ -107,4 +154,8 @@ function getEventIcon(event: Highlight): EventIcon {
   if (name.includes('offside')) return FlagIcon
   if (name.includes('pen')) return ShieldAlertIcon
   return CircleDotIcon
+}
+
+function getEventIconClassName(event: Highlight): string {
+  return getSubevent(event)?.iconClassName ?? 'text-primary'
 }
