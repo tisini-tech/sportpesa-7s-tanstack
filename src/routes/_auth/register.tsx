@@ -239,10 +239,10 @@ function RegisterPage() {
             <FieldDescription className="text-center text-xs leading-relaxed">
               Already have an account?{' '}
               <Link
-                to="/"
+                to="/login"
                 className="font-semibold text-secondary underline-offset-4 hover:underline"
               >
-                Back to home
+                Sign in
               </Link>
             </FieldDescription>
           </Field>

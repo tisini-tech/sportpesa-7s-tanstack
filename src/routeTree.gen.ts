@@ -16,6 +16,7 @@ import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthRequestPasswordRouteImport } from './routes/_auth/request-password'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as SiteVotingIndexRouteImport } from './routes/_site/voting/index'
 import { Route as SiteQuizIndexRouteImport } from './routes/_site/quiz/index'
 import { Route as SiteGalleryIndexRouteImport } from './routes/_site/gallery/index'
@@ -76,6 +77,11 @@ const AuthRequestPasswordRoute = AuthRequestPasswordRouteImport.update({
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const SiteVotingIndexRoute = SiteVotingIndexRouteImport.update({
@@ -246,6 +252,7 @@ const SiteLeagueSlugSeasonSlugLegSlugClubsClubSlugFixturesRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
@@ -281,6 +288,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_site': typeof SiteRouteRouteWithChildren
+  '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/request-password': typeof AuthRequestPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
@@ -352,6 +361,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/register'
     | '/request-password'
     | '/reset-password'
@@ -387,6 +397,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/register'
     | '/request-password'
     | '/reset-password'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/_site'
+    | '/_auth/login'
     | '/_auth/register'
     | '/_auth/request-password'
     | '/_auth/reset-password'
@@ -509,6 +521,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/_site/voting/': {
@@ -711,6 +730,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthRequestPasswordRoute: typeof AuthRequestPasswordRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
@@ -718,6 +738,7 @@ interface AuthRouteRouteChildren {
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthRequestPasswordRoute: AuthRequestPasswordRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,

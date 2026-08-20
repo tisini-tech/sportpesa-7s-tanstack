@@ -157,7 +157,10 @@ function StandingsPage() {
         ) : isLoadingOverall ? (
           <Loading label="Loading overall standings" />
         ) : (
-          <OverallStandingsTable standings={overall?.overall_standings ?? []} />
+          <OverallStandingsTable
+            standings={overall?.overall_standings ?? []}
+            divisions={season.divisions}
+          />
         )}
       </section>
     </div>

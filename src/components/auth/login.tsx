@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { Loader2Icon, MailIcon, SmartphoneIcon } from 'lucide-react'
 
@@ -24,19 +25,18 @@ import type { LoginSchema } from '#/lib/schemas'
 
 export type LoginMethod = 'phone' | 'email'
 
-type LoginModalProps = {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  showTrigger?: boolean
+type LoginFormProps = {
   onSuccess?: () => void
+  /** Page layout shows its own title; modal keeps the dialog header. */
+  showHeading?: boolean
+  idPrefix?: string
 }
 
-export function LoginModal({
-  open,
-  onOpenChange,
-  showTrigger = true,
+export function LoginForm({
   onSuccess,
-}: LoginModalProps) {
+  showHeading = true,
+  idPrefix = 'login',
+}: LoginFormProps) {
   const [method, setMethod] = useState<LoginMethod>('phone')
   const [submitError, setSubmitError] = useState<string | null>(null)
 
@@ -87,6 +87,175 @@ export function LoginModal({
   }
 
   return (
+    <div className="space-y-6">
+      {showHeading ? (
+        <header className="space-y-2 text-center">
+          <h1 className="font-heading text-xl font-black tracking-tight text-foreground uppercase">
+            Welcome back
+          </h1>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            Sign in with your phone or email to continue.
+          </p>
+        </header>
+      ) : null}
+
+      <div
+        className="grid grid-cols-2 gap-0.5 rounded-xl border border-border bg-muted/30 p-0.5"
+        role="tablist"
+        aria-label="Login method"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={method === 'phone'}
+          onClick={() => switchMethod('phone')}
+          className={cn(
+            'inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2.5 text-[0.65rem] font-bold tracking-[0.1em] uppercase transition-colors',
+            method === 'phone'
+              ? 'bg-secondary/15 text-secondary shadow-sm'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+          )}
+        >
+          <SmartphoneIcon className="size-3.5" aria-hidden />
+          Phone
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={method === 'email'}
+          onClick={() => switchMethod('email')}
+          className={cn(
+            'inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2.5 text-[0.65rem] font-bold tracking-[0.1em] uppercase transition-colors',
+            method === 'email'
+              ? 'bg-secondary/15 text-secondary shadow-sm'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+          )}
+        >
+          <MailIcon className="size-3.5" aria-hidden />
+          Email
+        </button>
+      </div>
+
+      <form
+        noValidate
+        className="space-y-6"
+        onSubmit={(e) => {
+          e.preventDefault()
+          void form.handleSubmit()
+        }}
+      >
+        <FieldGroup className="gap-5">
+          {method === 'phone' ? (
+            <form.Field
+              name="phone"
+              children={(field) => (
+                <InputField
+                  field={field}
+                  id={`${idPrefix}-phone`}
+                  label="Phone number"
+                  type="tel"
+                  placeholder="0712 345 678"
+                  autoComplete="tel"
+                  className="gap-2"
+                  inputClassName="h-11 rounded-xl px-3"
+                />
+              )}
+            />
+          ) : (
+            <form.Field
+              name="email"
+              children={(field) => (
+                <InputField
+                  field={field}
+                  id={`${idPrefix}-email`}
+                  label="Email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className="gap-2"
+                  inputClassName="h-11 rounded-xl px-3"
+                />
+              )}
+            />
+          )}
+
+          <form.Field
+            name="password"
+            children={(field) => (
+              <InputField
+                field={field}
+                id={`${idPrefix}-password`}
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+                className="gap-2"
+                inputClassName="h-11 rounded-xl px-3"
+                labelEnd={
+                  <Link
+                    to="/request-password"
+                    className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
+                }
+              />
+            )}
+          />
+
+          {submitError ? (
+            <Field>
+              <FieldError errors={[{ message: submitError }]} />
+            </Field>
+          ) : null}
+
+          <Field className="mt-1 gap-4">
+            <form.Subscribe
+              selector={(state) => state.isSubmitting}
+              children={(isSubmitting) => (
+                <Button
+                  disabled={isSubmitting}
+                  type="submit"
+                  size="lg"
+                  className="h-11 w-full rounded-xl text-sm font-bold tracking-[0.08em] uppercase"
+                >
+                  {isSubmitting ? (
+                    <Loader2Icon className="size-4 animate-spin" />
+                  ) : (
+                    'Login'
+                  )}
+                </Button>
+              )}
+            />
+            <FieldDescription className="text-center text-xs leading-relaxed">
+              Don&apos;t have an account?{' '}
+              <Link
+                to="/register"
+                className="font-semibold text-secondary underline-offset-4 hover:underline"
+              >
+                Sign up
+              </Link>
+            </FieldDescription>
+          </Field>
+        </FieldGroup>
+      </form>
+    </div>
+  )
+}
+
+type LoginModalProps = {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  showTrigger?: boolean
+  onSuccess?: () => void
+}
+
+export function LoginModal({
+  open,
+  onOpenChange,
+  showTrigger = true,
+  onSuccess,
+}: LoginModalProps) {
+  return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {showTrigger ? (
         <DialogTrigger
@@ -106,145 +275,14 @@ export function LoginModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div
-          className="grid grid-cols-2 gap-0.5 rounded-xl border border-border bg-muted/30 p-0.5"
-          role="tablist"
-          aria-label="Login method"
-        >
-          <button
-            type="button"
-            role="tab"
-            aria-selected={method === 'phone'}
-            onClick={() => switchMethod('phone')}
-            className={cn(
-              'inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2.5 text-[0.65rem] font-bold tracking-[0.1em] uppercase transition-colors',
-              method === 'phone'
-                ? 'bg-secondary/15 text-secondary shadow-sm'
-                : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-            )}
-          >
-            <SmartphoneIcon className="size-3.5" aria-hidden />
-            Phone
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={method === 'email'}
-            onClick={() => switchMethod('email')}
-            className={cn(
-              'inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2.5 text-[0.65rem] font-bold tracking-[0.1em] uppercase transition-colors',
-              method === 'email'
-                ? 'bg-secondary/15 text-secondary shadow-sm'
-                : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-            )}
-          >
-            <MailIcon className="size-3.5" aria-hidden />
-            Email
-          </button>
-        </div>
-
-        <form
-          noValidate
-          className="space-y-6"
-          onSubmit={(e) => {
-            e.preventDefault()
-            void form.handleSubmit()
+        <LoginForm
+          showHeading={false}
+          idPrefix="login-modal"
+          onSuccess={() => {
+            onOpenChange?.(false)
+            onSuccess?.()
           }}
-        >
-          <FieldGroup className="gap-5">
-            {method === 'phone' ? (
-              <form.Field
-                name="phone"
-                children={(field) => (
-                  <InputField
-                    field={field}
-                    id="login-phone"
-                    label="Phone number"
-                    type="tel"
-                    placeholder="0712 345 678"
-                    autoComplete="tel"
-                    className="gap-2"
-                    inputClassName="h-11 rounded-xl px-3"
-                  />
-                )}
-              />
-            ) : (
-              <form.Field
-                name="email"
-                children={(field) => (
-                  <InputField
-                    field={field}
-                    id="login-email"
-                    label="Email"
-                    type="email"
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                    className="gap-2"
-                    inputClassName="h-11 rounded-xl px-3"
-                  />
-                )}
-              />
-            )}
-
-            <form.Field
-              name="password"
-              children={(field) => (
-                <InputField
-                  field={field}
-                  id="login-password"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  className="gap-2"
-                  inputClassName="h-11 rounded-xl px-3"
-                  labelEnd={
-                    <a
-                      href="/request-password"
-                      className="text-xs font-medium text-primary underline-offset-4 hover:underline"
-                    >
-                      Forgot password?
-                    </a>
-                  }
-                />
-              )}
-            />
-
-            {submitError ? (
-              <Field>
-                <FieldError errors={[{ message: submitError }]} />
-              </Field>
-            ) : null}
-
-            <Field className="mt-1 gap-4">
-              <form.Subscribe
-                selector={(state) => state.isSubmitting}
-                children={(isSubmitting) => (
-                  <Button
-                    disabled={isSubmitting}
-                    type="submit"
-                    size="lg"
-                    className="h-11 w-full rounded-xl text-sm font-bold tracking-[0.08em] uppercase"
-                  >
-                    {isSubmitting ? (
-                      <Loader2Icon className="size-4 animate-spin" />
-                    ) : (
-                      'Login'
-                    )}
-                  </Button>
-                )}
-              />
-              <FieldDescription className="text-center text-xs leading-relaxed">
-                Don&apos;t have an account?{' '}
-                <a
-                  href="/register"
-                  className="font-semibold text-secondary underline-offset-4 hover:underline"
-                >
-                  Sign up
-                </a>
-              </FieldDescription>
-            </Field>
-          </FieldGroup>
-        </form>
+        />
       </DialogContent>
     </Dialog>
   )

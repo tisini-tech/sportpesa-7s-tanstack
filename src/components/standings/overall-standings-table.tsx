@@ -1,6 +1,12 @@
 import { cn } from '#/lib/utils'
-import type { OverallStanding } from '#/lib/types'
+import type { Division, OverallStanding } from '#/lib/types'
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
+
+type OverallStandingsTableProps = {
+  standings: OverallStanding[]
+  /** Season legs — used to order columns chronologically. */
+  divisions?: Division[]
+}
 
 function getTeamInitials(name: string | null | undefined): string {
   const source = name || 'TBD'
@@ -9,15 +15,14 @@ function getTeamInitials(name: string | null | undefined): string {
 
 export function OverallStandingsTable({
   standings,
-}: {
-  standings: OverallStanding[]
-}) {
+  divisions = [],
+}: OverallStandingsTableProps) {
   const sorted = [...standings].sort((a, b) => {
     if (a.position !== b.position) return a.position - b.position
     return b.total_points - a.total_points
   })
 
-  const legColumns = collectLegColumns(sorted)
+  const legColumns = collectLegColumns(sorted, divisions)
 
   if (sorted.length === 0) {
     return (
@@ -77,7 +82,10 @@ type LegColumn = {
   division_name: string
 }
 
-function collectLegColumns(standings: OverallStanding[]): LegColumn[] {
+function collectLegColumns(
+  standings: OverallStanding[],
+  divisions: Division[],
+): LegColumn[] {
   const byId = new Map<number, string>()
 
   for (const standing of standings) {
@@ -88,9 +96,30 @@ function collectLegColumns(standings: OverallStanding[]): LegColumn[] {
     }
   }
 
+  const orderById = new Map(
+    divisions.map((division) => [division.id, division.order]),
+  )
+  const dateById = new Map(
+    divisions.map((division) => [division.id, division.date_from]),
+  )
+
   return [...byId.entries()]
     .map(([division_id, division_name]) => ({ division_id, division_name }))
-    .sort((a, b) => a.division_id - b.division_id)
+    .sort((a, b) => {
+      const dateA = dateById.get(a.division_id)
+      const dateB = dateById.get(b.division_id)
+      if (dateA && dateB && dateA !== dateB) {
+        return dateA.localeCompare(dateB)
+      }
+
+      const orderA = orderById.get(a.division_id)
+      const orderB = orderById.get(b.division_id)
+      if (orderA != null && orderB != null && orderA !== orderB) {
+        return orderA - orderB
+      }
+
+      return a.division_id - b.division_id
+    })
 }
 
 function shortLegLabel(name: string): string {

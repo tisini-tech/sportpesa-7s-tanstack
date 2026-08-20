@@ -1,18 +1,22 @@
-import type { EventStat, SubEvent, TeamStats as TeamStatsData } from '#/lib/types'
+import type {
+  EventStat,
+  SubEvent,
+  TeamStats as TeamStatsData,
+} from '#/lib/types'
 import { cn } from '#/lib/utils'
 
 const HIGHLIGHTED_STATS = [
-  { eventId: 33, label: 'Score' },
-  { eventId: 60, label: 'Penalties conceded', topSubEvents: 3 },
-  { eventId: 58, label: 'Carries' },
-  { eventId: 37, label: 'Linebreaks' },
+  { eventId: [33, 253], label: 'Score' },
+  { eventId: [60, 257], label: 'Penalties conceded', topSubEvents: 3 },
+  { eventId: [58, 250], label: 'Carries' },
+  { eventId: [37, 243], label: 'Linebreaks' },
 ] as const
 
 function findStat(
   stats: EventStat[],
-  eventId: number,
+  eventId: readonly [number, number],
 ): EventStat | undefined {
-  return stats.find((stat) => stat.event_id === eventId)
+  return stats.find((stat) => eventId.includes(stat.event_id))
 }
 
 function getSubEventBreakdown(
@@ -38,7 +42,9 @@ function StatBreakdown({
   const max = Math.max(...items.map((item) => item.total))
 
   return (
-    <ul className={cn('mt-3 space-y-2 border-t border-border/60 pt-3', className)}>
+    <ul
+      className={cn('mt-3 space-y-2 border-t border-border/60 pt-3', className)}
+    >
       {items.map((item) => {
         const width = max > 0 ? (item.total / max) * 100 : 0
 
@@ -88,7 +94,7 @@ export function TeamStatsCards({ data }: { data: TeamStatsData }) {
 
         return (
           <li
-            key={item.eventId}
+            key={item.eventId.join('-')}
             className="flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5"
           >
             <div className="flex items-baseline justify-between gap-3">
