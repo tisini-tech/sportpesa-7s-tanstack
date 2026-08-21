@@ -46,9 +46,8 @@ export const Route = createFileRoute('/_site/gallery/')({
 
     const featured = pickGalleryDivision(season.divisions)
     const division =
-      (search.leg
-        ? resolveDivisionBySlug(season, search.leg)
-        : undefined) ?? featured?.division
+      (search.leg ? resolveDivisionBySlug(season, search.leg) : undefined) ??
+      featured?.division
 
     if (!division) {
       throw redirect({ to: '/' })
@@ -87,7 +86,7 @@ function GalleryPage() {
   const legSlug = getLegSlug(division)
 
   useEffect(() => {
-    if (search.season === seasonSlug && search.leg === legSlug) return
+    if (search.season && search.leg) return
 
     void navigate({
       to: '/gallery',
@@ -177,10 +176,6 @@ function GalleryGridContent({
   )
 
   return (
-    <GalleryGrid
-      images={images}
-      seasonSlug={seasonSlug}
-      legSlug={legSlug}
-    />
+    <GalleryGrid images={images} seasonSlug={seasonSlug} legSlug={legSlug} />
   )
 }
