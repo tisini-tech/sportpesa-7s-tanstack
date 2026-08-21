@@ -1,5 +1,6 @@
-import { createFileRoute, Link, notFound, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { ArrowLeftIcon } from 'lucide-react'
+import { useEffect } from 'react'
 
 import { pickGalleryDivision } from '#/components/landing/division-utils'
 import { getSeasonsFn, seasonImagesQueryOptions } from '#/data/seasons'
@@ -23,7 +24,7 @@ export const Route = createFileRoute('/_site/gallery/$imageId/')({
     season: typeof search.season === 'string' ? search.season : undefined,
     leg: typeof search.leg === 'string' ? search.leg : undefined,
   }),
-  beforeLoad: async ({ search, params }) => {
+  beforeLoad: async ({ search }) => {
     const seasons = await getSeasonsFn({
       data: { id: GALLERY_COMPETITION_ID },
     })
@@ -43,18 +44,7 @@ export const Route = createFileRoute('/_site/gallery/$imageId/')({
 
     if (!division) throw notFound()
 
-    const seasonSlug = getSeasonSlug(season)
-    const legSlug = getLegSlug(division)
-
-    if (search.season !== seasonSlug || search.leg !== legSlug) {
-      throw redirect({
-        to: '/gallery/$imageId',
-        params: { imageId: params.imageId },
-        search: { season: seasonSlug, leg: legSlug },
-        replace: true,
-      })
-    }
-
+    // Avoid beforeLoad redirect for search defaults (pending + redirect race).
     return {
       seasons,
       season,
@@ -90,6 +80,22 @@ function GalleryImagePage() {
   const { season, division } = Route.useRouteContext()
   const { image } = Route.useLoaderData()
   const search = Route.useSearch()
+  const navigate = Route.useNavigate()
+  const { imageId } = Route.useParams()
+
+  const seasonSlug = getSeasonSlug(season)
+  const legSlug = getLegSlug(division)
+
+  useEffect(() => {
+    if (search.season === seasonSlug && search.leg === legSlug) return
+
+    void navigate({
+      to: '/gallery/$imageId',
+      params: { imageId },
+      search: { season: seasonSlug, leg: legSlug },
+      replace: true,
+    })
+  }, [search.season, search.leg, seasonSlug, legSlug, imageId, navigate])
 
   return (
     <div>
@@ -97,7 +103,7 @@ function GalleryImagePage() {
         <div className="sp-content-shell flex flex-col gap-x-3 gap-y-1.5 px-4 py-2.5 sm:px-6">
           <Link
             to="/gallery"
-            search={search}
+            search={{ season: seasonSlug, leg: legSlug }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3.5" aria-hidden />

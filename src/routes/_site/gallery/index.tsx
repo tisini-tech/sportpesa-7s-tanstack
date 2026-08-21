@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 
 import { pickGalleryDivision } from '#/components/landing/division-utils'
 import {
@@ -54,17 +54,8 @@ export const Route = createFileRoute('/_site/gallery/')({
       throw redirect({ to: '/' })
     }
 
-    const seasonSlug = getSeasonSlug(season)
-    const legSlug = getLegSlug(division)
-
-    if (search.season !== seasonSlug || search.leg !== legSlug) {
-      throw redirect({
-        to: '/gallery',
-        search: { season: seasonSlug, leg: legSlug },
-        replace: true,
-      })
-    }
-
+    // Do not throw redirect here to fill search defaults — that races with
+    // defaultPendingComponent and can white-screen client navigations.
     return {
       seasons,
       season,
@@ -89,7 +80,21 @@ export const Route = createFileRoute('/_site/gallery/')({
 
 function GalleryPage() {
   const { seasons, season, division, competitionId } = Route.useRouteContext()
+  const search = Route.useSearch()
   const navigate = Route.useNavigate()
+
+  const seasonSlug = getSeasonSlug(season)
+  const legSlug = getLegSlug(division)
+
+  useEffect(() => {
+    if (search.season === seasonSlug && search.leg === legSlug) return
+
+    void navigate({
+      to: '/gallery',
+      search: { season: seasonSlug, leg: legSlug },
+      replace: true,
+    })
+  }, [search.season, search.leg, seasonSlug, legSlug, navigate])
 
   const handleSeasonChange = (nextSeasonId: number) => {
     const nextSeason = seasons.find((item) => item.id === nextSeasonId)
@@ -145,8 +150,8 @@ function GalleryPage() {
             competitionId={competitionId}
             seasonId={season.id.toString()}
             divisionId={division.id.toString()}
-            seasonSlug={getSeasonSlug(season)}
-            legSlug={getLegSlug(division)}
+            seasonSlug={seasonSlug}
+            legSlug={legSlug}
           />
         </Suspense>
       </section>
