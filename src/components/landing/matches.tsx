@@ -2,6 +2,10 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, getRouteApi } from '@tanstack/react-router'
 
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
+import {
+  isFixtureCompleted,
+  isFixtureUpcoming,
+} from '#/components/schedule/fixture-status'
 import { fixturesQueryOptions } from '#/data/fixtures'
 import type { Fixture } from '#/lib/types'
 import { cn } from '#/lib/utils'
@@ -62,27 +66,11 @@ function sortByKickoffDesc(a: Fixture, b: Fixture): number {
 }
 
 function isCompleted(fixture: Fixture): boolean {
-  const status = (fixture.game_status ?? '').toLowerCase()
-  return (
-    status.includes('finish') ||
-    status.includes('complete') ||
-    status.includes('ft') ||
-    status.includes('played') ||
-    status.includes('ended')
-  )
+  return isFixtureCompleted(fixture)
 }
 
 function isUpcoming(fixture: Fixture): boolean {
-  const status = (fixture.game_status ?? '').toLowerCase()
-  if (isCompleted(fixture)) return false
-  if (
-    status.includes('live') ||
-    status.includes('playing') ||
-    status.includes('progress')
-  ) {
-    return false
-  }
-  return true
+  return isFixtureUpcoming(fixture)
 }
 
 function pickSnippetFixtures(

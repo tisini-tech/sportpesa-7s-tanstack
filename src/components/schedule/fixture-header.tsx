@@ -1,5 +1,11 @@
 import { Loader2Icon } from 'lucide-react'
 
+import {
+  formatFixtureClock,
+  formatFixtureKickoff,
+  getFixtureStatus,
+  isFixtureLive,
+} from '#/components/schedule/fixture-status'
 import { cn } from '#/lib/utils'
 import type { Fixture } from '#/lib/types'
 
@@ -7,7 +13,7 @@ function formatGameDate(gameDate?: string | null): string {
   if (!gameDate) return 'TBC'
 
   if (gameDate.includes(' ')) {
-    return gameDate.split(' ')[0]
+    return gameDate.split(' ')[0]!
   }
 
   const parsed = new Date(gameDate)
@@ -25,19 +31,25 @@ function getTeamInitials(name?: string | null): string {
   return source.slice(0, 2).toUpperCase()
 }
 
+function scoreboardLabel(details: Fixture): string {
+  const status = getFixtureStatus(details)
+
+  if (status === 'completed') return 'FT'
+  if (status === 'halftime') return 'HT'
+  if (status === 'live') {
+    return formatFixtureClock(details) ?? 'Live'
+  }
+
+  return formatFixtureKickoff(details)
+}
+
 const FixtureHeader = ({ details }: { details: Fixture }) => {
   const homeScore = Number(details.home_score)
   const awayScore = Number(details.away_score)
   const homeWin = homeScore > awayScore
   const awayWin = awayScore > homeScore
-
-  const scoreStatus =
-    details.game_status === 'ended' || details.game_status === 'FT'
-      ? 'FT'
-      : (details.minute === 45 || details.minute === 46) &&
-          details.game_moment === 'secondhalf'
-        ? 'HT'
-        : `${details.minute}'`
+  const status = getFixtureStatus(details)
+  const live = isFixtureLive(details)
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -74,10 +86,10 @@ const FixtureHeader = ({ details }: { details: Fixture }) => {
         </div>
 
         <div className="min-w-[6rem] rounded-lg border border-border/60 bg-muted/20 px-3 py-2 text-center shadow-sm sm:min-w-[7.5rem] sm:px-4 sm:py-2.5">
-          {details.game_status === 'notstarted' ? (
+          {status === 'upcoming' ? (
             <div className="flex items-center justify-center gap-2 text-sm font-semibold text-primary">
               <Loader2Icon className="size-4 animate-spin" aria-hidden />
-              {details.matchtime || 'Pending'}
+              {formatFixtureKickoff(details)}
             </div>
           ) : (
             <>
@@ -100,8 +112,25 @@ const FixtureHeader = ({ details }: { details: Fixture }) => {
                   {details.away_score}
                 </span>
               </div>
-              <div className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:text-sm">
-                {scoreStatus}
+              <div
+                className={cn(
+                  'mt-0.5 text-xs font-semibold tracking-wide uppercase sm:text-sm',
+                  live
+                    ? 'animate-pulse text-primary'
+                    : 'text-muted-foreground',
+                )}
+              >
+                {live && status === 'live' ? (
+                  <span className="inline-flex items-center justify-center gap-1.5">
+                    <span
+                      className="size-1.5 rounded-full bg-primary"
+                      aria-hidden
+                    />
+                    Live · {scoreboardLabel(details)}
+                  </span>
+                ) : (
+                  scoreboardLabel(details)
+                )}
               </div>
             </>
           )}

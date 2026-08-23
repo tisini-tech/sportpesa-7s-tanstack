@@ -213,7 +213,7 @@ export const TeamStats = ({ home, away }: StatsProps) => {
 
         <AccuracyRow
           hComp={homeSuccKicks}
-          aComp={awayTotalKicks}
+          aComp={awaySuccKicks}
           hTotal={homeTotalKicks}
           aTotal={awayTotalKicks}
           stat={'Successful Goal Attempts'}

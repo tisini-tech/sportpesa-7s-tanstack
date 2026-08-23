@@ -1,8 +1,13 @@
 import { cn } from '#/lib/utils'
 import type { Fixture, TeamLogo } from '#/lib/types'
 import { Link, useParams } from '@tanstack/react-router'
+import {
+  formatFixtureKickoff,
+  formatFixtureStatusLabel,
+  getFixtureStatus,
+  isFixtureLive,
+} from '#/components/schedule/fixture-status'
 
-type FixtureStatus = 'live' | 'completed' | 'upcoming'
 export type FixtureResult = 'W' | 'D' | 'L'
 
 type FixtureRowProps = {
@@ -10,55 +15,6 @@ type FixtureRowProps = {
   interactive?: boolean
   result?: FixtureResult
   logos?: TeamLogo[]
-}
-
-function getFixtureStatus(fixture: Fixture): FixtureStatus {
-  const status = (fixture.game_status ?? '').toLowerCase()
-
-  if (
-    status.includes('live') ||
-    status.includes('playing') ||
-    status.includes('progress')
-  ) {
-    return 'live'
-  }
-
-  if (
-    status.includes('finish') ||
-    status.includes('complete') ||
-    status.includes('ft') ||
-    status.includes('played') ||
-    status.includes('ended')
-  ) {
-    return 'completed'
-  }
-
-  return 'upcoming'
-}
-
-function formatFixtureStatusLabel(status: FixtureStatus): string {
-  if (status === 'live') return 'Live'
-  if (status === 'completed') return 'FT'
-  return 'Upcoming'
-}
-
-function formatFixtureKickoff(fixture: Fixture): string {
-  if (fixture.matchtime) {
-    // API often sends "HH:MM:SS" — show kickoff as HH:MM
-    const match = fixture.matchtime.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/)
-    if (match) return `${match[1].padStart(2, '0')}:${match[2]}`
-    return fixture.matchtime
-  }
-
-  if (!fixture.game_date) return 'TBC'
-
-  const parsed = new Date(fixture.game_date)
-  if (Number.isNaN(parsed.getTime())) return 'TBC'
-
-  return new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(parsed)
 }
 
 function hasScore(fixture: Fixture): boolean {
@@ -154,6 +110,7 @@ function FixtureRowContent({
   interactive = true,
 }: FixtureRowProps) {
   const status = getFixtureStatus(fixture)
+  const live = isFixtureLive(fixture)
   const showScore = status !== 'upcoming' && hasScore(fixture)
   const homeName = fixture.team1_name || 'TBC'
   const awayName = fixture.team2_name || 'TBC'
@@ -197,10 +154,20 @@ function FixtureRowContent({
         <p
           className={cn(
             'mt-0.5 text-[0.65rem] font-semibold tracking-wider text-muted-foreground uppercase',
-            status === 'live' && 'animate-pulse text-secondary',
+            live && 'animate-pulse text-primary',
           )}
         >
-          {formatFixtureStatusLabel(status)}
+          {live && status === 'live' ? (
+            <span className="inline-flex items-center gap-1">
+              <span
+                className="size-1.5 rounded-full bg-primary"
+                aria-hidden
+              />
+              {formatFixtureStatusLabel(fixture)}
+            </span>
+          ) : (
+            formatFixtureStatusLabel(fixture)
+          )}
         </p>
       </div>
 
