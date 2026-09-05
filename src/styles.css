@@ -237,6 +237,10 @@ body {
   .sp-jackpot-cta {
     animation: sp-jackpot-cta-pulse 1.8s ease-in-out infinite;
   }
+
+  .sp-register-cta {
+    animation: sp-register-cta-pulse 1.8s ease-in-out infinite;
+  }
 }
 
 @keyframes sp-rugby-bounce-spin {
@@ -308,5 +312,17 @@ body {
   50% {
     transform: translateY(-3px) scale(1.04);
     box-shadow: 0 8px 22px color-mix(in oklch, var(--secondary) 55%, transparent);
+  }
+}
+
+@keyframes sp-register-cta-pulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 14px color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 8px 22px color-mix(in oklch, var(--primary) 60%, transparent);
   }
 }

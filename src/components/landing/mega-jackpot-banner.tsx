@@ -5,7 +5,9 @@ import { buttonVariants } from '#/components/ui/button'
 import { trackEvent } from '#/lib/analytics'
 import { cn } from '#/lib/utils'
 
-const SPORTPESA_URL = 'https://ke.sportpesa.com'
+const SPORTPESA_URL =
+  'https://www.ke.sportpesa.com/en/mega-jackpot-pro?utm_source=tisini&utm_medium=tisini&utm_campaign=jackpot'
+
 
 function trackMegaJackpotClick() {
   trackEvent('mega_jackpot_click', {

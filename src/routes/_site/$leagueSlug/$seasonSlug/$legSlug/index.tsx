@@ -57,6 +57,8 @@ function Home() {
 
   return (
     <div>
+      <RegisterCampaignBanner placement="homepage_hero" />
+
       <HeroSection
         divisions={season.divisions}
         season={season}
@@ -91,8 +93,6 @@ function Home() {
           divisionId={divisionId}
         />
       </Suspense>
-
-      <RegisterCampaignBanner />
 
       <Suspense
         fallback={

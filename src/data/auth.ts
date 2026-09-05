@@ -99,6 +99,25 @@ export const registerFn = createServerFn({ method: 'POST' })
     if (data.optInSms) channels.push('sms')
     if (data.optInEmail) channels.push('email')
 
+    console.log({
+      phone_number: formatE164Phone(data.countryCode, data.phone),
+      email: data.email,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      sir_name: '',
+      username: data.username,
+      password: data.password,
+      reg_source: 'sportpesa7s',
+      messaging_opt_in: {
+        company_id: 2,
+        channels,
+        channel: channels[0] ?? '',
+        opted_in: channels.length > 0,
+        read_privacy: data.acceptPrivacy,
+        policy_version: '1.0',
+      },
+    })
+
     const res = await fetch(`${url}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -121,6 +140,8 @@ export const registerFn = createServerFn({ method: 'POST' })
         },
       }),
     })
+
+    console.log(await res.json())
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({}))

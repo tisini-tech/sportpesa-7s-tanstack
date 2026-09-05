@@ -24,7 +24,7 @@ function QuizPage() {
 
   return (
     <div>
-      <RegisterCampaignBanner />
+      <RegisterCampaignBanner placement="quiz_top" />
 
       <section className="border-b border-border bg-card">
         <div className="sp-content-shell border-b border-border/60 bg-muted/15 px-4 py-4 sm:px-6 sm:py-5">
