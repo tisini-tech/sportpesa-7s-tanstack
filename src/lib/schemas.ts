@@ -28,10 +28,17 @@ export const registerSchema = z
     email: z.string().email('Invalid email address'),
     password: passwordSchema,
     confirmPassword: z.string().min(1, 'Confirm your password'),
+    optInSms: z.boolean(),
+    optInEmail: z.boolean(),
+    acceptPrivacy: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
+  })
+  .refine((data) => data.acceptPrivacy, {
+    message: 'Please confirm you have read the Privacy Policy',
+    path: ['acceptPrivacy'],
   })
 
 /** Combine dial code + local 9-digit number → e.g. +254713909472 */

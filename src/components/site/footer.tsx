@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   christiePartner,
   dala7sPartner,
@@ -56,7 +57,7 @@ const SOCIAL_LINKS = [
 ] as const
 
 const FOOTER_LINKS = [
-  { label: 'Privacy', href: '#' },
+  { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '#' },
   { label: 'Contact', href: '#' },
 ] as const
@@ -98,15 +99,29 @@ export default function SiteFooter() {
             aria-label="Footer"
             className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm"
           >
-            {FOOTER_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="font-medium text-muted-foreground transition-colors hover:text-secondary"
-              >
-                {link.label}
-              </a>
-            ))}
+            {FOOTER_LINKS.map((link) => {
+              if (link.href === '/privacy') {
+                return (
+                  <Link
+                    key={link.label}
+                    to="/privacy"
+                    className="font-medium text-muted-foreground transition-colors hover:text-secondary"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              }
+
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="font-medium text-muted-foreground transition-colors hover:text-secondary"
+                >
+                  {link.label}
+                </a>
+              )
+            })}
           </nav>
 
           <nav

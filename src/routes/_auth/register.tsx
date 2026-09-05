@@ -16,9 +16,11 @@ import {
   FieldDescription,
   FieldError,
   FieldGroup,
+  FieldLabel,
 } from '#/components/ui/field'
 import { registerFn } from '#/data/auth'
 import { getDefaultCountry, PhoneField } from '#/components/forms/phone-field'
+import { cn } from '#/lib/utils'
 
 const authRoute = getRouteApi('/_auth')
 
@@ -34,6 +36,44 @@ export const Route = createFileRoute('/_auth/register')({
   }),
   component: RegisterPage,
 })
+
+function ConsentCheckbox({
+  id,
+  checked,
+  onCheckedChange,
+  children,
+  error,
+}: {
+  id: string
+  checked: boolean
+  onCheckedChange: (checked: boolean) => void
+  children: React.ReactNode
+  error?: string
+}) {
+  return (
+    <Field data-invalid={error ? true : undefined} className="gap-1.5">
+      <div className="flex items-start gap-3">
+        <input
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onCheckedChange(e.target.checked)}
+          className={cn(
+            'mt-0.5 size-4 shrink-0 rounded border border-border bg-background text-primary accent-primary',
+            'focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none',
+          )}
+        />
+        <FieldLabel
+          htmlFor={id}
+          className="cursor-pointer text-sm leading-snug font-normal text-foreground/90"
+        >
+          {children}
+        </FieldLabel>
+      </div>
+      {error ? <FieldError errors={[{ message: error }]} /> : null}
+    </Field>
+  )
+}
 
 function RegisterPage() {
   const { countries } = authRoute.useRouteContext()
@@ -52,6 +92,9 @@ function RegisterPage() {
       email: '',
       password: '',
       confirmPassword: '',
+      optInSms: false,
+      optInEmail: false,
+      acceptPrivacy: false,
     },
     validators: {
       onSubmit: registerSchema,
@@ -210,6 +253,82 @@ function RegisterPage() {
               )}
             />
           </div>
+
+          <div className="space-y-3 rounded-xl border border-border bg-muted/20 px-3 py-3 sm:px-4">
+            <p className="text-[0.65rem] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
+              SportPesa offers (optional · 18+)
+            </p>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Promotional messages from SportPesa may include gambling content.
+              Play responsibly.
+            </p>
+
+            <form.Field
+              name="optInSms"
+              children={(field) => (
+                <ConsentCheckbox
+                  id="register-opt-in-sms"
+                  checked={field.state.value}
+                  onCheckedChange={(checked) => field.handleChange(checked)}
+                >
+                  Opt in to SMS offers from SportPesa
+                </ConsentCheckbox>
+              )}
+            />
+
+            <form.Field
+              name="optInEmail"
+              children={(field) => (
+                <ConsentCheckbox
+                  id="register-opt-in-email"
+                  checked={field.state.value}
+                  onCheckedChange={(checked) => field.handleChange(checked)}
+                >
+                  Opt in to email offers from SportPesa
+                </ConsentCheckbox>
+              )}
+            />
+          </div>
+
+          <form.Field
+            name="acceptPrivacy"
+            children={(field) => {
+              const error =
+                field.state.meta.isTouched && !field.state.meta.isValid
+                  ? field.state.meta.errors[0]
+                  : undefined
+              const message =
+                typeof error === 'string'
+                  ? error
+                  : error &&
+                      typeof error === 'object' &&
+                      'message' in error &&
+                      typeof error.message === 'string'
+                    ? error.message
+                    : undefined
+
+              return (
+                <ConsentCheckbox
+                  id="register-accept-privacy"
+                  checked={field.state.value}
+                  onCheckedChange={(checked) => {
+                    field.handleChange(checked)
+                    field.handleBlur()
+                  }}
+                  error={message}
+                >
+                  I have read and agree to the{' '}
+                  <Link
+                    to="/privacy"
+                    className="font-semibold text-secondary underline-offset-4 hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Privacy Policy
+                  </Link>
+                </ConsentCheckbox>
+              )
+            }}
+          />
 
           {submitError ? (
             <Field>

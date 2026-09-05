@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SiteRouteRouteImport } from './routes/_site/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SitePrivacyRouteImport } from './routes/_site/privacy'
 import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
 import { Route as AuthRequestPasswordRouteImport } from './routes/_auth/request-password'
@@ -58,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SitePrivacyRoute = SitePrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => SiteRouteRoute,
 } as any)
 const AuthVerifyRoute = AuthVerifyRouteImport.update({
   id: '/verify',
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify': typeof AuthVerifyRoute
+  '/privacy': typeof SitePrivacyRoute
   '/gallery/': typeof SiteGalleryIndexRoute
   '/quiz/': typeof SiteQuizIndexRoute
   '/voting/': typeof SiteVotingIndexRoute
@@ -293,6 +300,7 @@ export interface FileRoutesByTo {
   '/request-password': typeof AuthRequestPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
   '/verify': typeof AuthVerifyRoute
+  '/privacy': typeof SitePrivacyRoute
   '/gallery': typeof SiteGalleryIndexRoute
   '/quiz': typeof SiteQuizIndexRoute
   '/voting': typeof SiteVotingIndexRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/_auth/request-password': typeof AuthRequestPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
   '/_auth/verify': typeof AuthVerifyRoute
+  '/_site/privacy': typeof SitePrivacyRoute
   '/_site/gallery/': typeof SiteGalleryIndexRoute
   '/_site/quiz/': typeof SiteQuizIndexRoute
   '/_site/voting/': typeof SiteVotingIndexRoute
@@ -366,6 +375,7 @@ export interface FileRouteTypes {
     | '/request-password'
     | '/reset-password'
     | '/verify'
+    | '/privacy'
     | '/gallery/'
     | '/quiz/'
     | '/voting/'
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/request-password'
     | '/reset-password'
     | '/verify'
+    | '/privacy'
     | '/gallery'
     | '/quiz'
     | '/voting'
@@ -436,6 +447,7 @@ export interface FileRouteTypes {
     | '/_auth/request-password'
     | '/_auth/reset-password'
     | '/_auth/verify'
+    | '/_site/privacy'
     | '/_site/gallery/'
     | '/_site/quiz/'
     | '/_site/voting/'
@@ -494,6 +506,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_site/privacy': {
+      id: '/_site/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof SitePrivacyRouteImport
+      parentRoute: typeof SiteRouteRoute
     }
     '/_auth/verify': {
       id: '/_auth/verify'
@@ -852,6 +871,7 @@ const SiteLeagueSlugSeasonSlugScheduleRouteRouteWithChildren =
   )
 
 interface SiteRouteRouteChildren {
+  SitePrivacyRoute: typeof SitePrivacyRoute
   SiteGalleryIndexRoute: typeof SiteGalleryIndexRoute
   SiteQuizIndexRoute: typeof SiteQuizIndexRoute
   SiteVotingIndexRoute: typeof SiteVotingIndexRoute
@@ -865,6 +885,7 @@ interface SiteRouteRouteChildren {
 }
 
 const SiteRouteRouteChildren: SiteRouteRouteChildren = {
+  SitePrivacyRoute: SitePrivacyRoute,
   SiteGalleryIndexRoute: SiteGalleryIndexRoute,
   SiteQuizIndexRoute: SiteQuizIndexRoute,
   SiteVotingIndexRoute: SiteVotingIndexRoute,
