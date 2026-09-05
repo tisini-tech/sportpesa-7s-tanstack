@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
+import { MegaJackpotBanner } from '#/components/landing/mega-jackpot-banner'
 import { SiteHeader } from '#/components/site/header'
 import SiteFooter from '#/components/site/footer'
 import { getOptionalUserFn } from '#/data/auth'
@@ -33,6 +34,7 @@ function SiteLayout() {
         <Outlet />
       </div>
 
+      <MegaJackpotBanner />
       <SiteFooter />
     </main>
   )

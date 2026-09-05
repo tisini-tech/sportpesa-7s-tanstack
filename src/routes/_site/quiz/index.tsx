@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { RegisterCampaignBanner } from '#/components/landing/register-campaign-banner'
 import { QuizList } from '#/components/quiz/quiz-list'
 import { getQuizzesFn } from '#/data/quiz'
 
@@ -23,6 +24,8 @@ function QuizPage() {
 
   return (
     <div>
+      <RegisterCampaignBanner />
+
       <section className="border-b border-border bg-card">
         <div className="sp-content-shell border-b border-border/60 bg-muted/15 px-4 py-4 sm:px-6 sm:py-5">
           <h1 className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">

@@ -106,6 +106,7 @@ export const registerFn = createServerFn({ method: 'POST' })
         sir_name: '',
         username: data.username,
         password: data.password,
+        reg_source: 'sportpesa7s',
       }),
     })
 
