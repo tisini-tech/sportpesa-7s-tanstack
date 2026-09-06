@@ -2,18 +2,64 @@ import type { Fixture } from '#/lib/types'
 
 export type FixtureStatus = 'live' | 'halftime' | 'completed' | 'upcoming'
 
-function normalizeStatus(fixture: Fixture): string {
-  return (fixture.game_status ?? '').trim().toLowerCase()
+function normalize(value: string | null | undefined): string {
+  return (value ?? '').trim().toLowerCase().replace(/[\s_-]+/g, '')
 }
 
-export function getFixtureStatus(fixture: Fixture): FixtureStatus {
-  const status = normalizeStatus(fixture)
+function isPlayingMoment(moment: string): boolean {
+  return (
+    moment === 'firsthalf' ||
+    moment === 'secondhalf' ||
+    moment === '1sthalf' ||
+    moment === '2ndhalf' ||
+    moment.includes('playing') ||
+    moment.includes('progress')
+  )
+}
 
-  if (status === 'ft' || status === 'ended' || status.includes('complete')) {
+function isHalftimeMoment(moment: string): boolean {
+  return moment === 'ht' || moment === 'halftime' || moment === 'half'
+}
+
+function isCompletedMoment(moment: string): boolean {
+  return (
+    moment === 'ft' ||
+    moment === 'fulltime' ||
+    moment === 'ended' ||
+    moment.includes('complete') ||
+    moment.includes('finish')
+  )
+}
+
+/**
+ * Prefer `game_moment` when the API lags on `game_status`
+ * (e.g. status still "HT" after second half has started).
+ */
+export function getFixtureStatus(fixture: Fixture): FixtureStatus {
+  const status = normalize(fixture.game_status)
+  const moment = normalize(fixture.game_moment)
+
+  if (
+    status === 'ft' ||
+    status === 'ended' ||
+    status.includes('complete') ||
+    status.includes('finish') ||
+    status.includes('played') ||
+    isCompletedMoment(moment)
+  ) {
     return 'completed'
   }
 
-  if (status === 'ht' || status === 'halftime' || status === 'half-time') {
+  // In-play periods beat a stale HT status
+  if (isPlayingMoment(moment)) {
+    return 'live'
+  }
+
+  if (
+    status === 'ht' ||
+    status === 'halftime' ||
+    isHalftimeMoment(moment)
+  ) {
     return 'halftime'
   }
 
@@ -28,16 +74,12 @@ export function getFixtureStatus(fixture: Fixture): FixtureStatus {
 
   if (
     status === 'notstarted' ||
-    status === 'not_started' ||
     status.includes('schedul') ||
-    status.includes('pending')
+    status.includes('pending') ||
+    moment === 'notstarted' ||
+    !status
   ) {
     return 'upcoming'
-  }
-
-  // Fallbacks for older/odd API values
-  if (status.includes('finish') || status.includes('played')) {
-    return 'completed'
   }
 
   return 'upcoming'
@@ -57,7 +99,11 @@ export function isFixtureUpcoming(fixture: Fixture): boolean {
 }
 
 export function formatFixtureClock(fixture: Fixture): string | null {
-  if (typeof fixture.minute !== 'number' || Number.isNaN(fixture.minute)) {
+  if (
+    typeof fixture.minute !== 'number' ||
+    Number.isNaN(fixture.minute) ||
+    fixture.minute <= 0
+  ) {
     return null
   }
 
