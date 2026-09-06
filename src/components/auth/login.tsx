@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { Loader2Icon, MailIcon, SmartphoneIcon } from 'lucide-react'
@@ -19,9 +19,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '#/components/ui/dialog'
+import {
+  TurnstileWidget,
+  type TurnstileHandle,
+} from '#/components/auth/turnstile'
 import { cn } from '#/lib/utils'
 import { loginFn } from '#/data/auth'
-import type { LoginSchema } from '#/lib/schemas'
 
 export type LoginMethod = 'phone' | 'email'
 
@@ -39,6 +42,8 @@ export function LoginForm({
 }: LoginFormProps) {
   const [method, setMethod] = useState<LoginMethod>('phone')
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const turnstileRef = useRef<TurnstileHandle>(null)
 
   const form = useForm({
     defaultValues: {
@@ -66,12 +71,22 @@ export function LoginForm({
         return
       }
 
+      if (!turnstileToken) {
+        setSubmitError('Complete the security check to continue.')
+        return
+      }
+
       try {
         await loginFn({
-          data: { identifier, password: value.password } as LoginSchema,
+          data: {
+            identifier,
+            password: value.password,
+            turnstileToken,
+          },
         })
         onSuccess?.()
       } catch (error) {
+        turnstileRef.current?.reset()
         if (error instanceof Error) {
           setSubmitError(error.message)
         } else {
@@ -202,6 +217,11 @@ export function LoginForm({
             )}
           />
 
+          <TurnstileWidget
+            ref={turnstileRef}
+            onTokenChange={setTurnstileToken}
+          />
+
           {submitError ? (
             <Field>
               <FieldError errors={[{ message: submitError }]} />
@@ -213,7 +233,7 @@ export function LoginForm({
               selector={(state) => state.isSubmitting}
               children={(isSubmitting) => (
                 <Button
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !turnstileToken}
                   type="submit"
                   size="lg"
                   className="h-11 w-full rounded-xl text-sm font-bold tracking-[0.08em] uppercase"

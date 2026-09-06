@@ -1,7 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { useAppSession } from '#/lib/session'
 import type {
-  LoginSchema,
   RegisterSchema,
   ResetPasswordSchema,
 } from '#/lib/schemas'
@@ -10,11 +9,18 @@ import { formatApiError } from '#/lib/utils'
 // import { redirect } from '@tanstack/react-router'
 
 export const loginFn = createServerFn({ method: 'POST' })
-  .validator((data: LoginSchema) => data)
+  .validator(
+    (data: { identifier: string; password: string; turnstileToken: string }) =>
+      data,
+  )
   .handler(async ({ data }) => {
     const url = process.env.API_QUIZ_URL
     if (!url) {
       throw new Error('API_URL is not set')
+    }
+
+    if (!data.turnstileToken.trim()) {
+      throw new Error('Complete the security check to continue')
     }
 
     const res = await fetch(`${url}/auth/login`, {
@@ -23,12 +29,15 @@ export const loginFn = createServerFn({ method: 'POST' })
       body: JSON.stringify({
         email_or_phone_number: data.identifier,
         password: data.password,
+        turnstile_token: data.turnstileToken,
       }),
     })
 
     if (!res.ok) {
-      const error = await res.json()
-      throw new Error(`Login Failed: ${error.detail || 'Failed to login'}`)
+      const error = await res.json().catch(() => ({}))
+      throw new Error(
+        `Login Failed: ${formatApiError(error, 'Failed to login')}`,
+      )
     }
     const user = await res.json()
 
@@ -88,11 +97,15 @@ export const getUserFn = createServerFn({ method: 'GET' }).handler(async () => {
 })
 
 export const registerFn = createServerFn({ method: 'POST' })
-  .validator((data: RegisterSchema) => data)
+  .validator((data: RegisterSchema & { turnstileToken: string }) => data)
   .handler(async ({ data }) => {
     const url = process.env.API_QUIZ_URL
     if (!url) {
       throw new Error('API_URL is not set')
+    }
+
+    if (!data.turnstileToken.trim()) {
+      throw new Error('Complete the security check to continue')
     }
 
     // Backend requires a channel even when declining offers — default to sms + opted_in false.
@@ -122,6 +135,7 @@ export const registerFn = createServerFn({ method: 'POST' })
           read_privacy: data.acceptPrivacy,
           policy_version: '1.0',
         },
+        turnstile_token: data.turnstileToken,
       }),
     })
 

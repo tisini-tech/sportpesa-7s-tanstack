@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Loader2Icon } from 'lucide-react'
 import { useForm } from '@tanstack/react-form'
 import {
@@ -20,6 +20,10 @@ import {
 } from '#/components/ui/field'
 import { registerFn } from '#/data/auth'
 import { getDefaultCountry, PhoneField } from '#/components/forms/phone-field'
+import {
+  TurnstileWidget,
+  type TurnstileHandle,
+} from '#/components/auth/turnstile'
 import { cn } from '#/lib/utils'
 
 const authRoute = getRouteApi('/_auth')
@@ -78,6 +82,8 @@ function ConsentCheckbox({
 function RegisterPage() {
   const { countries } = authRoute.useRouteContext()
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+  const turnstileRef = useRef<TurnstileHandle>(null)
   const navigate = useNavigate()
 
   const defaultCountry = getDefaultCountry(countries)
@@ -102,10 +108,16 @@ function RegisterPage() {
     onSubmit: async ({ value }) => {
       setSubmitError(null)
 
+      if (!turnstileToken) {
+        setSubmitError('Complete the security check to continue.')
+        return
+      }
+
       try {
-        await registerFn({ data: value })
+        await registerFn({ data: { ...value, turnstileToken } })
         void navigate({ to: '/verify' })
       } catch (error) {
+        turnstileRef.current?.reset()
         setSubmitError(
           error instanceof Error
             ? error.message
@@ -330,6 +342,11 @@ function RegisterPage() {
             }}
           />
 
+          <TurnstileWidget
+            ref={turnstileRef}
+            onTokenChange={setTurnstileToken}
+          />
+
           {submitError ? (
             <Field>
               <FieldError errors={[{ message: submitError }]} />
@@ -341,7 +358,7 @@ function RegisterPage() {
               selector={(state) => state.isSubmitting}
               children={(isSubmitting) => (
                 <Button
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !turnstileToken}
                   type="submit"
                   size="lg"
                   className="h-11 w-full rounded-xl text-sm font-bold tracking-[0.08em] uppercase"
