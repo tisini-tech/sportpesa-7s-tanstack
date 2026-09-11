@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { RegisterCampaignBanner } from '#/components/landing/register-campaign-banner'
-import { VotingCauses } from '#/components/voting/voting-causes'
 import { getVoteCausesFn } from '#/data/voting'
+import { VotingCauses } from '#/components/voting/voting-causes'
+import { RegisterCampaignBanner } from '#/components/landing/register-campaign-banner'
 
 export const Route = createFileRoute('/_site/voting/')({
   loader: async () => {

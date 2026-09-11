@@ -55,7 +55,7 @@ function applyVoteResult(
   }
 }
 
-export function CastVote({ poll: initialPoll }: { poll: VoteParticipant }) {
+export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
   const [poll, setPoll] = useState(initialPoll)
   const [pendingParticipant, setPendingParticipant] =
     useState<Participant | null>(null)

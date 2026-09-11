@@ -1,5 +1,6 @@
 import { ImageIcon, TrophyIcon } from 'lucide-react'
 
+import { SlateVoteResults } from '#/components/voting/slate-results'
 import type { Participant, VoteParticipant } from '#/lib/types'
 import { cn } from '#/lib/utils'
 
@@ -21,6 +22,10 @@ function teamLabel(participant: Participant): string | null {
 }
 
 export function VoteResults({ poll }: { poll: VoteParticipant }) {
+  if (poll.vote_mode?.trim().toLowerCase() === 'slate') {
+    return <SlateVoteResults poll={poll} />
+  }
+
   const ranked = [...poll.participants].sort(
     (a, b) => b.total_votes - a.total_votes,
   )

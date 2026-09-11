@@ -1,7 +1,12 @@
 import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
-import type { Participant, VoteCause, VoteParticipant } from '#/lib/types'
+import type {
+  BallotResult,
+  Participant,
+  VoteCause,
+  VoteParticipant,
+} from '#/lib/types'
 
 export const getVoteCausesFn = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -45,7 +50,31 @@ export const castVoteFn = createServerFn({ method: 'POST' })
       },
       {
         base: 'quiz',
-        withApiKey: true,
+      },
+    )
+
+    return response
+  })
+
+export const castBallotFn = createServerFn({ method: 'POST' })
+  .validator(
+    (data: {
+      causeId: number
+      session: string
+      comment: string | null
+      picks: Array<{ slot: number; participant_id: number }>
+    }) => data,
+  )
+  .handler(async ({ data }) => {
+    const response = await apiService.post<BallotResult>(
+      `/causes/${data.causeId}/cast-ballot`,
+      {
+        session: data.session,
+        comment: data.comment,
+        picks: data.picks,
+      },
+      {
+        base: 'quiz',
       },
     )
 

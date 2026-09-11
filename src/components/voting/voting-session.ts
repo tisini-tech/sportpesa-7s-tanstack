@@ -71,3 +71,43 @@ export function markCauseVoted(causeId: number) {
   next.add(causeId)
   localStorage.setItem(VOTED_CAUSES_KEY, JSON.stringify([...next]))
 }
+
+export type StoredBallotPick = {
+  slot: number
+  number: number
+  label: string
+  participantId: number
+  name: string
+  teamName: string | null
+}
+
+const BALLOT_PICKS_KEY = 'voting_ballot_picks'
+
+export function saveBallotPicks(causeId: number, picks: StoredBallotPick[]) {
+  assertBrowser()
+
+  try {
+    const raw = localStorage.getItem(BALLOT_PICKS_KEY)
+    const parsed =
+      raw != null ? (JSON.parse(raw) as Record<string, StoredBallotPick[]>) : {}
+    const next = typeof parsed === 'object' && parsed ? parsed : {}
+    next[String(causeId)] = picks
+    localStorage.setItem(BALLOT_PICKS_KEY, JSON.stringify(next))
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
+export function loadBallotPicks(causeId: number): StoredBallotPick[] | null {
+  assertBrowser()
+
+  try {
+    const raw = localStorage.getItem(BALLOT_PICKS_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Record<string, StoredBallotPick[]>
+    const picks = parsed[String(causeId)]
+    return Array.isArray(picks) && picks.length > 0 ? picks : null
+  } catch {
+    return null
+  }
+}
