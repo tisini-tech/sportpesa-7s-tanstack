@@ -5,7 +5,6 @@ import { DivisionPools } from '#/components/landing/division-pools'
 import { HeroSection } from '#/components/landing/hero'
 import { LegStrip } from '#/components/landing/legs-strip'
 import { MatchesToday } from '#/components/landing/matches'
-import { RegisterCampaignBanner } from '#/components/landing/register-campaign-banner'
 import { StandingsSnippet } from '#/components/landing/standings'
 import { VideosSection } from '#/components/landing/videos'
 import { fixturesQueryOptions } from '#/data/fixtures'
@@ -57,8 +56,6 @@ function Home() {
 
   return (
     <div>
-      <RegisterCampaignBanner placement="homepage_hero" />
-
       <HeroSection
         divisions={season.divisions}
         season={season}
