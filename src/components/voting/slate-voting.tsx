@@ -98,6 +98,14 @@ function matchScore(participant: Participant, position: FormationPosition): numb
   return 0
 }
 
+function shuffleInPlace<T>(items: T[]): T[] {
+  for (let i = items.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[items[i], items[j]] = [items[j]!, items[i]!]
+  }
+  return items
+}
+
 function candidatesForSlot(
   participants: Participant[],
   position: FormationPosition,
@@ -106,7 +114,7 @@ function candidatesForSlot(
 ): Participant[] {
   const q = query.trim().toLowerCase()
 
-  return participants
+  const matched = participants
     .map((participant) => ({
       participant,
       score: matchScore(participant, position),
@@ -125,11 +133,23 @@ function candidatesForSlot(
         .toLowerCase()
       return haystack.includes(q)
     })
-    .sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score
-      return a.participant.name.localeCompare(b.participant.name)
-    })
-    .map(({ participant }) => participant)
+
+  // Keep role-fit tiers, shuffle within each tier so order isn't fixed.
+  matched.sort((a, b) => b.score - a.score)
+
+  const randomized: Participant[] = []
+  let index = 0
+  while (index < matched.length) {
+    const score = matched[index]!.score
+    const start = index
+    while (index < matched.length && matched[index]!.score === score) {
+      index += 1
+    }
+    const tier = matched.slice(start, index).map((entry) => entry.participant)
+    randomized.push(...shuffleInPlace(tier))
+  }
+
+  return randomized
 }
 
 export function SlateVoting({
