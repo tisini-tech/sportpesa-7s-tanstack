@@ -72,6 +72,20 @@ export function markCauseVoted(causeId: number) {
   localStorage.setItem(VOTED_CAUSES_KEY, JSON.stringify([...next]))
 }
 
+/** True if localStorage or the server says this user already voted. Syncs local when needed. */
+export function resolveHasVoted(causeId: number, serverHasVoted?: boolean) {
+  assertBrowser()
+
+  const local = hasVotedForCause(causeId)
+  const server = Boolean(serverHasVoted)
+
+  if (server && !local) {
+    markCauseVoted(causeId)
+  }
+
+  return local || server
+}
+
 export type StoredBallotPick = {
   slot: number
   number: number

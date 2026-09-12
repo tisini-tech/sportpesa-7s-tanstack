@@ -14,9 +14,9 @@ import {
 } from '#/components/ui/dialog'
 import {
   getOrCreateVotingSessionId,
-  hasVotedForCause,
   loadBallotPicks,
   markCauseVoted,
+  resolveHasVoted,
   saveBallotPicks,
   type StoredBallotPick,
 } from '#/components/voting/voting-session'
@@ -153,10 +153,10 @@ export function SlateVoting({ poll }: { poll: VoteParticipant }) {
   const [savedPicks, setSavedPicks] = useState<StoredBallotPick[]>([])
 
   useEffect(() => {
-    setSubmitted(hasVotedForCause(poll.id))
+    setSubmitted(resolveHasVoted(poll.id, poll.has_voted))
     setSavedPicks(loadBallotPicks(poll.id) ?? [])
     setHydrated(true)
-  }, [poll.id])
+  }, [poll.has_voted, poll.id])
 
   const filledCount = Object.keys(picks).length
   const isComplete =

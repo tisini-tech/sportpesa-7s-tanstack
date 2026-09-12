@@ -7,8 +7,8 @@ import { Button } from '#/components/ui/button'
 import type { Participant, VoteParticipant } from '#/lib/types'
 import {
   getOrCreateVotingSessionId,
-  hasVotedForCause,
   markCauseVoted,
+  resolveHasVoted,
 } from '#/components/voting/voting-session'
 import {
   Dialog,
@@ -71,8 +71,8 @@ export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
   }, [initialPoll])
 
   useEffect(() => {
-    setHasVoted(hasVotedForCause(initialPoll.id))
-  }, [initialPoll.id])
+    setHasVoted(resolveHasVoted(initialPoll.id, initialPoll.has_voted))
+  }, [initialPoll.has_voted, initialPoll.id])
 
   const participants = [...poll.participants].sort((a, b) =>
     a.name.localeCompare(b.name),

@@ -386,6 +386,7 @@ export interface VoteParticipant {
   participants: Participant[]
   company: number | null
   formation: Formation | null
+  has_voted: boolean
   picks_required: number | null
   vote_mode: string
   team_of_the_week: PlayerOfTheWeek[]

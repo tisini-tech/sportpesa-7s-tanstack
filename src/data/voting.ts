@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
+import { useAppSession } from '#/lib/session'
 import type {
   BallotResult,
   Participant,
@@ -21,11 +22,15 @@ export const getVoteCausesFn = createServerFn({ method: 'GET' }).handler(
 export const getVoteParticipantsFn = createServerFn({ method: 'GET' })
   .validator((data: { causeId: number }) => data)
   .handler(async ({ data }) => {
+    const session = await useAppSession()
+    const hasToken = Boolean(session.data.accessToken)
+
+    // Guests: API key (public poll data). Authed: Bearer (includes has_voted).
     const response = await apiService.get<VoteParticipant>(
       `/causes/${data.causeId}/participants`,
       {
         base: 'quiz',
-        withApiKey: true,
+        withApiKey: !hasToken,
       },
     )
     return response
