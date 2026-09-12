@@ -55,7 +55,13 @@ function applyVoteResult(
   }
 }
 
-export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
+export function SingleVoting({
+  poll: initialPoll,
+  userId,
+}: {
+  poll: VoteParticipant
+  userId: number
+}) {
   const [poll, setPoll] = useState(initialPoll)
   const [pendingParticipant, setPendingParticipant] =
     useState<Participant | null>(null)
@@ -71,8 +77,10 @@ export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
   }, [initialPoll])
 
   useEffect(() => {
-    setHasVoted(resolveHasVoted(initialPoll.id, initialPoll.has_voted))
-  }, [initialPoll.has_voted, initialPoll.id])
+    setHasVoted(
+      resolveHasVoted(userId, initialPoll.id, initialPoll.has_voted),
+    )
+  }, [initialPoll.has_voted, initialPoll.id, userId])
 
   const participants = [...poll.participants].sort((a, b) =>
     a.name.localeCompare(b.name),
@@ -91,7 +99,7 @@ export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
     setError(null)
 
     try {
-      const session = getOrCreateVotingSessionId()
+      const session = getOrCreateVotingSessionId(userId)
       const result = await castVoteFn({
         data: {
           causeId: poll.id,
@@ -101,7 +109,7 @@ export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
         },
       })
 
-      markCauseVoted(poll.id)
+      markCauseVoted(userId, poll.id)
       setPoll(applyVoteResult(poll, result))
       setVotedParticipant(result)
       setHasVoted(true)
@@ -112,7 +120,7 @@ export function SingleVoting({ poll: initialPoll }: { poll: VoteParticipant }) {
       setError(message)
 
       if (/already|duplicate|once/i.test(message)) {
-        markCauseVoted(poll.id)
+        markCauseVoted(userId, poll.id)
         setHasVoted(true)
       }
     } finally {

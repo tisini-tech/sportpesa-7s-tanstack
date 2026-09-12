@@ -71,11 +71,15 @@ function RouteComponent() {
   }, [sessionExpired, router])
 
   useEffect(() => {
-    // Combine server (cross-browser) + localStorage (same browser / offline UX).
-    const voted = resolveHasVoted(poll.id, poll.has_voted)
-    if (!voted) return
+    // Combine server (cross-browser) + per-user localStorage (same gadget, different accounts).
+    if (!user) {
+      setAlreadyVoted(false)
+      return
+    }
 
-    setAlreadyVoted(true)
+    const voted = resolveHasVoted(user.id, poll.id, poll.has_voted)
+    setAlreadyVoted(voted)
+    if (!voted) return
 
     if (status === 'ended' || view === 'results') return
     // Slate polls stay on the success screen instead of results.
@@ -85,7 +89,7 @@ function RouteComponent() {
       search: { view: 'results' },
       replace: true,
     })
-  }, [isSlate, navigate, poll.has_voted, poll.id, status, view])
+  }, [isSlate, navigate, poll.has_voted, poll.id, status, user, view])
 
   const showResults =
     status === 'ended' || view === 'results' || (alreadyVoted && !isSlate)
@@ -109,9 +113,9 @@ function RouteComponent() {
       ) : user && !sessionExpired ? (
         <>
           {mode === 'slate' ? (
-            <SlateVoting poll={poll} />
+            <SlateVoting poll={poll} userId={user.id} />
           ) : (
-            <SingleVoting poll={poll} />
+            <SingleVoting poll={poll} userId={user.id} />
           )}
         </>
       ) : (

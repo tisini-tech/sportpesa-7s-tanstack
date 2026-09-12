@@ -132,7 +132,13 @@ function candidatesForSlot(
     .map(({ participant }) => participant)
 }
 
-export function SlateVoting({ poll }: { poll: VoteParticipant }) {
+export function SlateVoting({
+  poll,
+  userId,
+}: {
+  poll: VoteParticipant
+  userId: number
+}) {
   const orientation = usePitchOrientation()
   const formation = resolveFormation(poll)
   const positions = useMemo(() => {
@@ -153,10 +159,10 @@ export function SlateVoting({ poll }: { poll: VoteParticipant }) {
   const [savedPicks, setSavedPicks] = useState<StoredBallotPick[]>([])
 
   useEffect(() => {
-    setSubmitted(resolveHasVoted(poll.id, poll.has_voted))
-    setSavedPicks(loadBallotPicks(poll.id) ?? [])
+    setSubmitted(resolveHasVoted(userId, poll.id, poll.has_voted))
+    setSavedPicks(loadBallotPicks(userId, poll.id) ?? [])
     setHydrated(true)
-  }, [poll.has_voted, poll.id])
+  }, [poll.has_voted, poll.id, userId])
 
   const filledCount = Object.keys(picks).length
   const isComplete =
@@ -212,7 +218,7 @@ export function SlateVoting({ poll }: { poll: VoteParticipant }) {
     setError(null)
 
     try {
-      const session = getOrCreateVotingSessionId()
+      const session = getOrCreateVotingSessionId(userId)
       await castBallotFn({
         data: {
           causeId: poll.id,
@@ -237,8 +243,8 @@ export function SlateVoting({ poll }: { poll: VoteParticipant }) {
         }
       })
 
-      markCauseVoted(poll.id)
-      saveBallotPicks(poll.id, ballotPicks)
+      markCauseVoted(userId, poll.id)
+      saveBallotPicks(userId, poll.id, ballotPicks)
       setSavedPicks(ballotPicks)
       setSubmitted(true)
       setConfirmOpen(false)
@@ -248,7 +254,7 @@ export function SlateVoting({ poll }: { poll: VoteParticipant }) {
       setError(message)
 
       if (/already|duplicate|once/i.test(message)) {
-        markCauseVoted(poll.id)
+        markCauseVoted(userId, poll.id)
         setSubmitted(true)
       }
     } finally {
