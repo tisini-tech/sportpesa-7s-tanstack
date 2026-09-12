@@ -34,6 +34,10 @@ function isCompletedMoment(moment: string): boolean {
 /**
  * Prefer `game_moment` when the API lags on `game_status`
  * (e.g. status still "HT" after second half has started).
+ *
+ * Do not treat default `game_moment: "firsthalf"` as live while
+ * `game_status` is still `notstarted` — the API often leaves moment
+ * as firsthalf before kickoff.
  */
 export function getFixtureStatus(fixture: Fixture): FixtureStatus {
   const status = normalize(fixture.game_status)
@@ -48,6 +52,16 @@ export function getFixtureStatus(fixture: Fixture): FixtureStatus {
     isCompletedMoment(moment)
   ) {
     return 'completed'
+  }
+
+  // Explicit pre-kickoff beats a default in-play game_moment.
+  if (
+    status === 'notstarted' ||
+    status.includes('schedul') ||
+    status.includes('pending') ||
+    moment === 'notstarted'
+  ) {
+    return 'upcoming'
   }
 
   // In-play periods beat a stale HT status
@@ -72,13 +86,7 @@ export function getFixtureStatus(fixture: Fixture): FixtureStatus {
     return 'live'
   }
 
-  if (
-    status === 'notstarted' ||
-    status.includes('schedul') ||
-    status.includes('pending') ||
-    moment === 'notstarted' ||
-    !status
-  ) {
+  if (!status) {
     return 'upcoming'
   }
 

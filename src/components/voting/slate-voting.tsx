@@ -312,7 +312,7 @@ export function SlateVoting({ poll }: { poll: VoteParticipant }) {
               {poll.reason}
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Thanks — your {picksRequired}-player slate is locked in.
+              Thank you — your team has been locked in.
             </p>
           </div>
         </header>
