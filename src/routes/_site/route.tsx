@@ -6,6 +6,10 @@ import SiteFooter from '#/components/site/footer'
 import { getOptionalUserFn } from '#/data/auth'
 import { getSeasonsFn } from '#/data/seasons'
 import { DEFAULT_LEAGUE } from '#/lib/leagues'
+import {
+  AdsBanner,
+  SPORTPESA_PROMO_BANNERS,
+} from '#/components/site/ads-banner'
 
 export const Route = createFileRoute('/_site')({
   beforeLoad: async () => {
@@ -29,6 +33,7 @@ function SiteLayout() {
   return (
     <main className="flex min-h-screen w-full flex-col">
       <SiteHeader />
+      <AdsBanner banners={SPORTPESA_PROMO_BANNERS} placement="homepage_top" />
 
       <div className="w-full min-w-0 flex-1">
         <Outlet />

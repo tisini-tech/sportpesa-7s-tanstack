@@ -3,7 +3,9 @@ import venueHero from './venue.jpeg'
 import sportpesaLogo from './sportpesa-white.png'
 import kruLogo from './kru-logo.jpeg'
 import aviatorRegisterBanner from './aviator-register-banner.png'
+import aviatrixxBanner from './aviatrixx-banner.png'
 import megaJackpotBanner from './mega-jackpot-banner.jpg'
+import xupBanner from './xup-banner.jpg'
 
 import christiePartner from './partners/christie.png'
 import dala7sPartner from './partners/dala7s.png'
@@ -19,7 +21,9 @@ export {
   sportpesaLogo,
   kruLogo,
   aviatorRegisterBanner,
+  aviatrixxBanner,
   megaJackpotBanner,
+  xupBanner,
   christiePartner,
   dala7sPartner,
   driftwoodPartner,
