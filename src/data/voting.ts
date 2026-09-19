@@ -11,7 +11,7 @@ import type {
 
 export const getVoteCausesFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const response = await apiService.get<VoteCause[]>(`/causes`, {
+    const response = await apiService.get<VoteCause[]>(`/causes?company_id=2`, {
       base: 'quiz',
       withApiKey: true,
     })
