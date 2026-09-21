@@ -11,7 +11,7 @@ import type {
 
 export const getQuizzesFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    return apiService.get<Quiz[]>('/engagements?type=QZ', {
+    return apiService.get<Quiz[]>('/engagements?type=QZ&companyId=2', {
       base: 'quiz',
       withApiKey: true,
     })
