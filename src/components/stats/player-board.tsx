@@ -17,15 +17,17 @@ export const PlayerLeaderBoard = ({
   data,
   eventId,
   isPoints = false,
+  limit = LEAGUE_TEAM_LEADERBOARD_LIMIT,
 }: {
   title: string
   data: TopPlayerStats[]
   eventId: string
   isPoints?: boolean
+  limit?: number
 }) => {
   const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
-  const visible = data.slice(0, LEAGUE_TEAM_LEADERBOARD_LIMIT)
-  const hasMore = data.length > LEAGUE_TEAM_LEADERBOARD_LIMIT
+  const visible = data.slice(0, limit)
+  const hasMore = data.length > limit
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">

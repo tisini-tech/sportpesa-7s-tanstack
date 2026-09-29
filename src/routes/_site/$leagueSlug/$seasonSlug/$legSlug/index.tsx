@@ -6,9 +6,11 @@ import { HeroSection } from '#/components/landing/hero'
 import { LegStrip } from '#/components/landing/legs-strip'
 import { MatchesToday } from '#/components/landing/matches'
 import { StandingsSnippet } from '#/components/landing/standings'
+import { StatsGlimpse } from '#/components/landing/stats-glimpse'
 import { VideosSection } from '#/components/landing/videos'
 import { fixturesQueryOptions } from '#/data/fixtures'
 import { divisionStandingsQueryOptions } from '#/data/standings'
+import { leagueStatsGlimpseQueryOptions } from '#/data/teams'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
 
 const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
@@ -16,7 +18,7 @@ const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 export const Route = createFileRoute(
   '/_site/$leagueSlug/$seasonSlug/$legSlug/',
 )({
-  loader: async ({ context }) => {
+  loader: async ({ context, params }) => {
     const competitionId = context.competitionId
     const seasonId = context.season.id.toString()
     const divisionId = context.division.id.toString()
@@ -28,6 +30,9 @@ export const Route = createFileRoute(
     void context.queryClient.prefetchQuery(
       fixturesQueryOptions(competitionId, seasonId, divisionId),
     )
+    void context.queryClient.prefetchQuery(
+      leagueStatsGlimpseQueryOptions(competitionId, seasonId, params.seasonSlug),
+    )
   },
   component: Home,
 })
@@ -35,7 +40,7 @@ export const Route = createFileRoute(
 function Home() {
   const { seasons, season, division, competitionId } =
     legRoute.useRouteContext()
-  const { leagueSlug } = Route.useParams()
+  const { leagueSlug, seasonSlug } = Route.useParams()
   const navigate = Route.useNavigate()
 
   const seasonId = season.id.toString()
@@ -63,7 +68,6 @@ function Home() {
         activeDivisionId={division.id}
         leagueSlug={leagueSlug}
       />
-
       <LegStrip
         leagueSlug={leagueSlug}
         seasons={seasons}
@@ -74,7 +78,6 @@ function Home() {
         onSelectSeason={handleSeasonChange}
         onSelectDivision={handleDivisionChange}
       />
-
       <Suspense
         fallback={
           <section className="sp-content-shell py-8">
@@ -90,7 +93,6 @@ function Home() {
           divisionId={divisionId}
         />
       </Suspense>
-
       <Suspense
         fallback={
           <section className="sp-content-shell py-8">
@@ -118,7 +120,21 @@ function Home() {
           </div>
         </section>
       </Suspense>
-
+      <Suspense
+        fallback={
+          <section className="sp-content-shell py-8">
+            <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-12 text-center">
+              <p className="text-sm text-muted-foreground">Loading stats…</p>
+            </div>
+          </section>
+        }
+      >
+        <StatsGlimpse
+          competitionId={competitionId}
+          seasonId={seasonId}
+          seasonSlug={seasonSlug}
+        />
+      </Suspense>
       <VideosSection data={seasons} />
     </div>
   )
