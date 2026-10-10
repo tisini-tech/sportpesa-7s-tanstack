@@ -1,2 +1,8 @@
 allowBuilds:
-  unrs-resolver: set this to true or false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@tanstack/history@1.162.5'
+  - '@tanstack/router-cli@1.167.41'
+  - '@tanstack/router-core@1.171.35'
+  - '@tanstack/router-generator@1.167.41'
+  - '@tanstack/router-plugin@1.168.43'
