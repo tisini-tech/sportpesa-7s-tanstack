@@ -9,8 +9,11 @@ import { getGroupStandingsFn } from '#/data/standings'
 import { ScheduleHeader } from '#/components/schedule/schedule-header'
 import { LegScheduleSection } from '#/components/schedule/leg-schedule-section'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
+import { isSafariLeague, resolveLeagueBySlug } from '#/lib/leagues'
 import type { Division, Fixture, StageStanding } from '#/lib/types'
+import { getLegSlug, resolveDivisionBySlug } from '#/lib/tournament-slugs'
 import { loadScheduleSeasonContext } from './load-context'
+import { readLeg } from '../-season'
 
 function divisionStartTime(division: Division): number {
   if (!division.date_from) return Number.POSITIVE_INFINITY
@@ -54,6 +57,9 @@ function sortLegsForSchedule<T extends { division: Division }>(legs: T[]): T[] {
 export const Route = createFileRoute(
   '/_site/$leagueSlug/$seasonSlug/schedule/',
 )({
+  validateSearch: (search: Record<string, unknown>) => ({
+    leg: readLeg(search),
+  }),
   // Same-route beforeLoad avoids parent/child context races on first navigation.
   beforeLoad: async ({ params }) => loadScheduleSeasonContext(params),
   loader: async ({ context }) => {
@@ -97,27 +103,54 @@ export const Route = createFileRoute(
 function ScheduleLayout() {
   const { seasons, season } = Route.useRouteContext()
   const { legs } = Route.useLoaderData()
+  const { leg } = Route.useSearch()
   const { leagueSlug } = Route.useParams()
   const navigate = Route.useNavigate()
+  const league = resolveLeagueBySlug(leagueSlug)
+  const safari = league ? isSafariLeague(league) : false
+  const selectedDivision =
+    (leg ? resolveDivisionBySlug(season, leg) : undefined) ??
+    pickFeaturedDivision(season.divisions)?.division
 
   const { handleLeagueChange, handleSeasonChange } = useTournamentNavigation({
-    leagueSlug,
-    seasons,
-    season,
-    onNavigate: (params) => {
-      navigate({
-        to: '/$leagueSlug/$seasonSlug/schedule',
-        params: {
-          leagueSlug: params.leagueSlug,
-          seasonSlug: params.seasonSlug,
-        },
-      })
-    },
-  })
+      leagueSlug,
+      seasons,
+      season,
+      onNavigate: (params) => {
+        const nextLeague = resolveLeagueBySlug(params.leagueSlug)
+        navigate({
+          to: '/$leagueSlug/$seasonSlug/schedule',
+          params: {
+            leagueSlug: params.leagueSlug,
+            seasonSlug: params.seasonSlug,
+          },
+          search: {
+            leg:
+              nextLeague && !isSafariLeague(nextLeague)
+                ? params.legSlug
+                : undefined,
+          },
+        })
+      },
+    })
 
   const legNumberById = new Map(
     [...season.divisions].map((division, index) => [division.id, index + 1]),
   )
+
+  const selectLeg = (divisionId: number) => {
+    const division = season.divisions.find((item) => item.id === divisionId)
+    if (!division) return
+    const legSlug = getLegSlug(division)
+    navigate({
+      search: { leg: legSlug },
+      replace: true,
+    })
+    document.getElementById(`leg-${legSlug}`)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
 
   return (
     <div>
@@ -126,8 +159,11 @@ function ScheduleLayout() {
         seasons={seasons}
         season={season}
         seasonId={season.id}
+        division={selectedDivision}
+        divisionId={selectedDivision?.id}
         onLeagueChange={handleLeagueChange}
         onSeasonChange={handleSeasonChange}
+        onDivisionChange={safari ? undefined : selectLeg}
       />
 
       {legs.length === 0 ? (
@@ -146,6 +182,7 @@ function ScheduleLayout() {
             key={leg.division.id}
             leg={leg}
             legNumber={legNumberById.get(leg.division.id) ?? leg.division.order}
+            variant={safari ? 'safari' : 'circuit'}
           />
         ))
       )}

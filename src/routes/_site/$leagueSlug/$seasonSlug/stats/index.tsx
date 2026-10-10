@@ -1,4 +1,4 @@
-import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { Loading } from '#/components/error/loading'
 import { getTopPlayerStatsFn, getTopTeamStatsFn } from '#/data/teams'
@@ -7,15 +7,19 @@ import { TeamLeaderboard } from '#/components/stats/team-board'
 import { PlayerLeaderBoard } from '#/components/stats/player-board'
 import { TournamentPageHeader } from '#/components/site/tournament-page-header'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
+import { activeStatsDivision, loadStatsSeasonContext } from './-season'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/',
+  '/_site/$leagueSlug/$seasonSlug/stats/',
 )({
-  loader: async ({ context, params }) => {
+  validateSearch: (search: Record<string, unknown>) => ({
+    leg: typeof search.leg === 'string' ? search.leg : undefined,
+  }),
+  loaderDeps: ({ search }) => ({ leg: search.leg }),
+  beforeLoad: async ({ params }) => loadStatsSeasonContext(params),
+  loader: async ({ context, params, deps }) => {
     const seasonId = context.season.id.toString()
-    const divisionId = context.division.id.toString()
+    const { divisionId } = activeStatsDivision(context.season, deps.leg)
     const competitionId = context.competitionId
     const events = getLeagueStatsEvents(params.seasonSlug)
 
@@ -101,7 +105,9 @@ export const Route = createFileRoute(
 })
 
 function StatsPage() {
-  const { seasons, season, division } = legRoute.useRouteContext()
+  const { seasons, season } = Route.useRouteContext()
+  const { leg } = Route.useSearch()
+  const { division, divisionId } = activeStatsDivision(season, leg)
   const {
     events,
     topTeamTries,
@@ -112,17 +118,21 @@ function StatsPage() {
     topPlayerPoints,
   } = Route.useLoaderData()
   const navigate = Route.useNavigate()
-  const { leagueSlug } = Route.useParams()
+  const { leagueSlug, seasonSlug } = Route.useParams()
 
   const { handleLeagueChange, handleSeasonChange, handleDivisionChange } =
     useTournamentNavigation({
       leagueSlug,
       seasons,
       season,
-      onNavigate: (params) => {
+      onNavigate: ({ leagueSlug: nextLeagueSlug, seasonSlug: nextSeasonSlug, legSlug }) => {
         navigate({
-          to: '/$leagueSlug/$seasonSlug/$legSlug/stats',
-          params,
+          to: '/$leagueSlug/$seasonSlug/stats',
+          params: {
+            leagueSlug: nextLeagueSlug,
+            seasonSlug: nextSeasonSlug,
+          },
+          search: { leg: legSlug },
         })
       },
     })
@@ -133,9 +143,9 @@ function StatsPage() {
         leagueSlug={leagueSlug}
         seasons={seasons}
         season={season}
-        division={division}
+        division={divisionId ? division : undefined}
         seasonId={season.id}
-        divisionId={division.id}
+        divisionId={divisionId ? division?.id : undefined}
         onLeagueChange={handleLeagueChange}
         onSeasonChange={handleSeasonChange}
         onDivisionChange={handleDivisionChange}
@@ -149,16 +159,25 @@ function StatsPage() {
             data={topTeamPoints}
             eventId={events.score}
             isPoints
+            leagueSlug={leagueSlug}
+            seasonSlug={seasonSlug}
+            legSlug={leg}
           />
           <TeamLeaderboard
             title="Tries"
             data={topTeamTries}
             eventId={events.score}
+            leagueSlug={leagueSlug}
+            seasonSlug={seasonSlug}
+            legSlug={leg}
           />
           <TeamLeaderboard
             title="Visits in opp 22"
             data={topTeamVisits}
             eventId={events.visits}
+            leagueSlug={leagueSlug}
+            seasonSlug={seasonSlug}
+            legSlug={leg}
           />
         </StatsSection>
 
@@ -168,16 +187,25 @@ function StatsPage() {
             data={topPlayerPoints.items}
             eventId={events.score}
             isPoints
+            leagueSlug={leagueSlug}
+            seasonSlug={seasonSlug}
+            legSlug={leg}
           />
           <PlayerLeaderBoard
             title="Tries"
             data={topPlayerTries.items}
             eventId={events.score}
+            leagueSlug={leagueSlug}
+            seasonSlug={seasonSlug}
+            legSlug={leg}
           />
           <PlayerLeaderBoard
             title="Carries"
             data={topPlayersCarries.items}
             eventId={events.carries}
+            leagueSlug={leagueSlug}
+            seasonSlug={seasonSlug}
+            legSlug={leg}
           />
         </StatsSection>
       </section>

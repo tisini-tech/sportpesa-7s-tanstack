@@ -1,13 +1,13 @@
-import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { VideoCard } from '#/components/landing/videos'
 import { collectVideos } from '#/lib/utils'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
+import { loadStatsSeasonContext } from '../-season'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/videos/',
+  '/_site/$leagueSlug/$seasonSlug/videos/',
 )({
+  beforeLoad: async ({ params }) => loadStatsSeasonContext(params),
   component: RouteComponent,
   head: () => ({
     meta: [
@@ -19,7 +19,8 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
-  const { seasons } = legRoute.useRouteContext()
+  const { seasons, league } = Route.useRouteContext()
+  const { leagueSlug } = Route.useParams()
   const videos = collectVideos(seasons)
 
   return (
@@ -30,7 +31,7 @@ function RouteComponent() {
             Videos
           </h1>
           <p className="mt-1 text-sm text-foreground/90">
-            Highlights and features from the SportPesa National 7s Circuit.
+            Highlights and features from {league.title}.
           </p>
         </div>
       </section>
@@ -49,7 +50,7 @@ function RouteComponent() {
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {videos.map((video) => (
               <li key={video.id}>
-                <VideoCard video={video} />
+                <VideoCard video={video} leagueSlug={leagueSlug} />
               </li>
             ))}
           </ul>

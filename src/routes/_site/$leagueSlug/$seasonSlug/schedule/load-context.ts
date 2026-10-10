@@ -2,6 +2,7 @@ import { notFound } from '@tanstack/react-router'
 
 import { getSeasonsFn } from '#/data/seasons'
 import {
+  materializeSeasons,
   resolveLeagueBySlug,
   type LeagueDefinition,
 } from '#/lib/leagues'
@@ -22,9 +23,12 @@ export async function loadScheduleSeasonContext(params: {
   const league = resolveLeagueBySlug(params.leagueSlug)
   if (!league) throw notFound()
 
-  const seasons = await getSeasonsFn({
-    data: { id: String(league.id) },
-  })
+  const seasons = materializeSeasons(
+    await getSeasonsFn({
+      data: { id: String(league.id) },
+    }),
+    league,
+  )
   const season = resolveSeasonBySlug(seasons, params.seasonSlug)
   if (!season) throw notFound()
 

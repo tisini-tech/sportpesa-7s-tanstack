@@ -23,7 +23,7 @@ export function ClubsGrid({
   teams: Team[]
   leagueSlug: string
   seasonSlug: string
-  legSlug: string
+  legSlug?: string
 }) {
   const sorted = [...teams].sort((a, b) =>
     a.team_name.localeCompare(b.team_name),
@@ -45,14 +45,13 @@ export function ClubsGrid({
       {sorted.map((team) => (
         <li key={team.team_id}>
           <Link
-            to="/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug"
+            to="/$leagueSlug/$seasonSlug/clubs/$clubSlug"
             params={{
               leagueSlug,
               seasonSlug,
-              legSlug,
               clubSlug: getClubSlug(team),
             }}
-            search={{ teamId: team.team_id }}
+            search={{ leg: legSlug, teamId: team.team_id }}
             className={cn(
               'group flex h-full flex-col items-center gap-3 rounded-2xl border border-border bg-card p-4 text-center shadow-sm transition-colors',
               'hover:border-secondary/40 hover:bg-muted/20',

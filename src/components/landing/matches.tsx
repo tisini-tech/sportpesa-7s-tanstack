@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Link, getRouteApi } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
 import {
@@ -9,8 +9,6 @@ import {
 import { fixturesQueryOptions } from '#/data/fixtures'
 import type { Fixture } from '#/lib/types'
 import { cn } from '#/lib/utils'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 function formatLocalYmd(date: Date): string {
   const year = date.getFullYear()
@@ -139,14 +137,17 @@ export function MatchesToday({
   competitionId,
   seasonId,
   divisionId,
+  leagueSlug,
+  seasonSlug,
   limit = 3,
 }: {
   competitionId: string
   seasonId: string
   divisionId: string
+  leagueSlug: string
+  seasonSlug: string
   limit?: number
 }) {
-  const { leagueSlug, seasonSlug } = legRoute.useParams()
   const { data: allFixtures } = useSuspenseQuery(
     fixturesQueryOptions(competitionId, seasonId, divisionId),
   )
@@ -177,8 +178,8 @@ export function MatchesToday({
 
       <div className="mt-auto border-t border-border bg-muted/15 px-4 py-3">
         <Link
-          to="/$leagueSlug/$seasonSlug/schedule"
-          params={{ leagueSlug, seasonSlug }}
+          to="/$leagueSlugOld/$seasonSlug/schedule"
+          params={{ leagueSlugOld: leagueSlug, seasonSlug }}
           className={cn(
             'inline-flex rounded-full border border-primary/40 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase hover:bg-primary/5',
           )}
@@ -214,9 +215,9 @@ function MatchSnippetRow({
 
   return (
     <Link
-      to="/$leagueSlug/$seasonSlug/schedule/$fixtureId"
+      to="/$leagueSlugOld/$seasonSlug/schedule/$fixtureId"
       params={{
-        leagueSlug,
+        leagueSlugOld: leagueSlug,
         seasonSlug,
         fixtureId: fixture.id.toString(),
       }}

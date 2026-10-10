@@ -1,5 +1,6 @@
 import { TournamentPageHeader } from '#/components/site/tournament-page-header'
-import type { Season } from '#/lib/types'
+import { isSafariLeague, resolveLeagueBySlug } from '#/lib/leagues'
+import type { Division, Season } from '#/lib/types'
 import type { ScheduleStage } from '#/components/schedule/schedule-stages'
 
 type ScheduleHeaderProps = {
@@ -7,8 +8,11 @@ type ScheduleHeaderProps = {
   seasons: Season[]
   season?: Season
   seasonId?: number
+  division?: Division
+  divisionId?: number
   onLeagueChange: (leagueSlug: string) => void
   onSeasonChange: (seasonId: number) => void
+  onDivisionChange?: (divisionId: number) => void
 }
 
 export function ScheduleHeader({
@@ -16,24 +20,33 @@ export function ScheduleHeader({
   seasons,
   season,
   seasonId,
+  division,
+  divisionId,
   onLeagueChange,
   onSeasonChange,
+  onDivisionChange,
 }: ScheduleHeaderProps) {
+  const league = resolveLeagueBySlug(leagueSlug)
+  const safari = league ? isSafariLeague(league) : false
+
   return (
     <TournamentPageHeader
       leagueSlug={leagueSlug}
       seasons={seasons}
       season={season}
       seasonId={seasonId}
+      division={safari ? undefined : division}
+      divisionId={safari ? undefined : divisionId}
       onLeagueChange={onLeagueChange}
       onSeasonChange={onSeasonChange}
-      showDivisionSelect={false}
+      onDivisionChange={onDivisionChange}
+      showDivisionSelect={!safari}
       banded
-      title="Schedule"
+      title={safari ? undefined : 'Schedule'}
       subtitle={
-        season
-          ? `${season.name} · ${season.divisions.length} legs`
-          : undefined
+        safari || !season
+          ? undefined
+          : `${season.name} · ${season.divisions.length} ${season.divisions.length === 1 ? 'leg' : 'legs'}`
       }
       emptyMessage="Select a season to view fixtures."
     />

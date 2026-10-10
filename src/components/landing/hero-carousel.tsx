@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, getRouteApi } from '@tanstack/react-router'
+import { Link, useParams } from '@tanstack/react-router'
 import {
   ArrowRightIcon,
   CalendarDaysIcon,
@@ -15,7 +15,6 @@ import type { Division } from '#/lib/types'
 import { cn } from '#/lib/utils'
 
 const AUTO_PLAY_MS = 5500
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 type SlideId = 'matches' | 'vote' | 'quiz' | 'live'
 
@@ -33,8 +32,8 @@ type HeroSlide = {
     | '/$leagueSlug/$seasonSlug/schedule'
     | '/voting'
     | '/quiz'
-    | '/$leagueSlug/$seasonSlug/$legSlug/videos'
-    | '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
+    | '/$leagueSlug/$seasonSlug/videos'
+    | '/$leagueSlug/$seasonSlug/videos/$videoId'
   videoId?: string
 }
 
@@ -126,8 +125,8 @@ function buildSlides(
       cta: live.videoId ? 'Watch live' : 'Browse videos',
       footnote: live.videoId ? `${live.dayLabel} stream` : 'Videos hub',
       to: live.videoId
-        ? '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
-        : '/$leagueSlug/$seasonSlug/$legSlug/videos',
+        ? '/$leagueSlug/$seasonSlug/videos/$videoId'
+        : '/$leagueSlug/$seasonSlug/videos',
       videoId: live.videoId ?? undefined,
     },
     {
@@ -168,7 +167,7 @@ export function EngagementCarousel({
   division: Division | null
   seasonId: number | null
 }) {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
+  const { leagueSlug = '', seasonSlug = '' } = useParams({ strict: false })
   const slides = useMemo(
     () => buildSlides(division, seasonId),
     [division, seasonId],
@@ -272,14 +271,13 @@ export function EngagementCarousel({
                       />
                     </Link>
                   ) : slide.to ===
-                      '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId' &&
+                      '/$leagueSlug/$seasonSlug/videos/$videoId' &&
                     slide.videoId ? (
                     <Link
-                      to="/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId"
+                      to="/$leagueSlug/$seasonSlug/videos/$videoId"
                       params={{
                         leagueSlug,
                         seasonSlug,
-                        legSlug,
                         videoId: slide.videoId,
                       }}
                       className={ctaClassName}
@@ -294,6 +292,7 @@ export function EngagementCarousel({
                     <Link
                       to="/$leagueSlug/$seasonSlug/schedule"
                       params={{ leagueSlug, seasonSlug }}
+                      search={{ leg: undefined }}
                       className={ctaClassName}
                     >
                       {slide.cta}
@@ -304,13 +303,8 @@ export function EngagementCarousel({
                     </Link>
                   ) : (
                     <Link
-                      to={
-                        slide.to ===
-                        '/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId'
-                          ? '/$leagueSlug/$seasonSlug/$legSlug/videos'
-                          : slide.to
-                      }
-                      params={{ leagueSlug, seasonSlug, legSlug }}
+                      to="/$leagueSlug/$seasonSlug/videos"
+                      params={{ leagueSlug, seasonSlug }}
                       className={ctaClassName}
                     >
                       {slide.cta}

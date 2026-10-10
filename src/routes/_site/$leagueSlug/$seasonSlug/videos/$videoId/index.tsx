@@ -9,8 +9,10 @@ import {
   getYouTubeId,
   youtubeEmbedUrl,
 } from '#/lib/utils'
+import { loadStatsSeasonContext } from '../../-season'
 
-export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId/')({
+export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/videos/$videoId/')({
+  beforeLoad: async ({ params }) => loadStatsSeasonContext(params),
   loader: ({ context, params }) => {
     const videos = collectVideos(context.seasons)
     const video = videos.find((item) => item.id === params.videoId)
@@ -27,7 +29,7 @@ export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/vi
 })
 
 function VideoDetailPage() {
-  const { leagueSlug, seasonSlug, legSlug } = Route.useParams()
+  const { leagueSlug, seasonSlug } = Route.useParams()
   const { video, moreVideos } = Route.useLoaderData()
   const youtubeId = getYouTubeId(video.url)
 
@@ -44,8 +46,8 @@ function VideoDetailPage() {
       <section className="border-b border-border bg-card">
         <div className="sp-content-shell flex flex-col gap-x-3 gap-y-1.5 px-4 py-2.5 sm:px-6">
           <Link
-            to="/$leagueSlug/$seasonSlug/$legSlug/videos"
-            params={{ leagueSlug, seasonSlug, legSlug }}
+            to="/$leagueSlug/$seasonSlug/videos"
+            params={{ leagueSlug, seasonSlug }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3.5" aria-hidden />
@@ -115,7 +117,7 @@ function VideoDetailPage() {
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {moreVideos.map((item) => (
                 <li key={item.id}>
-                  <VideoCard video={item} />
+                  <VideoCard video={item} leagueSlug={leagueSlug} />
                 </li>
               ))}
             </ul>

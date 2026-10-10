@@ -6,6 +6,8 @@ export interface Season {
   date_from: string
   date_to: string
   divisions: Division[]
+  /** Present when the competition has no divisions (Safari). */
+  stages?: Stage[]
 }
 
 export interface SeasonImage {

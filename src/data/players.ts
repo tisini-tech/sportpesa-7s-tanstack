@@ -7,7 +7,7 @@ export const getPlayersFn = createServerFn({ method: 'GET' })
     (data: {
       competitionId: string
       seasonId: string
-      divisionId: string
+      divisionId?: string
       teamId: string
     }) => data,
   )

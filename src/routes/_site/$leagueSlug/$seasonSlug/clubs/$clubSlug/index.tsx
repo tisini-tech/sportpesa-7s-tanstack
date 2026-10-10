@@ -2,24 +2,16 @@ import { TeamPlayers } from '#/components/clubs/team-players'
 import { getPlayersFn } from '#/data/players'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/')({
-  validateSearch: (search: Record<string, unknown>) => {
-    const raw = search.teamId
-    const teamId =
-      typeof raw === 'number'
-        ? raw
-        : typeof raw === 'string'
-          ? Number(raw)
-          : undefined
-    return {
-      teamId: teamId != null && !Number.isNaN(teamId) ? teamId : undefined,
-    }
-  },
+import { clubSearch } from '../-search'
+
+export const Route = createFileRoute(
+  '/_site/$leagueSlug/$seasonSlug/clubs/$clubSlug/',
+)({
+  validateSearch: clubSearch,
   loaderDeps: ({ search }) => ({
     teamId: search.teamId,
   }),
   loader: async ({ context, deps }) => {
-    const seasonId = context.season.id.toString()
     const teamId = deps.teamId
     if (!teamId) {
       throw new Error('Team ID is required')
@@ -27,8 +19,7 @@ export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/cl
     const players = await getPlayersFn({
       data: {
         competitionId: context.competitionId,
-        seasonId,
-        divisionId: context.division.id.toString(),
+        seasonId: context.season.id.toString(),
         teamId: teamId.toString(),
       },
     })

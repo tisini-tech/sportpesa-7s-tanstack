@@ -19,10 +19,14 @@ export const getDivisionPoolsFn = createServerFn({ method: 'GET' })
       data,
   )
   .handler(async ({ data }) => {
-    const divisionPools = await apiService.get<DivisionPool[]>(
-      `/competitions/${data.competitionId}/seasons/${data.seasonId}/pools?division_id=${data.divisionId}`,
-    )
-    return divisionPools
+    try {
+      const divisionPools = await apiService.get<DivisionPool[]>(
+        `/competitions/${data.competitionId}/seasons/${data.seasonId}/pools?division_id=${data.divisionId}`,
+      )
+      return divisionPools
+    } catch {
+      return []
+    }
   })
 
 export const poolsQueryOptions = (

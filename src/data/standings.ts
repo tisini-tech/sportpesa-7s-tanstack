@@ -34,8 +34,15 @@ export const getDivisionStandingsFn = createServerFn({ method: 'GET' })
   )
   .handler(async ({ data }) => {
     try {
+      const divisionId = Number(data.divisionId)
+      const params = new URLSearchParams()
+      if (Number.isFinite(divisionId) && divisionId > 0) {
+        params.set('division_id', data.divisionId)
+        params.set('leg', 'True')
+      }
+      const query = params.toString()
       const standings: CompetitionStanding = await apiService.get(
-        `/competitions/${data.competitionId}/seasons/${data.seasonId}/standings?division_id=${data.divisionId}&leg=True`,
+        `/competitions/${data.competitionId}/seasons/${data.seasonId}/standings${query ? `?${query}` : ''}`,
       )
 
       return standings

@@ -6,7 +6,7 @@ import { FixtureRow } from '#/components/schedule/fixture-row'
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
 import { ScheduleEmptyState } from '#/components/schedule/schedule-empty-state'
 
-const GROUP_STAGE_PREFIXES = ['Group', 'Pool']
+const GROUP_STAGE_PREFIXES = ['Group', 'Pool', 'Poo', 'Round']
 
 function isGroupStageFixture(fixture: Fixture): boolean {
   if (!fixture.stage_name) return false
@@ -48,7 +48,7 @@ function groupFixturesByStage(fixtures: Fixture[]): Record<string, Fixture[]> {
 }
 
 function getPoolTabLabel(groupName: string): string {
-  const match = groupName.match(/(?:pool|group)\s*([a-z])/i)
+  const match = groupName.match(/(?:pool|poo|group)\s*([a-z])/i)
   if (match) return `Pool ${match[1].toUpperCase()}`
   return groupName
 }

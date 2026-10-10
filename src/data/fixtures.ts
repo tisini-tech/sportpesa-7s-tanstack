@@ -11,12 +11,19 @@ import type {
 
 export const getFixturesFn = createServerFn({ method: 'GET' })
   .validator(
-    (data: { competitionId: string; seasonId: string; divisionId: string }) =>
+    (data: { competitionId: string; seasonId: string; divisionId?: string }) =>
       data,
   )
   .handler(async ({ data }) => {
+    const params = new URLSearchParams()
+    const divisionId = Number(data.divisionId)
+    if (data.divisionId && Number.isFinite(divisionId) && divisionId > 0) {
+      params.set('division_id', data.divisionId)
+    }
+    const query = params.toString()
+
     const fixtures: Fixture[] = await apiService.get(
-      `/competitions/${data.competitionId}/seasons/${data.seasonId}/fixtures?division_id=${data.divisionId}`,
+      `/competitions/${data.competitionId}/seasons/${data.seasonId}/fixtures${query ? `?${query}` : ''}`,
     )
     return fixtures
   })

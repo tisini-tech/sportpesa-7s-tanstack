@@ -1,11 +1,9 @@
-import { getRouteApi, Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 
 import { FixtureSectionHeader } from '../schedule/fixture-section-header'
 import { LEAGUE_TEAM_LEADERBOARD_LIMIT } from '#/lib/league-stats'
 import type { TopPlayerStats } from '#/lib/types'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 function getPlayerInitials(name: string | null | undefined): string {
   const source = name || 'TBD'
@@ -18,14 +16,19 @@ export const PlayerLeaderBoard = ({
   eventId,
   isPoints = false,
   limit = LEAGUE_TEAM_LEADERBOARD_LIMIT,
+  leagueSlug,
+  seasonSlug,
+  legSlug,
 }: {
   title: string
   data: TopPlayerStats[]
   eventId: string
   isPoints?: boolean
   limit?: number
+  leagueSlug?: string
+  seasonSlug?: string
+  legSlug?: string
 }) => {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
   const visible = data.slice(0, limit)
   const hasMore = data.length > limit
 
@@ -81,19 +84,18 @@ export const PlayerLeaderBoard = ({
             ))}
           </ul>
 
-          {hasMore ? (
+          {hasMore && leagueSlug && seasonSlug ? (
             <div className="border-t border-border/60 px-4 py-3 text-center">
               <Link
-                to="/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/players"
+                to="/$leagueSlug/$seasonSlug/stats/$statsId/players"
                 params={{
                   leagueSlug,
                   seasonSlug,
-                  legSlug,
                   statsId: eventId,
                 }}
                 search={{
+                  leg: legSlug,
                   isPoints: isPoints ? true : undefined,
-                  page: undefined,
                 }}
                 className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
               >

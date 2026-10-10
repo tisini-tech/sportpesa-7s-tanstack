@@ -7,17 +7,17 @@ import { cn } from '#/lib/utils'
 const tabs = [
   {
     label: 'Players',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug' as const,
+    to: '/$leagueSlug/$seasonSlug/clubs/$clubSlug' as const,
     exact: true,
   },
   {
     label: 'Fixtures',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures' as const,
+    to: '/$leagueSlug/$seasonSlug/clubs/$clubSlug/fixtures' as const,
     exact: false,
   },
   {
     label: 'Stats',
-    to: '/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/stats' as const,
+    to: '/$leagueSlug/$seasonSlug/clubs/$clubSlug/stats' as const,
     exact: false,
   },
 ]
@@ -44,7 +44,7 @@ export function TeamHeader({
   teamId: number
   leagueSlug: string
   seasonSlug: string
-  legSlug: string
+  legSlug?: string
   clubSlug: string
 }) {
   const displayName = team.team_name || clubSlug
@@ -55,8 +55,9 @@ export function TeamHeader({
       <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         <div className="border-b border-border/60 bg-muted/15 px-3 py-2 sm:px-4">
           <Link
-            to="/$leagueSlug/$seasonSlug/$legSlug/clubs"
-            params={{ leagueSlug, seasonSlug, legSlug }}
+            to="/$leagueSlug/$seasonSlug/clubs"
+            params={{ leagueSlug, seasonSlug }}
+            search={{ leg: legSlug }}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3.5" aria-hidden />
@@ -106,8 +107,8 @@ export function TeamHeader({
           <Link
             key={tab.to}
             to={tab.to}
-            params={{ leagueSlug, seasonSlug, legSlug, clubSlug }}
-            search={{ teamId }}
+            params={{ leagueSlug, seasonSlug, clubSlug }}
+            search={{ leg: legSlug, teamId }}
             className={tabLinkClass}
             activeProps={{ className: cn(tabLinkClass, tabLinkActiveClass) }}
             activeOptions={{ exact: tab.exact }}

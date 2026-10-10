@@ -11,10 +11,9 @@ import {
   buildFeaturedTournamentPath,
   getSeasonBaseFromPathname,
   getSeasonBaseFromTournamentBase,
-  getTournamentBaseFromPathname,
 } from '#/lib/tournament-slugs'
 import { clearSessionFn } from '#/data/auth'
-import { DEFAULT_LEAGUE } from '#/lib/leagues'
+import { DEFAULT_LEAGUE, resolveLeagueBySlug } from '#/lib/leagues'
 import type { SessionUser } from '#/lib/session'
 import { cn } from '#/lib/utils'
 import { SiteLogo } from './logo'
@@ -22,18 +21,17 @@ import { SiteLogo } from './logo'
 const siteRoute = getRouteApi('/_site')
 
 type NavItem =
-  | { kind: 'tournament'; segment: string; label: string }
   | { kind: 'season'; segment: string; label: string }
   | { kind: 'absolute'; to: string; label: string }
 
 const NAV_ITEMS: NavItem[] = [
   { kind: 'season', segment: 'schedule', label: 'Schedule' },
-  { kind: 'tournament', segment: 'standings', label: 'Standings' },
-  { kind: 'tournament', segment: 'clubs', label: 'Clubs' },
-  { kind: 'tournament', segment: 'stats', label: 'Stats' },
+  { kind: 'season', segment: 'standings', label: 'Standings' },
+  { kind: 'season', segment: 'clubs', label: 'Clubs' },
+  { kind: 'season', segment: 'stats', label: 'Stats' },
   { kind: 'absolute', to: '/voting', label: 'Voting' },
   { kind: 'absolute', to: '/quiz', label: 'Quiz' },
-  { kind: 'tournament', segment: 'videos', label: 'Videos' },
+  { kind: 'season', segment: 'videos', label: 'Videos' },
   { kind: 'absolute', to: '/gallery', label: 'Gallery' },
 ]
 
@@ -74,7 +72,8 @@ function HeaderNavLink({
   )
 }
 
-function useTournamentNavBase(): string {
+/** `/$leagueSlug/$seasonSlug`. A leg is not part of the header base. */
+function useSeasonNavBase(): string {
   const context = siteRoute.useRouteContext()
   const defaultSeasons = context.defaultSeasons ?? []
   const defaultLeague = context.defaultLeague ?? DEFAULT_LEAGUE
@@ -82,28 +81,23 @@ function useTournamentNavBase(): string {
     select: (state) => state.location.pathname,
   })
 
-  return (
-    getTournamentBaseFromPathname(pathname) ??
-    buildFeaturedTournamentPath(defaultSeasons, defaultLeague.slug) ??
-    '/'
-  )
-}
-
-function resolveNavTo(
-  item: NavItem,
-  tournamentBase: string,
-  pathname: string,
-): string {
-  if (item.kind === 'absolute') return item.to
-
-  if (item.kind === 'season') {
-    const seasonBase =
-      getSeasonBaseFromPathname(pathname) ??
-      getSeasonBaseFromTournamentBase(tournamentBase)
-    return seasonBase ? `${seasonBase}/${item.segment}` : `/${item.segment}`
+  const fromPath = getSeasonBaseFromPathname(pathname)
+  const leagueSlug = fromPath?.split('/')[1]
+  if (fromPath && leagueSlug && resolveLeagueBySlug(leagueSlug)) {
+    return fromPath
   }
 
-  return `${tournamentBase}/${item.segment}`
+  const featured = buildFeaturedTournamentPath(
+    defaultSeasons,
+    defaultLeague.slug,
+  )
+  return (featured && getSeasonBaseFromTournamentBase(featured)) || '/'
+}
+
+function resolveNavTo(item: NavItem, seasonBase: string): string {
+  if (item.kind === 'absolute') return item.to
+  if (!seasonBase || seasonBase === '/') return `/${item.segment}`
+  return `${seasonBase}/${item.segment}`
 }
 
 function userInitials(user: SessionUser): string {
@@ -252,10 +246,7 @@ function HeaderAuth({
 export function SiteHeader() {
   const { user } = siteRoute.useRouteContext()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const tournamentBase = useTournamentNavBase()
-  const pathname = useRouterState({
-    select: (state) => state.location.pathname,
-  })
+  const seasonBase = useSeasonNavBase()
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -272,7 +263,7 @@ export function SiteHeader() {
       <div className="sp-shell-wide">
         <div className="flex items-center justify-between gap-4 py-2 lg:py-2.5">
           <SiteLogo
-            to={tournamentBase}
+            to={seasonBase}
             variant="header"
             onNavigate={closeMobileMenu}
           />
@@ -284,7 +275,7 @@ export function SiteHeader() {
             {NAV_ITEMS.map((item) => (
               <HeaderNavLink
                 key={item.label}
-                to={resolveNavTo(item, tournamentBase, pathname)}
+                to={resolveNavTo(item, seasonBase)}
                 label={item.label}
               />
             ))}
@@ -323,7 +314,7 @@ export function SiteHeader() {
               {NAV_ITEMS.map((item) => (
                 <li key={item.label}>
                   <HeaderNavLink
-                    to={resolveNavTo(item, tournamentBase, pathname)}
+                    to={resolveNavTo(item, seasonBase)}
                     label={item.label}
                     onNavigate={closeMobileMenu}
                     className="block w-full px-1 py-3 after:inset-x-1"

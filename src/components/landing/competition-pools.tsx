@@ -1,46 +1,56 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Link, getRouteApi } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
-import { poolsQueryOptions } from '#/data/seasons'
-import type { DivisionPool, TeamPool } from '#/lib/types'
+import { competitionPoolsQueryOptions } from '#/data/competition-pools'
+import type { DivisionPool, Stage, TeamPool } from '#/lib/types'
 import { slugify } from '#/lib/tournament-slugs'
 import { cn } from '#/lib/utils'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 function getTeamInitials(name: string | null | undefined): string {
   const source = name || 'TBD'
   return source.slice(0, 2).toUpperCase()
 }
 
-function sortPools(pools: DivisionPool[]): DivisionPool[] {
-  return [...pools].sort((a, b) => a.name.localeCompare(b.name))
-}
-
-export function DivisionPools({
+export function CompetitionPools({
   competitionId,
   seasonId,
   divisionId,
+  leagueSlug,
+  seasonSlug,
+  legSlug,
+  stages = [],
 }: {
   competitionId: string
   seasonId: string
-  divisionId: string
+  divisionId?: string
+  leagueSlug: string
+  seasonSlug: string
+  legSlug?: string
+  stages?: Stage[]
 }) {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
-  const { data: divisionPools } = useSuspenseQuery(
-    poolsQueryOptions(competitionId, seasonId, divisionId),
+  const { data } = useSuspenseQuery(
+    competitionPoolsQueryOptions({
+      competitionId,
+      seasonId,
+      divisionId,
+      stages,
+    }),
   )
-
-  const pools = sortPools(divisionPools)
+  const pools = data.pools
+  const isStagePools = data.source === 'stage'
 
   if (pools.length === 0) {
     return (
       <section className="sp-content-shell py-8">
         <div className="rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-12 text-center">
-          <p className="text-sm font-semibold text-foreground">No pools yet</p>
+          <p className="text-sm font-semibold text-foreground">
+            {isStagePools ? 'No stage pools yet' : 'No pools yet'}
+          </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Pool draw for this leg will appear here once it is published.
+            {isStagePools
+              ? 'Stage pools will appear here once the groups are published.'
+              : 'Pool draw for this leg will appear here once it is published.'}
           </p>
         </div>
       </section>
@@ -51,10 +61,12 @@ export function DivisionPools({
     <section className="sp-content-shell py-8">
       <div className="mb-5">
         <h2 className="text-[0.65rem] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-          Pools
+          {isStagePools ? 'Stage pools' : 'Pools'}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Group stage draw for this leg
+          {isStagePools
+            ? 'Group stage draw for this tournament'
+            : 'Group stage draw for this leg'}
         </p>
       </div>
 
@@ -73,7 +85,7 @@ export function DivisionPools({
               pool={pool}
               leagueSlug={leagueSlug}
               seasonSlug={seasonSlug}
-              legSlug={legSlug}
+              legSlug={isStagePools ? undefined : legSlug}
             />
           </li>
         ))}
@@ -91,7 +103,7 @@ function PoolCard({
   pool: DivisionPool
   leagueSlug: string
   seasonSlug: string
-  legSlug: string
+  legSlug?: string
 }) {
   const teams = pool.teams
 
@@ -136,38 +148,42 @@ function PoolTeamRow({
   team: TeamPool
   leagueSlug: string
   seasonSlug: string
-  legSlug: string
+  legSlug?: string
 }) {
+  const body = (
+    <>
+      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/50">
+        {team.team_logo ? (
+          <img src={team.team_logo} alt="" className="size-full object-cover" />
+        ) : (
+          <span className="text-[0.65rem] font-bold text-muted-foreground">
+            {getTeamInitials(team.team_name)}
+          </span>
+        )}
+      </div>
+      <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+        {team.team_name}
+      </span>
+    </>
+  )
+
+  if (!legSlug) {
+    return <li className="flex items-center gap-3 px-4 py-3">{body}</li>
+  }
+
   return (
     <li>
       <Link
-        to="/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug"
+        to="/$leagueSlug/$seasonSlug/clubs/$clubSlug"
         params={{
           leagueSlug,
           seasonSlug,
-          legSlug,
           clubSlug: slugify(team.team_name),
         }}
-        search={{ teamId: team.team_id }}
+        search={{ leg: legSlug, teamId: team.team_id }}
         className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/20"
       >
-        <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-muted/50">
-          {team.team_logo ? (
-            <img
-              src={team.team_logo}
-              alt=""
-              className="size-full object-cover"
-            />
-          ) : (
-            <span className="text-[0.65rem] font-bold text-muted-foreground">
-              {getTeamInitials(team.team_name)}
-            </span>
-          )}
-        </div>
-
-        <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-          {team.team_name}
-        </span>
+        {body}
       </Link>
     </li>
   )

@@ -1,6 +1,6 @@
 import { pickFeaturedDivision } from '#/components/landing/division-utils'
 import { getSeasonsFn } from '#/data/seasons'
-import { resolveLeagueBySlug } from '#/lib/leagues'
+import { materializeSeasons, resolveLeagueBySlug } from '#/lib/leagues'
 import {
   getFeaturedTournamentParams,
   getLegSlug,
@@ -35,9 +35,12 @@ export function useTournamentNavigation({
     const league = resolveLeagueBySlug(nextLeagueSlug)
     if (!league) return
 
-    const nextSeasons = await getSeasonsFn({
-      data: { id: String(league.id) },
-    })
+    const nextSeasons = materializeSeasons(
+      await getSeasonsFn({
+        data: { id: String(league.id) },
+      }),
+      league,
+    )
     const featured = getFeaturedTournamentParams(nextSeasons, league.slug)
     if (!featured) return
 

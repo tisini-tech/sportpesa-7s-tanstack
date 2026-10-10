@@ -1,22 +1,25 @@
-import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { ClubsGrid } from '#/components/clubs/clubs-grid'
 import { TournamentPageHeader } from '#/components/site/tournament-page-header'
 import { getTeamsFn } from '#/data/teams'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
+import { activeStatsDivision, loadStatsSeasonContext, readLeg } from '../-season'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/',
+  '/_site/$leagueSlug/$seasonSlug/clubs/',
 )({
-  loader: async ({ context }) => {
-    const seasonId = context.season.id.toString()
-    const divisionId = context.division.id.toString()
+  validateSearch: (search: Record<string, unknown>) => ({
+    leg: readLeg(search),
+  }),
+  loaderDeps: ({ search }) => ({ leg: search.leg }),
+  beforeLoad: async ({ params }) => loadStatsSeasonContext(params),
+  loader: async ({ context, deps }) => {
+    const { divisionId } = activeStatsDivision(context.season, deps.leg)
     const teams = await getTeamsFn({
       data: {
         competitionId: context.competitionId,
-        seasonId,
+        seasonId: context.season.id.toString(),
         divisionId,
       },
     })
@@ -33,20 +36,30 @@ export const Route = createFileRoute(
 })
 
 function ClubsPage() {
-  const { seasons, season, division } = legRoute.useRouteContext()
+  const { seasons, season } = Route.useRouteContext()
+  const { leg } = Route.useSearch()
+  const { division, divisionId, legSlug } = activeStatsDivision(season, leg)
   const { teams } = Route.useLoaderData()
   const navigate = Route.useNavigate()
-  const { leagueSlug, seasonSlug, legSlug } = Route.useParams()
+  const { leagueSlug, seasonSlug } = Route.useParams()
 
   const { handleLeagueChange, handleSeasonChange, handleDivisionChange } =
     useTournamentNavigation({
       leagueSlug,
       seasons,
       season,
-      onNavigate: (params) => {
+      onNavigate: ({
+        leagueSlug: nextLeagueSlug,
+        seasonSlug: nextSeasonSlug,
+        legSlug: nextLegSlug,
+      }) => {
         navigate({
-          to: '/$leagueSlug/$seasonSlug/$legSlug/clubs',
-          params,
+          to: '/$leagueSlug/$seasonSlug/clubs',
+          params: {
+            leagueSlug: nextLeagueSlug,
+            seasonSlug: nextSeasonSlug,
+          },
+          search: { leg: nextLegSlug },
         })
       },
     })
@@ -57,9 +70,9 @@ function ClubsPage() {
         leagueSlug={leagueSlug}
         seasons={seasons}
         season={season}
-        division={division}
+        division={divisionId ? division : undefined}
         seasonId={season.id}
-        divisionId={division.id}
+        divisionId={divisionId ? division?.id : undefined}
         onLeagueChange={handleLeagueChange}
         onSeasonChange={handleSeasonChange}
         onDivisionChange={handleDivisionChange}
@@ -72,7 +85,8 @@ function ClubsPage() {
             Clubs
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {teams.length} {teams.length === 1 ? 'club' : 'clubs'} in this leg
+            {teams.length} {teams.length === 1 ? 'club' : 'clubs'}
+            {divisionId ? ' in this leg' : ''}
           </p>
         </div>
 

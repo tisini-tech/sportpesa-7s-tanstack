@@ -7,6 +7,7 @@ import {
 } from '#/components/schedule/schedule-stages'
 import { ScheduleLegProvider } from '#/components/schedule/schedule-leg-context'
 import { GroupStageTab } from '#/components/schedule/groups'
+import { KnockoutsTab } from '#/components/schedule/knockouts'
 import { QuartersTab } from '#/components/schedule/quarters'
 import { SemisTab } from '#/components/schedule/semis'
 import { FinalsTab } from '#/components/schedule/finals'
@@ -18,11 +19,6 @@ import {
 import { getLegSlug } from '#/lib/tournament-slugs'
 import type { Division, Fixture, StageStanding } from '#/lib/types'
 import { cn } from '#/lib/utils'
-
-function getStageTabLabel(stage: (typeof SCHEDULE_STAGES)[number]): string {
-  if (stage.id === 'semi-finals') return 'Semis'
-  return stage.label
-}
 
 function statusBadgeClass(
   status: ReturnType<typeof getDivisionStatus>,
@@ -46,15 +42,24 @@ export function LegScheduleSection({
   leg,
   legNumber,
   defaultStage = 'groups',
+  variant = 'circuit',
 }: {
   leg: LegScheduleData
   legNumber: number
   defaultStage?: ScheduleStage
+  variant?: 'circuit' | 'safari'
 }) {
-  const [activeStage, setActiveStage] = useState<ScheduleStage>(defaultStage)
   const { division, fixtures, standings } = leg
   const status = getDivisionStatus(division)
   const legSlug = getLegSlug(division)
+  const stageTabs =
+    variant === 'safari'
+      ? ([
+          { id: 'groups', label: 'Groups' },
+          { id: 'knockouts', label: 'Knockouts' },
+        ] as const)
+      : SCHEDULE_STAGES
+  const [activeStage, setActiveStage] = useState<string>(defaultStage)
 
   return (
     <ScheduleLegProvider legSlug={legSlug}>
@@ -71,9 +76,11 @@ export function LegScheduleSection({
 
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="rounded-md bg-muted px-2 py-1 text-[0.6rem] font-black tracking-[0.15em] text-secondary uppercase">
-                    Leg {legNumber}
-                  </span>
+                  {variant === 'circuit' ? (
+                    <span className="rounded-md bg-muted px-2 py-1 text-[0.6rem] font-black tracking-[0.15em] text-secondary uppercase">
+                      Leg {legNumber}
+                    </span>
+                  ) : null}
                   <span
                     className={cn(
                       'rounded-md px-2 py-1 text-[0.6rem] font-bold tracking-wider uppercase ring-1',
@@ -89,17 +96,24 @@ export function LegScheduleSection({
                   {division.name}
                 </h2>
                 <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-                  {division.county} · {formatDivisionCardDateRange(division)}
+                  {[division.county, formatDivisionCardDateRange(division)]
+                    .filter(Boolean)
+                    .join(' · ')}
                 </p>
               </div>
             </div>
 
             <div
-              className="grid w-full grid-cols-2 gap-0.5 rounded-xl border border-border bg-muted/30 p-0.5 sm:w-auto sm:grid-cols-4"
+              className={cn(
+                'grid w-full gap-0.5 rounded-xl border border-border bg-muted/30 p-0.5 sm:w-auto',
+                variant === 'safari'
+                  ? 'grid-cols-2'
+                  : 'grid-cols-2 sm:grid-cols-4',
+              )}
               role="tablist"
               aria-label={`${division.name} tournament stage`}
             >
-              {SCHEDULE_STAGES.map((stage) => {
+              {stageTabs.map((stage) => {
                 const isActive = activeStage === stage.id
 
                 return (
@@ -116,7 +130,11 @@ export function LegScheduleSection({
                         : 'text-muted-foreground hover:bg-accent hover:text-foreground',
                     )}
                   >
-                    <span className="sm:hidden">{getStageTabLabel(stage)}</span>
+                    <span className="sm:hidden">
+                      {'id' in stage && stage.id === 'semi-finals'
+                        ? 'Semis'
+                        : stage.label}
+                    </span>
                     <span className="hidden sm:inline">{stage.label}</span>
                   </button>
                 )
@@ -128,6 +146,8 @@ export function LegScheduleSection({
         <div className="sp-content-shell py-8">
           {activeStage === 'groups' ? (
             <GroupStageTab fixtures={fixtures} standings={standings} />
+          ) : activeStage === 'knockouts' ? (
+            <KnockoutsTab fixtures={fixtures} stages={division.stages ?? []} />
           ) : activeStage === 'quarters' ? (
             <QuartersTab fixtures={fixtures} />
           ) : activeStage === 'semi-finals' ? (

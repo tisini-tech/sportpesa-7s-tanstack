@@ -1,12 +1,10 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Link, getRouteApi } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 
 import { FixtureSectionHeader } from '#/components/schedule/fixture-section-header'
 import { divisionStandingsQueryOptions } from '#/data/standings'
 import type { DivisionStanding } from '#/lib/types'
 import { cn } from '#/lib/utils'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 function getTeamInitials(name: string | null | undefined): string {
   const source = name || 'TBD'
@@ -17,14 +15,19 @@ export function StandingsSnippet({
   competitionId,
   seasonId,
   divisionId,
+  leagueSlug,
+  seasonSlug,
+  legSlug,
   limit = 5,
 }: {
   competitionId: string
   seasonId: string
   divisionId: string
+  leagueSlug: string
+  seasonSlug: string
+  legSlug?: string
   limit?: number
 }) {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
   const { data } = useSuspenseQuery(
     divisionStandingsQueryOptions(competitionId, seasonId, divisionId),
   )
@@ -41,9 +44,11 @@ export function StandingsSnippet({
       <FixtureSectionHeader
         title="Table"
         subtitle={
-          data.matches_played
-            ? `Leg standings · ${data.matches_played} matches played`
-            : 'Leg standings'
+          divisionId
+            ? data.matches_played
+              ? `Leg standings · ${data.matches_played} matches played`
+              : 'Leg standings'
+            : 'Tournament'
         }
       />
 
@@ -67,15 +72,18 @@ export function StandingsSnippet({
         </>
       )}
 
-      <div className="mt-auto border-t border-border bg-muted/15 px-4 py-3">
-        <Link
-          to="/$leagueSlug/$seasonSlug/$legSlug/standings"
-          params={{ leagueSlug, seasonSlug, legSlug }}
-          className="text-xs font-bold tracking-wider text-primary uppercase hover:underline"
-        >
-          Full standings →
-        </Link>
-      </div>
+      {rows.length > 0 ? (
+        <div className="mt-auto border-t border-border bg-muted/15 px-4 py-3">
+          <Link
+            to="/$leagueSlug/$seasonSlug/standings"
+            params={{ leagueSlug, seasonSlug }}
+            search={{ leg: legSlug }}
+            className="text-xs font-bold tracking-wider text-primary uppercase hover:underline"
+          >
+            Full standings →
+          </Link>
+        </div>
+      ) : null}
     </article>
   )
 }

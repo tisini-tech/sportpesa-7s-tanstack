@@ -18,14 +18,17 @@ type CompetitionSeason = {
 }
 
 type CompetitionSeasonDivision = CompetitionSeason & {
-  divisionId: string
+  divisionId?: string
 }
 
 export const getTeamsFn = createServerFn({ method: 'GET' })
   .validator((data: CompetitionSeasonDivision) => data)
   .handler(async ({ data }) => {
+    const params = new URLSearchParams()
+    if (data.divisionId) params.set('division_id', data.divisionId)
+    const query = params.toString()
     const teams: Team[] = await apiService.get(
-      `/competitions/${data.competitionId}/seasons/${data.seasonId}/teams?division_id=${data.divisionId}`,
+      `/competitions/${data.competitionId}/seasons/${data.seasonId}/teams${query ? `?${query}` : ''}`,
     )
     return teams
   })

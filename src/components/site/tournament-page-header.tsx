@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { MapPinIcon } from 'lucide-react'
+import { MapPinIcon, TrophyIcon } from 'lucide-react'
 
 import { cn } from '#/lib/utils'
-import { LEAGUES } from '#/lib/leagues'
+import { LEAGUES, resolveLeagueBySlug } from '#/lib/leagues'
 import type { Division, Season } from '#/lib/types'
 import {
   formatDivisionCardDateRange,
@@ -67,7 +67,26 @@ export function TournamentPageHeader({
   emptyMessage = 'Select a season and leg to continue.',
   children,
 }: TournamentPageHeaderProps) {
+  const league = resolveLeagueBySlug(leagueSlug)
   const status = division ? getDivisionStatus(division) : null
+  const seasonStatus =
+    !division && season
+      ? getDivisionStatus({
+          id: season.id,
+          name: season.name,
+          order: 1,
+          date_from: season.date_from,
+          date_to: season.date_to,
+          day1_video_url: null,
+          day2_video_url: null,
+          winner_url: null,
+          winner_team: null,
+          county: '',
+          stages: season.stages ?? [],
+        })
+      : null
+  const showDivisionPicker =
+    showDivisionSelect && (season?.divisions.length ?? 0) > 1
 
   const leagueItems = LEAGUES.map((league) => ({
     value: league.slug,
@@ -85,12 +104,32 @@ export function TournamentPageHeader({
   const legNumber =
     (season?.divisions.findIndex((item) => item.id === divisionId) ?? 0) + 1
 
-  const heading = title ?? division?.name
+  const seasonDates = season
+    ? formatDivisionCardDateRange({
+        id: season.id,
+        name: season.name,
+        order: 1,
+        date_from: season.date_from,
+        date_to: season.date_to,
+        day1_video_url: null,
+        day2_video_url: null,
+        winner_url: null,
+        winner_team: null,
+        county: '',
+        stages: season.stages ?? [],
+      })
+    : null
+  const heading = title ?? division?.name ?? league?.title
   const detail =
     subtitle ??
     (division
-      ? `${division.county} · ${formatDivisionCardDateRange(division)}`
-      : null)
+      ? [division.county, formatDivisionCardDateRange(division)]
+          .filter(Boolean)
+          .join(' · ')
+      : season
+        ? [season.name, seasonDates].filter(Boolean).join(' · ')
+        : null)
+  const HeadingIcon = division ? MapPinIcon : TrophyIcon
 
   return (
     <section className="border-b border-border bg-card">
@@ -103,10 +142,21 @@ export function TournamentPageHeader({
                   className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-muted/50 text-muted-foreground sm:size-20 lg:size-24"
                   aria-hidden
                 >
-                  <MapPinIcon className="size-6 sm:size-8 lg:size-9" />
+                  <HeadingIcon className="size-6 sm:size-8 lg:size-9" />
                 </div>
 
                 <div className="min-w-0 flex-1">
+                  {!division && !title && seasonStatus ? (
+                    <span
+                      className={cn(
+                        'rounded-md px-2 py-1 text-[0.6rem] font-bold tracking-wider uppercase ring-1 sm:text-[0.65rem]',
+                        statusBadgeClass(seasonStatus),
+                        seasonStatus === 'live' && 'animate-pulse',
+                      )}
+                    >
+                      {formatDivisionStatusLabel(seasonStatus)}
+                    </span>
+                  ) : null}
                   {division && !title ? (
                     <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <span className="rounded-md bg-muted px-2 py-1 text-[0.6rem] font-black tracking-[0.15em] text-secondary uppercase sm:text-[0.65rem]">
@@ -129,7 +179,9 @@ export function TournamentPageHeader({
                   <h1
                     className={cn(
                       'font-heading text-2xl font-black tracking-tight text-primary uppercase sm:text-3xl lg:text-4xl',
-                      division && !title ? 'mt-1.5 sm:mt-2' : '',
+                      (division && !title) || (!division && !title && seasonStatus)
+                        ? 'mt-1.5 sm:mt-2'
+                        : '',
                     )}
                   >
                     {heading}
@@ -150,7 +202,7 @@ export function TournamentPageHeader({
               <div
                 className={cn(
                   'grid w-full gap-2 sm:flex sm:w-auto sm:justify-end',
-                  showLeagueSelect && showDivisionSelect
+                  showLeagueSelect && showDivisionPicker
                     ? 'grid-cols-2 lg:grid-cols-3'
                     : 'grid-cols-2',
                 )}
@@ -195,7 +247,7 @@ export function TournamentPageHeader({
                   </SelectContent>
                 </Select>
 
-                {showDivisionSelect && onDivisionChange ? (
+                {showDivisionPicker && onDivisionChange ? (
                   <Select
                     value={divisionId?.toString()}
                     items={divisionItems}

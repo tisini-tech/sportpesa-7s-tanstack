@@ -3,28 +3,16 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { getTeamFixturesFn } from '#/data/teams'
 import { FixtureRow, getResultForTeam } from '#/components/schedule/fixture-row'
+import { clubSearch } from '../-search'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug/fixtures',
+  '/_site/$leagueSlug/$seasonSlug/clubs/$clubSlug/fixtures',
 )({
-  validateSearch: (search: Record<string, unknown>) => {
-    const raw = search.teamId
-    const teamId =
-      typeof raw === 'number'
-        ? raw
-        : typeof raw === 'string'
-          ? Number(raw)
-          : undefined
-    return {
-      teamId: teamId != null && !Number.isNaN(teamId) ? teamId : undefined,
-    }
-  },
+  validateSearch: clubSearch,
   loaderDeps: ({ search }) => ({
     teamId: search.teamId,
   }),
   loader: async ({ context, deps }) => {
-    const seasonId = context.season.id.toString()
-    const divisionId = context.division.id.toString()
     const teamId = deps.teamId
     if (!teamId) {
       throw new Error('Team ID is required')
@@ -32,8 +20,7 @@ export const Route = createFileRoute(
     const response = await getTeamFixturesFn({
       data: {
         competitionId: context.competitionId,
-        seasonId,
-        divisionId,
+        seasonId: context.season.id.toString(),
         teamId: teamId.toString(),
       },
     })

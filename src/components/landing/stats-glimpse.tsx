@@ -1,11 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Link, getRouteApi } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 
 import { PlayerLeaderBoard } from '#/components/stats/player-board'
 import { TeamLeaderboard } from '#/components/stats/team-board'
 import { leagueStatsGlimpseQueryOptions } from '#/data/teams'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 const GLIMPSE_LIMIT = 5
 
@@ -13,12 +11,15 @@ export function StatsGlimpse({
   competitionId,
   seasonId,
   seasonSlug,
+  leagueSlug,
+  legSlug,
 }: {
   competitionId: string
   seasonId: string
   seasonSlug: string
+  leagueSlug: string
+  legSlug?: string
 }) {
-  const { leagueSlug, legSlug } = legRoute.useParams()
   const { data } = useSuspenseQuery(
     leagueStatsGlimpseQueryOptions(competitionId, seasonId, seasonSlug),
   )
@@ -45,8 +46,9 @@ export function StatsGlimpse({
           </p>
         </div>
         <Link
-          to="/$leagueSlug/$seasonSlug/$legSlug/stats"
-          params={{ leagueSlug, seasonSlug, legSlug }}
+          to="/$leagueSlug/$seasonSlug/stats"
+          params={{ leagueSlug, seasonSlug }}
+          search={{ leg: legSlug }}
           className="shrink-0 text-xs font-bold tracking-wider text-primary uppercase hover:underline"
         >
           All stats →
@@ -60,18 +62,27 @@ export function StatsGlimpse({
           eventId={events.score}
           isPoints
           limit={GLIMPSE_LIMIT}
+          leagueSlug={leagueSlug}
+          seasonSlug={seasonSlug}
+          legSlug={legSlug}
         />
         <TeamLeaderboard
           title="Tries"
           data={topTeamTries}
           eventId={events.score}
           limit={GLIMPSE_LIMIT}
+          leagueSlug={leagueSlug}
+          seasonSlug={seasonSlug}
+          legSlug={legSlug}
         />
         <TeamLeaderboard
           title="Visits in opp 22"
           data={topTeamVisits}
           eventId={events.visits}
           limit={GLIMPSE_LIMIT}
+          leagueSlug={leagueSlug}
+          seasonSlug={seasonSlug}
+          legSlug={legSlug}
         />
       </StatsSection>
 
@@ -82,18 +93,27 @@ export function StatsGlimpse({
           eventId={events.score}
           isPoints
           limit={GLIMPSE_LIMIT}
+          leagueSlug={leagueSlug}
+          seasonSlug={seasonSlug}
+          legSlug={legSlug}
         />
         <PlayerLeaderBoard
           title="Tries"
           data={topPlayerTries}
           eventId={events.score}
           limit={GLIMPSE_LIMIT}
+          leagueSlug={leagueSlug}
+          seasonSlug={seasonSlug}
+          legSlug={legSlug}
         />
         <PlayerLeaderBoard
           title="Carries"
           data={topPlayersCarries}
           eventId={events.carries}
           limit={GLIMPSE_LIMIT}
+          leagueSlug={leagueSlug}
+          seasonSlug={seasonSlug}
+          legSlug={legSlug}
         />
       </StatsSection>
     </section>

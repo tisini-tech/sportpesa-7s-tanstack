@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from 'lucide-react'
-import { createFileRoute, getRouteApi, Link } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 import { getInitials } from '#/lib/utils'
 import { getTopTeamStatsFn } from '#/data/teams'
@@ -18,20 +18,21 @@ import {
   type LeagueTeamMetricKey,
 } from '#/lib/league-stats'
 import { useTournamentNavigation } from '#/hooks/use-tournament-navigation'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
+import { activeStatsDivision, loadStatsSeasonContext } from '../-season'
 
 export const Route = createFileRoute(
-  '/_site/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams',
+  '/_site/$leagueSlug/$seasonSlug/stats/$statsId/teams',
 )({
   validateSearch: (search: Record<string, unknown>) => ({
+    leg: typeof search.leg === 'string' ? search.leg : undefined,
     isPoints:
       search.isPoints === true || search.isPoints === 'true' ? true : undefined,
   }),
   loaderDeps: ({ search }) => ({ search }),
+  beforeLoad: async ({ params }) => loadStatsSeasonContext(params),
   loader: async ({ context, params, deps }) => {
     const seasonId = context.season.id.toString()
-    const divisionId = context.division.id.toString()
+    const { divisionId } = activeStatsDivision(context.season, deps.search.leg)
     const statsId = params.statsId
 
     const stats = await getTopTeamStatsFn({
@@ -50,9 +51,10 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
-  const { seasons, season, division } = legRoute.useRouteContext()
-  const { leagueSlug, seasonSlug, legSlug, statsId } = Route.useParams()
-  const { isPoints } = Route.useSearch()
+  const { seasons, season } = Route.useRouteContext()
+  const { leagueSlug, seasonSlug, statsId } = Route.useParams()
+  const { isPoints, leg } = Route.useSearch()
+  const { division, divisionId } = activeStatsDivision(season, leg)
   const { stats } = Route.useLoaderData()
   const navigate = Route.useNavigate()
 
@@ -65,7 +67,7 @@ function RouteComponent() {
   const navigateToMetric = (
     nextLeagueSlug: string,
     nextSeasonSlug: string,
-    nextLegSlug: string,
+    nextLegSlug: string | undefined,
     metricKey: LeagueTeamMetricKey,
   ) => {
     const metric =
@@ -73,14 +75,16 @@ function RouteComponent() {
       LEAGUE_TEAM_METRICS[0]
 
     navigate({
-      to: '/$leagueSlug/$seasonSlug/$legSlug/stats/$statsId/teams',
+      to: '/$leagueSlug/$seasonSlug/stats/$statsId/teams',
       params: {
         leagueSlug: nextLeagueSlug,
         seasonSlug: nextSeasonSlug,
-        legSlug: nextLegSlug,
         statsId: resolveMetricEventId(metric, nextSeasonSlug),
       },
-      search: { isPoints: metric.isPoints ? true : undefined },
+      search: {
+        leg: nextLegSlug,
+        isPoints: metric.isPoints ? true : undefined,
+      },
     })
   }
 
@@ -105,12 +109,7 @@ function RouteComponent() {
 
   const handleMetricChange = (value: string | null) => {
     if (!value) return
-    navigateToMetric(
-      leagueSlug,
-      seasonSlug,
-      legSlug,
-      value as LeagueTeamMetricKey,
-    )
+    navigateToMetric(leagueSlug, seasonSlug, leg, value as LeagueTeamMetricKey)
   }
 
   return (
@@ -119,9 +118,9 @@ function RouteComponent() {
         leagueSlug={leagueSlug}
         seasons={seasons}
         season={season}
-        division={division}
+        division={divisionId ? division : undefined}
         seasonId={season.id}
-        divisionId={division.id}
+        divisionId={divisionId ? division?.id : undefined}
         onLeagueChange={handleLeagueChange}
         onSeasonChange={handleSeasonChange}
         onDivisionChange={handleDivisionChange}
@@ -148,8 +147,9 @@ function RouteComponent() {
       <section className="sp-content-shell py-8">
         <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <Link
-            to="/$leagueSlug/$seasonSlug/$legSlug/stats"
-            params={{ leagueSlug, seasonSlug, legSlug }}
+            to="/$leagueSlug/$seasonSlug/stats"
+            params={{ leagueSlug, seasonSlug }}
+            search={{ leg }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeftIcon className="size-3.5" aria-hidden />
@@ -165,8 +165,8 @@ function RouteComponent() {
           </h1>
 
           <span className="text-xs text-muted-foreground">
-            {stats.length} {stats.length === 1 ? 'team' : 'teams'} ·{' '}
-            {division.name}
+            {stats.length} {stats.length === 1 ? 'team' : 'teams'}
+            {division ? ` · ${division.name}` : ''}
           </span>
         </div>
 

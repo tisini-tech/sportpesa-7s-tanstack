@@ -2,40 +2,27 @@ import { TeamHeader } from '#/components/clubs/team-header'
 import { getTeamFn } from '#/data/teams'
 import { createFileRoute, notFound, Outlet } from '@tanstack/react-router'
 
-type ClubSearch = {
-  teamId?: number
-}
+import { loadStatsSeasonContext } from '../../-season'
+import { clubSearch } from '../-search'
 
-export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/clubs/$clubSlug')({
-  validateSearch: (search: Record<string, unknown>): ClubSearch => {
-    const raw = search.teamId
-    const teamId =
-      typeof raw === 'number'
-        ? raw
-        : typeof raw === 'string'
-          ? Number(raw)
-          : undefined
-
-    return {
-      teamId: teamId != null && !Number.isNaN(teamId) ? teamId : undefined,
-    }
-  },
+export const Route = createFileRoute(
+  '/_site/$leagueSlug/$seasonSlug/clubs/$clubSlug',
+)({
+  validateSearch: clubSearch,
   loaderDeps: ({ search }) => ({
     teamId: search.teamId,
   }),
+  beforeLoad: async ({ params }) => loadStatsSeasonContext(params),
   loader: async ({ context, deps }) => {
     const teamId = deps.teamId
     if (teamId == null) {
       throw notFound()
     }
 
-    const seasonId = context.season.id.toString()
-    const divisionId = context.division.id.toString()
     const team = await getTeamFn({
       data: {
         competitionId: context.competitionId,
-        seasonId,
-        divisionId,
+        seasonId: context.season.id.toString(),
         teamId: teamId.toString(),
       },
     })
@@ -47,7 +34,8 @@ export const Route = createFileRoute('/_site/$leagueSlug/$seasonSlug/$legSlug/cl
 
 function RouteComponent() {
   const { team, teamId } = Route.useLoaderData()
-  const { leagueSlug, seasonSlug, legSlug, clubSlug } = Route.useParams()
+  const { leagueSlug, seasonSlug, clubSlug } = Route.useParams()
+  const { leg } = Route.useSearch()
 
   return (
     <div className="sp-content-shell flex flex-col gap-4 py-6">
@@ -56,7 +44,7 @@ function RouteComponent() {
         teamId={teamId}
         leagueSlug={leagueSlug}
         seasonSlug={seasonSlug}
-        legSlug={legSlug}
+        legSlug={leg}
         clubSlug={clubSlug}
       />
 

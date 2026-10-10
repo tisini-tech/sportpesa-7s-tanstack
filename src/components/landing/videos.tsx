@@ -1,11 +1,9 @@
 import { useMemo } from 'react'
-import { Link, getRouteApi } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ChevronRightIcon, PlayIcon } from 'lucide-react'
 
 import type { Season } from '#/lib/types'
 import { cn, collectVideos, formatVideoDate } from '#/lib/utils'
-
-const legRoute = getRouteApi('/_site/$leagueSlug/$seasonSlug/$legSlug')
 
 export type LandingVideo = {
   id: string
@@ -19,8 +17,16 @@ export type LandingVideo = {
   thumbnailUrl: string | null
 }
 
-export function VideosSection({ data }: { data: Season[] }) {
-  const { leagueSlug, seasonSlug, legSlug } = legRoute.useParams()
+export function VideosSection({
+  data,
+  leagueSlug,
+  seasonSlug,
+}: {
+  data: Season[]
+  leagueSlug: string
+  seasonSlug: string
+  legSlug?: string
+}) {
 
   const videos = useMemo(() => collectVideos(data).slice(0, 6), [data])
 
@@ -71,8 +77,8 @@ export function VideosSection({ data }: { data: Season[] }) {
         </div>
 
         <Link
-          to="/$leagueSlug/$seasonSlug/$legSlug/videos"
-          params={{ leagueSlug, seasonSlug, legSlug }}
+          to="/$leagueSlug/$seasonSlug/videos"
+          params={{ leagueSlug, seasonSlug }}
           className="inline-flex items-center gap-1 text-xs font-bold tracking-[0.08em] text-secondary uppercase transition-colors hover:text-secondary/80"
         >
           View all
@@ -83,7 +89,7 @@ export function VideosSection({ data }: { data: Season[] }) {
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {videos.map((video) => (
           <li key={video.id}>
-            <VideoCard video={video} />
+            <VideoCard video={video} leagueSlug={leagueSlug} />
           </li>
         ))}
       </ul>
@@ -91,16 +97,19 @@ export function VideosSection({ data }: { data: Season[] }) {
   )
 }
 
-export function VideoCard({ video }: { video: LandingVideo }) {
-  const { leagueSlug } = legRoute.useParams()
-
+export function VideoCard({
+  video,
+  leagueSlug,
+}: {
+  video: LandingVideo
+  leagueSlug: string
+}) {
   return (
     <Link
-      to="/$leagueSlug/$seasonSlug/$legSlug/videos/$videoId"
+      to="/$leagueSlug/$seasonSlug/videos/$videoId"
       params={{
         leagueSlug,
         seasonSlug: video.seasonSlug,
-        legSlug: video.legSlug,
         videoId: video.id,
       }}
       className={cn(
