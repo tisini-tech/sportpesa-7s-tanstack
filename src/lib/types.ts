@@ -313,6 +313,12 @@ export interface PaginatedResponse<T> {
   items: T[]
 }
 
+export interface CursorPaginatedResponse<T> {
+  next: string | null
+  previous: string | null
+  results: T[]
+}
+
 export interface TopPlayerStats {
   player_id: number
   name: string

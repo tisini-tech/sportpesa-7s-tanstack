@@ -1,12 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
 
 import { apiService } from '#/lib/api'
-import type {
-  Country,
-  Quiz,
-  QuizLeaderboard,
-  QuizParticipation,
-  QuizSubmitResponse,
+import {
+  type CursorPaginatedResponse,
+  type Country,
+  type Quiz,
+  type QuizLeaderboard,
+  type QuizParticipation,
+  type QuizSubmitResponse,
 } from '#/lib/types'
 
 export const getQuizzesFn = createServerFn({ method: 'GET' }).handler(
@@ -32,7 +33,7 @@ export const getQuizParticipationFn = createServerFn({ method: 'GET' })
 export const getQuizLeaderboardFn = createServerFn({ method: 'GET' })
   .validator((data: { quizId: string }) => data)
   .handler(async ({ data }) => {
-    return apiService.get<QuizLeaderboard[]>(
+    return apiService.get<CursorPaginatedResponse<QuizLeaderboard>>(
       `/engagements/${data.quizId}/leaderboard`,
       {
         base: 'quiz',

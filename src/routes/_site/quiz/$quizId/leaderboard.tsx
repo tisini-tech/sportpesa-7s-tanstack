@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_site/quiz/$quizId/leaderboard')({
       data: { quizId },
     })
 
-    return { leaderboard }
+    return { leaderboard: leaderboard.results }
   },
   component: QuizLeaderboardPage,
 })
